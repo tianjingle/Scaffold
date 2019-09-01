@@ -1,0 +1,69 @@
+package com.inclination.scaffold.api.interfaces;
+
+import java.util.Date;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.inclination.scaffold.api.request.project.ProjectManagerCreateRequest;
+import com.inclination.scaffold.api.request.project.ProjectManagerGitCreateRequest;
+import com.inclination.scaffold.application.project.ProjectInformationDto;
+import com.inclination.scaffold.application.project.ProjectManagerGitCreateDto;
+import com.inclination.scaffold.application.project.ProjectManagerService;
+import com.inclination.scaffold.application.users.UserDto;
+import com.inclination.scaffold.utils.ModelMapUtils;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+/**
+ * @dis:   this class manager scaffold project create
+ * @author tianjingle 
+ * @email: 2695062879@qq.com   
+ * @tel:   15652466911
+ * @time:  2019.06.15
+ * all right protect
+ */
+@RestController
+@Api
+public class ProjectManagerApi {
+	
+	/**
+	 * 注入工程管理服务
+	 */
+	@Autowired
+	private ProjectManagerService projectManagerService;
+	
+	/**
+	 * 创建项目的git仓库，然后才可以往上边提交创建的maven项目
+	 * @param request
+	 * @param session
+	 */
+	@PostMapping(value="/projects-repository-create")
+	@ApiOperation(value="创建git仓库",notes="创建git仓库")
+	public void repositoryCreate(@Valid @RequestBody ProjectManagerGitCreateRequest request,HttpSession session){
+		UserDto dto=(UserDto) session.getAttribute("CurrentUser");
+		projectManagerService.createGitRepository(ModelMapUtils.map(request, ProjectManagerGitCreateDto.class),dto);
+	}
+	
+	/**
+	 * 创建脚手架工程
+	 * @param request 脚手架工程的具体信息
+	 * @param session sessioin
+	 */
+	@PostMapping(value="/projects-scaffold-create")
+	@ApiOperation(value="创建脚手架工程",notes="创建工程")
+	public void scaffoldProjectCreate(@Valid @RequestBody ProjectManagerCreateRequest request,HttpSession session){
+		UserDto dto=(UserDto) session.getAttribute("CurrentUser");
+		ProjectInformationDto projectDto=ModelMapUtils.map(request, ProjectInformationDto.class);
+		projectDto.setCreatetime(new Date());
+		projectDto.setLoginid(dto.getLoginid());
+		projectManagerService.createScaffoldProject(projectDto,dto);
+	}
+
+}

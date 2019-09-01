@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="../ext-all.js"></script>
+    <script src="../packages/ext-locale/build/ext-locale-zh_CN.js"></script>
+    <script type="text/javascript" src="../packages/sysext.js"></script>
+    <script type="text/javascript" src="../packages/extfun.js"></script>
+    <script type="text/javascript" src="../packages/json2.js"></script>
+     <link href="../packages/ext-theme-crisp/build/resources/ext-theme-crisp-all.css" rel="stylesheet" />
+
+	<title>菜单管理</title>
+</head>
+<body>
+</body>
+<script type="text/javascript">
+	Ext.onReady(function(){
+
+		var store=Ext.create('Ext.data.Store',{
+			autoLoad:true,
+			pageSize:15,
+			fields:['id','mununame','content','flag'],
+			proxy:{
+				type:'ajax',
+				url:'/local/findmenulist.do',
+                reader:{
+                	type:'json',
+                	root:'data',
+                	totalProperty:'total'
+                }
+			}
+		});
+		//提前加载的----------------------------------------------------------结束
+		var sm = Ext.create('Ext.selection.CheckboxModel');
+        //创建面板，使用上边预生成的store
+		var panel = Ext.create('Ext.grid.Panel', {
+			store : store,
+            autoHeight:true,
+			columns : [{
+				header : '编号 ',
+				dataIndex : 'id',
+			     flex : 0.2 //占比9/20
+			}, {
+				header : '菜单名称',
+				dataIndex : 'mununame',
+				flex : 0.3, //占比9/20,
+				editable : true
+			}, {
+				header : '备注',
+				dataIndex : 'content',
+				flex : 0.5 //占比9/20
+			}, {
+				header : '标志',
+				dataIndex : 'flag',
+				flex : 1 //占比9/20
+			}],
+            //列表的工具栏
+			tbar : [ {
+				text : '新增',
+				iconCls : 'add',
+				handler : function() {
+					addWin.show();
+				}
+			}, '-', {
+				text : '修改',
+				iconCls : 'accept',
+				handler : function() {
+						if(null == sysExt.getSinData(panel)){
+							sysExt.alert('请选中一项条目。');
+						}else{
+							var record = panel.getSelectionModel().getSelection();
+							updForm.loadRecord(record[0]);
+							updWin.show();
+						}
+				}
+			}, '-', {
+				text : '删除',
+				iconCls : 'delete',
+				handler : function() {
+					var fun = function(){
+						/* store.getStore().load(); */
+						store.load();
+					}
+					sysExt.delFun('/local/deletecd.do',panel,fun);
+				}
+			} ],
+			bbar : Ext.create('Ext.PagingToolbar', {
+				store : store,
+				displayInfo : true,
+				displayMsg : '当前显示 {0} - {1} 条  共{2}条',
+				emptyMsg : "没有记录"
+			}),
+			selModel : sm,
+	/*		plugins : [ Ext.create('Ext.grid.plugin.CellEditing', {
+				clicksToEdit : 2
+			}) ],*/
+			renderTo : Ext.getBody()
+		});
+		//修改表单
+		var updForm = new Ext.widget({
+			id:	'updateform',
+			xtype : 'form',
+			bodyPadding : '5 5 5 5',
+			fieldDefaults : {
+				labelWidth : 60
+			},
+			items : [ {
+				xtype : 'fieldset',
+				defaultType : 'textfield',
+				layout : 'column',
+				defaults : {
+					margin : 3
+				},
+				items : [ {
+					fieldLabel : '资源编号',
+					name : 'id',
+					hidden : true,
+					xtype : 'textfield',
+					hidden:true
+					/* columnWidth:1 */
+				},{
+					fieldLabel : '菜单名称',
+					name : 'mununame',
+					hidden : false,
+					xtype : 'textfield',
+					columnWidth:1
+				},{
+					xtype:'textareafield',
+					fieldLabel : '内容简介(限300字以内)',
+					allowBlank : false,
+					columnWidth : 1,
+					maxLength  : 300,
+					name : 'content',
+					height : 115
+				}]
+			} ],
+			buttons : [ {
+				text : '保存',
+				handler : function() {
+					var form = this.up("form").getForm();
+					var fun = function(){
+	            		panel.getStore().load();
+	            		form.reset();
+	            		updWin.close();
+	            	}
+					sysExt.addFun('/local/updatecd.do', form, fun);
+				}
+			}, {
+				text : '取消',
+				handler : function() {
+					updWin.close();
+				}
+			} ]
+		});
+
+		var updWin = Ext.create('Ext.window.Window', {
+			title : '修改',
+			closable : true,
+			closeAction : 'hide',
+			resizable : false,
+			width : 520,
+			height : 270,
+			layout : 'fit',
+			items : [ updForm ]
+		});
+//新增表单
+		var addForm = new Ext.widget({
+			id:	'addForm',
+			xtype : 'form',
+			bodyPadding : '5 5 5 5',
+
+			fieldDefaults : {
+				labelWidth : 60
+			},
+			items : [ {
+				xtype : 'fieldset',
+				defaultType : 'textfield',
+				layout : 'column',
+				defaults : {
+					margin : 3
+				},
+				items : [ {
+					xtype : 'textfield',
+					fieldLabel : '名称',
+					allowBlank : false,
+					columnWidth : 1,
+					name : 'mununame'
+				},{
+					xtype:'textareafield',
+					fieldLabel : '备注',
+					allowBlank : false,
+					columnWidth : 1,
+					maxLength  : 500,
+					name : 'content',
+					height : 160
+				},{
+					xtype:'textfield',
+					fieldLabel : '标志',
+					allowBlank : false,
+					columnWidth : 1,
+					maxLength  : 10,
+					name : 'flag',
+					height : 10
+				}]
+			} ],
+
+			buttons : [ {
+				text : '保存',
+				handler : function() {
+					var form = this.up("form").getForm();
+					var fun = function(){
+	            		panel.getStore().load();
+	            		form.reset();
+	            	}
+					sysExt.addFun('/local/doAddcd.do', form, fun);
+				}
+			}, {
+				text : '取消',
+				handler : function() {
+					addWin.close();
+				}
+			} ]
+		});
+
+		var addWin = Ext.create('Ext.window.Window', {
+			title : '添加资源',
+			closable : true,
+			closeAction : 'hide',
+			resizable : false,
+			width : 520,
+			height : 320,
+			layout : 'fit',
+			items : [ addForm ]
+		});
+		initSize(panel);
+	})
+
+</script>
+</html>

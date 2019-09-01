@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE generatorConfiguration
+   PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+   "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+ 
+ <generatorConfiguration>
+     <context id="testTables" targetRuntime="MyBatis3">
+     
+         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
+         <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+         <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />
+
+	<commentGenerator type="com.inclination.scaffold.utils.CnkiCommentGenerator">
+		<property name="suppressDate" value="false" />
+		<property name="suppressAllComments" value="false" />
+	</commentGenerator>
+	
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/scaffold?useUnicode=true&amp;nullCatalogMeansCurrent=true;characterEncoding=utf-8&amp;useSSL=false"
+                        userId="root"
+                        password="tianjingle">
+                         <property name="nullCatalogMeansCurrent" value="true" />
+        </jdbcConnection>
+         
+         
+         <!-- <jdbcConnection driverClass="oracle.jdbc.OracleDriver"
+             connectionURL="jdbc:oracle:thin:@127.0.0.1:1521:yycg" 
+             userId="yycg"
+             password="yycg">
+         </jdbcConnection> -->
+ 
+         <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL 和 
+             NUMERIC 类型解析为java.math.BigDecimal -->
+         <javaTypeResolver>
+             <property name="forceBigDecimals" value="true" />
+         </javaTypeResolver>
+ 
+ 
+         <!-- targetProject:生成PO类的位置 -->
+         <javaModelGenerator targetPackage="com.inclination.scaffold.infrastraction.repository.po"
+             targetProject="./src/main/java">
+             <!-- enableSubPackages:是否让schema作为包的后缀 -->
+             <property name="enableSubPackages" value="true" />
+             <!-- 从数据库返回的值被清理前后的空格 -->
+             <property name="trimStrings" value="true" />
+         </javaModelGenerator>
+ 
+         <!-- targetProject:mapper映射文件生成的位置 -->
+         <sqlMapGenerator targetPackage="mybatis" 
+             targetProject="./src/main/resources">
+             <!-- enableSubPackages:是否让schema作为包的后缀 -->
+             <property name="enableSubPackages" value="true" />
+         </sqlMapGenerator>
+         <!-- targetPackage：mapper接口生成的位置 -->
+         <javaClientGenerator type="XMLMAPPER"
+             targetPackage="com.inclination.scaffold.infrastraction.repository" 
+             targetProject="./src/main/java">
+             <!-- enableSubPackages:是否让schema作为包的后缀 -->
+             <property name="enableSubPackages" value="true" />
+         </javaClientGenerator>
+         
+<!--         <table schema="tianjingle" tableName="resource" domainObjectName="Resource"/> 
+        <table schema="tianjingle" tableName="tmenu" domainObjectName="Tmenu"/> 
+        <table schema="tianjingle" tableName="menu_resource" domainObjectName="MenuResource"/> 
+        <table schema="tianjingle" tableName="role" domainObjectName="Role"/> 
+        <table schema="tianjingle" tableName="role_menu" domainObjectName="RoleMenu"/>  -->
+      <table schema="tianjingle" tableName="testcnki" domainObjectName="TestCnki"/> 
+</context>
+ </generatorConfiguration>

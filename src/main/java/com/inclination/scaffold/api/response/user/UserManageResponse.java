@@ -1,0 +1,77 @@
+package com.inclination.scaffold.api.response.user;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel
+public class UserManageResponse {
+	
+	@ApiModelProperty(name="id",value="用户seq")
+	private int id;
+	
+	@ApiModelProperty(name="username",value="用户名称")
+	private String username;
+	
+	@ApiModelProperty(name="loginid",value="手机号")
+	private String loginid;
+	
+	@ApiModelProperty(name="userpassword",value="用户密码")
+	private String userpassword;
+	
+	@ApiModelProperty(name="useremil",value="邮箱")
+	private String useremil;
+
+	@ApiModelProperty(name="roid",value="权限")
+    private Integer roid;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getLoginid() {
+		return loginid;
+	}
+
+	public void setLoginid(String loginid) {
+		this.loginid = loginid;
+	}
+
+	public String getUserpassword() {
+		return userpassword;
+	}
+
+	public void setUserpassword(String userpassword) {
+		this.userpassword = userpassword;
+	}
+
+	public String getUseremil() {
+		return useremil;
+	}
+
+	public void setUseremil(String useremil) {
+		this.useremil = useremil;
+	}
+
+	public Integer getRoid() {
+		return roid;
+	}
+
+	public void setRoid(Integer roid) {
+		this.roid = roid;
+	}
+	
+
+
+}
