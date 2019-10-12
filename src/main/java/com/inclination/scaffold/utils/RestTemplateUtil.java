@@ -2,7 +2,7 @@ package com.inclination.scaffold.utils;
 
 import java.util.Map;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -22,7 +22,7 @@ public class RestTemplateUtil {
 		header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		if(null!=adminName&&null!=adminPwd){
 			String userMsg=adminName+":"+adminPwd;
-			String base64UserMsg=Base64.encodeBase64String(userMsg.getBytes());
+			String base64UserMsg= Base64.encodeBase64String(userMsg.getBytes());
 			header.set("Authorization", "Basic "+base64UserMsg);
 		}
 		HttpEntity<MultiValueMap<String,Object>> entity=new HttpEntity<>(param,header);

@@ -59,11 +59,13 @@ public class MenuServiceImp implements MenuService{
 		// TODO Auto-generated method stub
 		ModelMapUtils.map(map, DMenu.class).menuModify(menuMapping);
 	}
-	@Transactional
+	@Override
+    @Transactional
 	public void deleteMenu(MenuDto dto) throws TException {
 		// TODO Auto-generated method stub
 		ModelMapUtils.map(dto, DMenu.class).menuDelete(menuMapping);
 	}
+	@Override
 	public MenuManagerQryResponse findMenu(MenuQryByPage request) {
 		// TODO Auto-generated method stub
 		Tmenu po=ModelMapUtils.map(request, Tmenu.class);

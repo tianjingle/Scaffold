@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,7 +29,7 @@ public class ApolloProjectCreateImp {
 		String apollourl="";
 		String artifactId="test";
 		String usermsg=username+":"+password;
-		String base64usermsg=Base64.encodeBase64String(usermsg.getBytes());
+		String base64usermsg= Base64.encodeBase64String(usermsg.getBytes());
 		HttpHeaders headers=new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 		headers.set("Authorization", "Basic "+base64usermsg);
