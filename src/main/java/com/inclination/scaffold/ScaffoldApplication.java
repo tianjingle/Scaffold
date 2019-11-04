@@ -12,10 +12,13 @@ import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import com.github.pagehelper.PageHelper;
 //import com.pengzu.sms.annotion.EnabledPengzuSmsAutoConfiguration;
 
+/***
+ * 很久都没有开源了,"com.pengzu.sms"
+ */
 @EnableApolloConfig
 @SpringBootApplication
 //@EnabledPengzuSmsAutoConfiguration
-@ComponentScan(basePackages={"com.inclination.scaffold","com.pengzu.sms"})
+@ComponentScan(basePackages={"com.inclination.scaffold"})
 @MapperScan("com.inclination.scaffold.infrastraction.repository")
 public class ScaffoldApplication {
 
