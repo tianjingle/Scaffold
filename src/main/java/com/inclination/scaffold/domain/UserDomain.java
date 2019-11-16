@@ -1,21 +1,11 @@
 package com.inclination.scaffold.domain;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.inclination.scaffold.infrastraction.repository.UserMapper;
 import com.inclination.scaffold.infrastraction.repository.po.User;
 import com.inclination.scaffold.infrastraction.repository.po.UserExample;
-import com.inclination.scaffold.api.entity.UserVo;
-import com.inclination.scaffold.api.entity.UserFindByPageVo;
 
-import com.inclination.scaffold.utils.ModelMapUtils;
-import com.inclination.scaffold.utils.ViewData;
-
-import com.inclination.scaffold.constant.TErrorCode;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TErrorCode;
+import com.inclination.scaffold.constant.exception.TException;
 
 /**
  * @Description: tianjingle业务实现

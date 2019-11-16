@@ -38,3 +38,11 @@ apollo:
     eagerLoad:
       enabled: true
     namespaces: application,TEST1.common
+
+liquibase:
+  change-log: classpath:db/changelog-master.xml
+  user: root
+  password: tianjingle
+  url: jdbc:mysql://localhost:3307/scaffold?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&useSSL=false
+  enabled: true
+  drop-first: false

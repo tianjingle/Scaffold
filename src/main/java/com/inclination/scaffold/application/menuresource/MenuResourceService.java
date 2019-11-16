@@ -2,7 +2,7 @@ package com.inclination.scaffold.application.menuresource;
 
 import com.inclination.scaffold.api.response.menuresource.MenuResourceQryResponse;
 import com.inclination.scaffold.api.response.resource.ResourceManagerAllResponse;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 
 public interface MenuResourceService {
 

@@ -23,15 +23,11 @@ import com.inclination.scaffold.api.response.user.UserManageLoginResponse;
 import com.inclination.scaffold.api.response.user.UserManagerQryResponse;
 import com.inclination.scaffold.application.users.UserDto;
 import com.inclination.scaffold.application.users.UserService;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ModelMapUtils;
 import com.inclination.scaffold.utils.ViewData;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 
 /**

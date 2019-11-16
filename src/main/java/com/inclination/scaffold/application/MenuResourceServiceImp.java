@@ -8,7 +8,7 @@ import com.inclination.scaffold.api.response.menuresource.MenuResourceQryRespons
 import com.inclination.scaffold.api.response.resource.ResourceManagerAllResponse;
 import com.inclination.scaffold.application.menuresource.MenuResourceDto;
 import com.inclination.scaffold.application.menuresource.MenuResourceService;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.DMenuResource;
 import com.inclination.scaffold.infrastraction.repository.MenuResourceMapper;
 import com.inclination.scaffold.infrastraction.repository.ResourceMapper;

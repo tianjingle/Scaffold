@@ -9,7 +9,7 @@ import com.inclination.scaffold.api.response.rolemenu.RoleMenuManagerAllResponse
 import com.inclination.scaffold.api.response.rolemenu.RoleMenuManagerQryResponse;
 import com.inclination.scaffold.application.rolemenu.RoleMenuDto;
 import com.inclination.scaffold.application.rolemenu.RoleMenuService;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.DRoleMenu;
 import com.inclination.scaffold.infrastraction.repository.RoleMenuMapper;
 import com.inclination.scaffold.infrastraction.repository.TmenuMapper;

@@ -13,7 +13,7 @@ import com.inclination.scaffold.api.response.menu.MenuManagerQryResponse;
 import com.inclination.scaffold.api.response.menu.MenuManagerResponse;
 import com.inclination.scaffold.application.menu.MenuDto;
 import com.inclination.scaffold.application.menu.MenuService;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.DMenu;
 import com.inclination.scaffold.infrastraction.repository.MenuResourceMapper;
 import com.inclination.scaffold.infrastraction.repository.ResourceMapper;

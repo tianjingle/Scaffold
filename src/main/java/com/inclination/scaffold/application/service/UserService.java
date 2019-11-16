@@ -2,7 +2,7 @@ package com.inclination.scaffold.application.service;
 
 import com.inclination.scaffold.api.entity.UserVo;
 import com.inclination.scaffold.api.entity.UserFindByPageVo;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ViewData;
 
 /**

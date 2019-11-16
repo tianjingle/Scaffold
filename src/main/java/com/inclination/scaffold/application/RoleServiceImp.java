@@ -12,15 +12,12 @@ import com.inclination.scaffold.api.request.role.RoleQryByPage;
 import com.inclination.scaffold.api.response.role.RoleManageAllResponse;
 import com.inclination.scaffold.api.response.role.RoleManageQryResponse;
 import com.inclination.scaffold.api.response.role.RoleManageResponse;
-import com.inclination.scaffold.api.response.user.UserManageResponse;
-import com.inclination.scaffold.api.response.user.UserManagerQryResponse;
 import com.inclination.scaffold.application.role.RoleDto;
 import com.inclination.scaffold.application.role.RoleService;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.DRole;
 import com.inclination.scaffold.infrastraction.repository.RoleMapper;
 import com.inclination.scaffold.infrastraction.repository.po.Role;
-import com.inclination.scaffold.infrastraction.repository.po.RoleExample;
 import com.inclination.scaffold.utils.ModelMapUtils;
 
 @Service

@@ -13,7 +13,7 @@ import com.inclination.scaffold.infrastraction.repository.UserMapper;
 import com.inclination.scaffold.api.entity.UserVo;
 import com.inclination.scaffold.api.entity.UserFindByPageVo;
 import com.inclination.scaffold.application.service.UserService;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.UserDomain;
 import com.inclination.scaffold.infrastraction.repository.po.User;
 import com.inclination.scaffold.infrastraction.repository.po.UserExample;

@@ -18,7 +18,7 @@ import com.inclination.scaffold.api.request.resource.ResourceQryByPage;
 import com.inclination.scaffold.api.response.resource.ResourceManagerQryResponse;
 import com.inclination.scaffold.application.resource.ResourceDto;
 import com.inclination.scaffold.application.resource.ResourceService;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ModelMapUtils;
 
 import io.swagger.annotations.ApiModel;

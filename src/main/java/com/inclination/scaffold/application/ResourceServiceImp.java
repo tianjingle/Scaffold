@@ -11,15 +11,12 @@ import com.github.pagehelper.PageHelper;
 import com.inclination.scaffold.api.request.resource.ResourceQryByPage;
 import com.inclination.scaffold.api.response.resource.ResourceManagerQryResponse;
 import com.inclination.scaffold.api.response.resource.ResourceManagerResponse;
-import com.inclination.scaffold.api.response.role.RoleManageQryResponse;
-import com.inclination.scaffold.api.response.role.RoleManageResponse;
 import com.inclination.scaffold.application.resource.ResourceDto;
 import com.inclination.scaffold.application.resource.ResourceService;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.DResource;
 import com.inclination.scaffold.infrastraction.repository.ResourceMapper;
 import com.inclination.scaffold.infrastraction.repository.po.Resource;
-import com.inclination.scaffold.infrastraction.repository.po.Role;
 import com.inclination.scaffold.utils.ModelMapUtils;
 
 @Service

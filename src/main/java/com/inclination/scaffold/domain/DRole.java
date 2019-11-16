@@ -1,7 +1,7 @@
 package com.inclination.scaffold.domain;
 
-import com.inclination.scaffold.constant.TErrorCode;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TErrorCode;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.repository.RoleMapper;
 import com.inclination.scaffold.infrastraction.repository.po.Role;
 import com.inclination.scaffold.utils.ModelMapUtils;

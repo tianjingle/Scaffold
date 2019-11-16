@@ -17,7 +17,7 @@ import com.inclination.scaffold.api.response.role.RoleManageAllResponse;
 import com.inclination.scaffold.api.response.role.RoleManageQryResponse;
 import com.inclination.scaffold.application.role.RoleDto;
 import com.inclination.scaffold.application.role.RoleService;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ModelMapUtils;
 
 import io.swagger.annotations.ApiModel;

@@ -1,0 +1,24 @@
+说明：
+      --liquibase formatted sql 必须添加，liquibase会根据此命令来格式话sql
+      --changeset 您的名字:版本号
+       您的名字可以填写，姓全写+名字的首字母
+       版本号d、t、v (类型+人名-年月日-0001自增) eg:Dzhangs-20190709-0001
+             d: 数据表基本操作,比如一般的增insert、删delete、改update、查select等
+             v: 视图创建view、查询select等视图相关的操作
+             t: 数据表的创建create、修改alter、索引index、外键forgine key等
+
+ drop table if exists `discuss_user_discuss_problem`;
+ /*!40101 set @saved_cs_client     = @@character_set_client */;
+  set character_set_client = utf8mb4 ;
+ create table `discuss_user_discuss_problem` (
+   `id` char(40) not null comment '问题主键',
+   `disid` char(40) not null comment '研讨会主键id',
+   `addusername` varchar(64) default null comment '添加者账号，对应hostusername',
+   `title` varchar(128) default null comment '问题的题名',
+   `explain` varchar(1024) default null comment '问题的解释',
+   `status` tinyint(11) default null comment '问题的状态（0：正常；1：置顶；-1：停止）',
+   `posttime` timestamp null default current_timestamp on update current_timestamp comment '添加问题的时间',
+   primary key (`id`)
+ ) engine=innodb default charset=utf8 row_format=dynamic;
+
+ 中的explain为mysql关键词，这里改变为explains

@@ -14,12 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.inclination.scaffold.api.entity.UserVo;
 import com.inclination.scaffold.api.entity.UserFindByPageVo;
 import com.inclination.scaffold.application.service.UserService;
-import com.inclination.scaffold.constant.config.TException;
-import com.inclination.scaffold.utils.ModelMapUtils;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ViewData;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 
  /**

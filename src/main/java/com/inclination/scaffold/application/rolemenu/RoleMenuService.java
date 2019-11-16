@@ -2,7 +2,7 @@ package com.inclination.scaffold.application.rolemenu;
 
 import com.inclination.scaffold.api.response.rolemenu.RoleMenuManagerAllResponse;
 import com.inclination.scaffold.api.response.rolemenu.RoleMenuManagerQryResponse;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 
 public interface RoleMenuService {
 

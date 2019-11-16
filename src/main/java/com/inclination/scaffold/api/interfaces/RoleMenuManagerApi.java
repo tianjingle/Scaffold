@@ -5,18 +5,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.inclination.scaffold.api.request.rolemenu.RoleMenuAddRequest;
 import com.inclination.scaffold.api.request.rolemenu.RoleMenuModifyRequest;
 import com.inclination.scaffold.api.response.rolemenu.RoleMenuManagerAllResponse;
-import com.inclination.scaffold.api.response.rolemenu.RoleMenuManagerQryResponse;
-import com.inclination.scaffold.api.response.rolemenu.RoleMenuManagerResponse;
 import com.inclination.scaffold.application.rolemenu.RoleMenuDto;
 import com.inclination.scaffold.application.rolemenu.RoleMenuService;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ModelMapUtils;
 
 import io.swagger.annotations.ApiModel;

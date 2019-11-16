@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -27,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.inclination.scaffold.api.request.project.ProjectManagerCreateRequest;
 import com.inclination.scaffold.application.project.ProjectInformationDto;
 import com.inclination.scaffold.application.users.UserDto;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.InputStreamRunnable;
 import com.inclination.scaffold.utils.ModelMapUtils;
 import com.inclination.scaffold.utils.RestTemplateUtil;

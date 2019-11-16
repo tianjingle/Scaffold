@@ -2,7 +2,7 @@ package com.inclination.scaffold.application.resource;
 
 import com.inclination.scaffold.api.request.resource.ResourceQryByPage;
 import com.inclination.scaffold.api.response.resource.ResourceManagerQryResponse;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 
 public interface ResourceService {
 

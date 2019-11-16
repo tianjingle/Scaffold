@@ -16,12 +16,11 @@ import com.inclination.scaffold.api.request.menu.MenuQryByPage;
 import com.inclination.scaffold.api.response.menu.MenuManagerQryResponse;
 import com.inclination.scaffold.application.menu.MenuDto;
 import com.inclination.scaffold.application.menu.MenuService;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ModelMapUtils;
 import com.inclination.scaffold.utils.ViewData;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 
 @RestController

@@ -6,8 +6,8 @@ import java.util.Map;
 
 import com.inclination.scaffold.api.response.rolemenu.RoleMenuManagerAllResponse;
 import com.inclination.scaffold.api.response.rolemenu.RoleMenuManagerResponse;
-import com.inclination.scaffold.constant.TErrorCode;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TErrorCode;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.repository.RoleMenuMapper;
 import com.inclination.scaffold.infrastraction.repository.TmenuMapper;
 import com.inclination.scaffold.infrastraction.repository.po.RoleMenu;

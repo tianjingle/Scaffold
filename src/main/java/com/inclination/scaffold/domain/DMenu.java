@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.inclination.scaffold.constant.TErrorCode;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TErrorCode;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.repository.MenuResourceMapper;
 import com.inclination.scaffold.infrastraction.repository.ResourceMapper;
 import com.inclination.scaffold.infrastraction.repository.RoleMenuMapper;

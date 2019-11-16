@@ -16,7 +16,7 @@ import com.inclination.scaffold.api.request.toolproject.ToolProjectModifyRequest
 import com.inclination.scaffold.api.response.toolproject.ToolProjectQryAllResponse;
 import com.inclination.scaffold.application.toolproject.ToolProjectDto;
 import com.inclination.scaffold.application.toolproject.ToolProjectService;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ModelMapUtils;
 
 import io.swagger.annotations.Api;

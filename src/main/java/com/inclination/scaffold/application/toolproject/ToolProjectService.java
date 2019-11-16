@@ -1,7 +1,7 @@
 package com.inclination.scaffold.application.toolproject;
 
 import com.inclination.scaffold.api.response.toolproject.ToolProjectQryAllResponse;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 
 public interface ToolProjectService {
 

@@ -6,8 +6,8 @@ import java.util.Map;
 
 import com.inclination.scaffold.api.response.resource.ResourceManagerAllResponse;
 import com.inclination.scaffold.api.response.resource.ResourceManagerResponse;
-import com.inclination.scaffold.constant.TErrorCode;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TErrorCode;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.repository.MenuResourceMapper;
 import com.inclination.scaffold.infrastraction.repository.ResourceMapper;
 import com.inclination.scaffold.infrastraction.repository.po.MenuResource;

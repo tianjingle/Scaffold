@@ -16,6 +16,10 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<jdbc.url>jdbc:mysql://localhost:3307/scaffold?useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=UTC&amp;useSSL=false</jdbc.url>
+		<jdbc.username>root</jdbc.username>
+		<jdbc.password>tianjingle</jdbc.password>
+		<jdbc.driverclassname>com.mysql.cj.jdbc.Driver</jdbc.driverclassname>
 	</properties>
 
 	<dependencies>
@@ -216,6 +220,14 @@
 			<artifactId>hystrix-javanica</artifactId>
 			<version>1.5.18</version>
 		</dependency>
+
+        <!--数据库修改变动-->
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>3.6.2</version>
+		</dependency>
+
 	</dependencies>
 
 <profiles>
@@ -279,6 +291,26 @@
 						<version>8.0.11</version>
 					</dependency>
 				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<version>3.6.2</version>
+				<configuration>
+					<changeLogFile>src/main/resources/db/changelog-master.xml</changeLogFile>
+					<driver>${jdbc.driverclassname}</driver>
+					<url>${jdbc.url}</url>
+					<username>${jdbc.username}</username>
+					<password>${jdbc.password}</password>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>update</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

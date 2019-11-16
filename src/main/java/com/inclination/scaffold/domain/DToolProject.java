@@ -1,13 +1,11 @@
 package com.inclination.scaffold.domain;
 
-import com.inclination.scaffold.constant.TErrorCode;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TErrorCode;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.repository.ToolprojecturlMapper;
 import com.inclination.scaffold.infrastraction.repository.po.Toolprojecturl;
 import com.inclination.scaffold.infrastraction.repository.po.ToolprojecturlExample;
 import com.inclination.scaffold.utils.ModelMapUtils;
-
-import io.swagger.annotations.ApiModelProperty;
 
 public class DToolProject {
 	

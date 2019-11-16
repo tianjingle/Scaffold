@@ -10,7 +10,7 @@ import com.inclination.scaffold.api.response.toolproject.ToolProjectQryAllRespon
 import com.inclination.scaffold.api.response.toolproject.ToolProjectResponse;
 import com.inclination.scaffold.application.toolproject.ToolProjectDto;
 import com.inclination.scaffold.application.toolproject.ToolProjectService;
-import com.inclination.scaffold.constant.config.TException;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.DToolProject;
 import com.inclination.scaffold.infrastraction.repository.ToolprojecturlMapper;
 import com.inclination.scaffold.infrastraction.repository.po.Toolprojecturl;
