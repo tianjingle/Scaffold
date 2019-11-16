@@ -23,65 +23,23 @@ public class UserManageAddRequest {
 	
 	@ApiModelProperty(name="userName",value="用户名称")
 	@NotBlank(message="不能为空")
-	private String username;
+	private String userName;
 	
 	@ApiModelProperty(name="loginid",value="手机号")
 	@NotBlank(message="不能为空")
     @Pattern(regexp = "^\\d{11}$", message = "手机号码格式错误")
-	private String loginid;
+	private String loginId;
 	
 	@ApiModelProperty(name="userpassword",value="用户密码")
 	@NotBlank(message="不能为空")
-	private String userpassword;
+	private String userPassword;
 	
 	@ApiModelProperty(name="useremil",value="邮箱")
 	@NotBlank(message="不能为空")
-	private String useremil;
+	private String userEmil;
 	
 	@ApiModelProperty(name="roid",value="权限")
 	@NotNull(message="不能为空")
-    private Integer roid;
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getLoginid() {
-		return loginid;
-	}
-
-	public void setLoginid(String loginid) {
-		this.loginid = loginid;
-	}
-
-	public String getUserpassword() {
-		return userpassword;
-	}
-
-	public void setUserpassword(String userpassword) {
-		this.userpassword = userpassword;
-	}
-
-	public String getUseremil() {
-		return useremil;
-	}
-
-	public void setUseremil(String useremil) {
-		this.useremil = useremil;
-	}
-
-	public Integer getRoid() {
-		return roid;
-	}
-
-	public void setRoid(Integer roid) {
-		this.roid = roid;
-	}
-
-    
+    private Integer roId;
 	
 }

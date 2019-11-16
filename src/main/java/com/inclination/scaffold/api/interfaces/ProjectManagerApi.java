@@ -61,8 +61,8 @@ public class ProjectManagerApi {
 	public void scaffoldProjectCreate(@Valid @RequestBody ProjectManagerCreateRequest request,HttpSession session){
 		UserDto dto=(UserDto) session.getAttribute("CurrentUser");
 		ProjectInformationDto projectDto=ModelMapUtils.map(request, ProjectInformationDto.class);
-		projectDto.setCreatetime(new Date());
-		projectDto.setLoginid(dto.getLoginid());
+		projectDto.setCreateTime(new Date());
+		projectDto.setLoginId(dto.getLoginId());
 		projectManagerService.createScaffoldProject(projectDto,dto);
 	}
 

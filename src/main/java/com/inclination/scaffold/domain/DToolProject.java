@@ -2,87 +2,86 @@ package com.inclination.scaffold.domain;
 
 import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.constant.exception.TException;
-import com.inclination.scaffold.infrastraction.repository.ToolprojecturlMapper;
-import com.inclination.scaffold.infrastraction.repository.po.Toolprojecturl;
-import com.inclination.scaffold.infrastraction.repository.po.ToolprojecturlExample;
+import com.inclination.scaffold.infrastraction.repository.ToolProjectPoMapper;
+import com.inclination.scaffold.infrastraction.repository.po.ToolProjectPo;
 import com.inclination.scaffold.utils.ModelMapUtils;
+import tk.mybatis.mapper.entity.Example;
 
 public class DToolProject {
 	
 	private Integer id;
 	
-	private String urlname;
+	private String name;
 
 	private String url;
 
-	private String name;
+	private String userName;
 	
-	private String password;
-	
-	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
+	private String userPassword;
 
 	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getUrlname() {
-		return urlname;
-	}
-
-	public void setUrlname(String urlname) {
-		this.urlname = urlname;
+	public String getName() {
+		return name;
 	}
 
 	public String getUrl() {
 		return url;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public String getUserPassword() {
+		return userPassword;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public void setUrl(String url) {
 		this.url = url;
 	}
 
-	public void toolProjectAdd(ToolprojecturlMapper toolprojecturlMapper) throws TException {
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
+	}
+
+	public void toolProjectAdd(ToolProjectPoMapper toolProjectPoMapper) throws TException {
 		// TODO Auto-generated method stub
-		Toolprojecturl po=ModelMapUtils.map(this, Toolprojecturl.class);
-		ToolprojecturlExample example=new ToolprojecturlExample();
-		ToolprojecturlExample.Criteria criteria=example.createCriteria();
-		criteria.andUrlnameEqualTo(this.urlname);
-		if(toolprojecturlMapper.countByExample(example)>0){
+		ToolProjectPo po=ModelMapUtils.map(this, ToolProjectPo.class);
+		Example example=new Example(ToolProjectPo.class);
+		Example.Criteria criteria=example.createCriteria();
+		criteria.andEqualTo("name",this.name);
+		if(toolProjectPoMapper.selectCountByExample(example)>0){
 			throw new TException(TErrorCode.ERROR_EXISIT_TOOLPROJECTURL_CODE,TErrorCode.ERROR_EXISIT_TOOLPROJECTURL_MSG);
 		}else{
-			if(toolprojecturlMapper.insert(po)!=1){
+			if(toolProjectPoMapper.insert(po)!=1){
 				throw new TException(TErrorCode.ERROR_INSERT_TOOLPROJECTURL_CODE,TErrorCode.ERROR_INSERT_TOOLPROJECTURL_MSG);
 			}
 		}
 		
 	}
 
-	public void toolProjectModify(ToolprojecturlMapper toolprojecturlMapper) throws TException {
+	public void toolProjectModify(ToolProjectPoMapper toolprojecturlMapper) throws TException {
 		// TODO Auto-generated method stub
-		Toolprojecturl po=ModelMapUtils.map(this, Toolprojecturl.class);
-		ToolprojecturlExample example=new ToolprojecturlExample();
-		ToolprojecturlExample.Criteria criteria=example.createCriteria();
-		criteria.andUrlnameEqualTo(this.urlname);
-		if(toolprojecturlMapper.countByExample(example)>0){
+		ToolProjectPo po=ModelMapUtils.map(this, ToolProjectPo.class);
+		Example example=new Example(ToolProjectPo.class);
+		Example.Criteria criteria=example.createCriteria();
+		criteria.andEqualTo("name",this.name);
+		if(toolprojecturlMapper.selectCountByExample(example)>0){
 			throw new TException(TErrorCode.ERROR_EXISIT_TOOLPROJECTURL_CODE,TErrorCode.ERROR_EXISIT_TOOLPROJECTURL_MSG);
 		}else{
 			if(toolprojecturlMapper.updateByPrimaryKey(po)!=1){
@@ -91,9 +90,9 @@ public class DToolProject {
 		}
 	}
 
-	public void toolProjectDelete(ToolprojecturlMapper toolprojecturlMapper) throws TException {
+	public void toolProjectDelete(ToolProjectPoMapper toolprojecturlMapper) throws TException {
 		// TODO Auto-generated method stub
-		Toolprojecturl po=ModelMapUtils.map(this, Toolprojecturl.class);
+		ToolProjectPo po=ModelMapUtils.map(this, ToolProjectPo.class);
 		if(toolprojecturlMapper.deleteByPrimaryKey(this.id)!=1){
 			throw new TException(TErrorCode.ERROR_DELETE_TOOLPROJECTURL_CODE,TErrorCode.ERROR_DELETE_TOOLPROJECTURL_MSG);
 		}

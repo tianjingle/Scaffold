@@ -2,23 +2,23 @@ package com.inclination.scaffold.application;
 
 import java.util.List;
 
+import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
+import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.inclination.scaffold.infrastraction.repository.UserMapper;
 
 import com.inclination.scaffold.api.entity.UserVo;
 import com.inclination.scaffold.api.entity.UserFindByPageVo;
 import com.inclination.scaffold.application.service.UserService;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.UserDomain;
-import com.inclination.scaffold.infrastraction.repository.po.User;
-import com.inclination.scaffold.infrastraction.repository.po.UserExample;
 import com.inclination.scaffold.utils.ModelMapUtils;
 import com.inclination.scaffold.utils.ViewData;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * @Description: tianjingle业务实现
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService{
 	 * @param mapper
 	 */
 	@Autowired
-	private UserMapper userMapping;
+	private UserPoMapper userMapping;
 	/**
 	 * 业务逻辑
 	 */
@@ -43,28 +43,33 @@ public class UserServiceImpl implements UserService{
 	@Transactional
 	public void UserAdd(UserVo entity) throws TException {
 		// TODO Auto-generated method stub
-		User po=ModelMapUtils.map(entity, User.class);
+		UserPo po=ModelMapUtils.map(entity, UserPo.class);
 		domain.add(po,userMapping);
 	}
 	@Override
 	@Transactional
 	public void UserModify(UserVo entity) throws TException {
 		// TODO Auto-generated method stub
-		User po=ModelMapUtils.map(entity, User.class);
+		UserPo po=ModelMapUtils.map(entity, UserPo.class);
 		domain.modify(po,userMapping);
 	}
+	@Override
 	@Transactional
 	public void UserDelete(String id) throws TException {
 		// TODO Auto-generated method stub
 		domain.delete(id,userMapping);
 	}
+	@Override
 	public ViewData findByPage(UserFindByPageVo request) {
 		// TODO Auto-generated method stub
-		User po=ModelMapUtils.map(request, User.class);
+		UserPo po=ModelMapUtils.map(request, UserPo.class);
 		Page hpage=PageHelper.startPage((int)request.getPage(), request.getLimit());
-		UserExample example=new UserExample();
-		UserExample.Criteria criteria=example.createCriteria();
-		List<User> list=userMapping.selectByExample(example);
+		Example example=new Example(UserPo.class);
+		Example.Criteria criteria=example.createCriteria();
+		criteria.orLike("loginId", po.getLoginId())
+				.orLike("userName", po.getUserName())
+				.orLike("userEmil", po.getUserEmil());
+		List<UserPo> list=userMapping.selectByExample(example);
 		 ViewData response = new ViewData();
 		response.setData(list);
 		response.PageBaseQueryEntity(request.getPage(),request.getLimit(), 
@@ -73,14 +78,9 @@ public class UserServiceImpl implements UserService{
 	}
 	@Override
 	public ViewData findAll(UserVo entity) {
-		//TODO Auto-generated method stub
-		User po=ModelMapUtils.map(entity, User.class);
-		UserExample example=new UserExample();
-		UserExample.Criteria criteria=example.createCriteria();
-		List<User> list=userMapping.selectByExample(example);
+		List<UserPo> list=userMapping.selectAll();
 		ViewData response = new ViewData();
 		response.setData(list);
 		return response;
-		
 	}
 }

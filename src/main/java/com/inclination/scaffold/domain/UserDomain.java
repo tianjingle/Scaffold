@@ -1,11 +1,11 @@
 package com.inclination.scaffold.domain;
 
-import com.inclination.scaffold.infrastraction.repository.UserMapper;
-import com.inclination.scaffold.infrastraction.repository.po.User;
-import com.inclination.scaffold.infrastraction.repository.po.UserExample;
+import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
 
 import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.constant.exception.TException;
+import com.inclination.scaffold.infrastraction.repository.po.UserPo;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * @Description: tianjingle业务实现
@@ -16,14 +16,14 @@ import com.inclination.scaffold.constant.exception.TException;
  
 public class UserDomain {
 
-    public boolean countByEqualName(User po,UserMapper userMapping){
-        UserExample example=new UserExample();
-		UserExample.Criteria criteria=example.createCriteria();
-		criteria.andIdEqualTo(po.getId());
-		return userMapping.countByExample(example)>0?true:false;
+    public boolean countByEqualName(UserPo po, UserPoMapper userMapping){
+		Example example=new Example(UserPo.class);
+		Example.Criteria criteria=example.createCriteria();
+		criteria.andEqualTo("Id",po.getId());
+		return userMapping.selectCountByExample(example)>0?true:false;
     }
 
-	public void add(User po,UserMapper userMapping) throws TException {
+	public void add(UserPo po,UserPoMapper userMapping) throws TException {
 		// TODO Auto-generated method stub
 		if(countByEqualName(po,userMapping)){
 			throw new TException(TErrorCode.ERROR_EXISIT_MENU_CODE,TErrorCode.ERROR_EXISIT_MENU_MSG);
@@ -32,7 +32,7 @@ public class UserDomain {
 		}
 	}
 
-	public void modify(User po,UserMapper userMapping) throws TException {
+	public void modify(UserPo po,UserPoMapper userMapping) throws TException {
 		// TODO Auto-generated method stub
 		if(countByEqualName(po,userMapping)){
 			throw new TException(TErrorCode.ERROR_EXISIT_MENU_CODE,TErrorCode.ERROR_EXISIT_MENU_MSG);
@@ -41,7 +41,7 @@ public class UserDomain {
 		}
 	}
 
-	public void delete(String id,UserMapper userMapping) throws TException {
+	public void delete(String id,UserPoMapper userMapping) throws TException {
 		// TODO Auto-generated method stub
 		if(userMapping.deleteByPrimaryKey(Integer.valueOf(id))!=1){
 			throw new TException(TErrorCode.ERROR_DELETE_MENU_CODE,TErrorCode.ERROR_DELETE_MENU_MSG);

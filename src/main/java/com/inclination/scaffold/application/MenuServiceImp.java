@@ -2,6 +2,8 @@ package com.inclination.scaffold.application;
 
 import java.util.List;
 
+import com.inclination.scaffold.infrastraction.repository.*;
+import com.inclination.scaffold.infrastraction.repository.po.MenuPo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +17,6 @@ import com.inclination.scaffold.application.menu.MenuDto;
 import com.inclination.scaffold.application.menu.MenuService;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.DMenu;
-import com.inclination.scaffold.infrastraction.repository.MenuResourceMapper;
-import com.inclination.scaffold.infrastraction.repository.ResourceMapper;
-import com.inclination.scaffold.infrastraction.repository.RoleMenuMapper;
-import com.inclination.scaffold.infrastraction.repository.TmenuMapper;
-import com.inclination.scaffold.infrastraction.repository.po.Tmenu;
 import com.inclination.scaffold.utils.ModelMapUtils;
 import com.inclination.scaffold.utils.ViewData;
 
@@ -27,25 +24,25 @@ import com.inclination.scaffold.utils.ViewData;
 public class MenuServiceImp implements MenuService{
 
 	@Autowired
-	private TmenuMapper menuMapping;
+	private MenuPoMapper menuMapping;
 	
 	/**
 	 * 注入数据库服务
 	 */
 	@Autowired
-	private RoleMenuMapper roleMenuMapper;
+	private RoleMenuPoMapper roleMenuMapper;
 	
 	/**
 	 * 注入资源的数据库服务
 	 */
 	@Autowired
-	private ResourceMapper resourceMapper;
+	private ResourcePoMapper resourceMapper;
 	
 	/**
 	 * 注入数据库服务
 	 */
 	@Autowired
-	private MenuResourceMapper menuResourceMapper;
+	private MenuResourcePoMapper menuResourceMapper;
 	
 	@Override
 	@Transactional
@@ -68,9 +65,9 @@ public class MenuServiceImp implements MenuService{
 	@Override
 	public MenuManagerQryResponse findMenu(MenuQryByPage request) {
 		// TODO Auto-generated method stub
-		Tmenu po=ModelMapUtils.map(request, Tmenu.class);
+		MenuPo po=ModelMapUtils.map(request, MenuPo.class);
 		Page hpage=PageHelper.startPage((int)request.getPage(), request.getLimit());
-		List<Tmenu> list=menuMapping.selectBySelective(po);
+		List<MenuPo> list=menuMapping.selectBySelective(po);
 		MenuManagerQryResponse response = new MenuManagerQryResponse();
 		response.setList(ModelMapUtils.map(list, MenuManagerResponse.class));
 		response.PageBaseQueryEntity(request.getPage(),request.getLimit(), 

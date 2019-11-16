@@ -18,7 +18,7 @@
     </commentGenerator>
 
     <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                    connectionURL="jdbc:mysql://localhost:3306/scaffold?useUnicode=true&amp;nullCatalogMeansCurrent=true;characterEncoding=utf-8&amp;useSSL=false"
+                    connectionURL="jdbc:mysql://localhost:3307/scaffold?useUnicode=true&amp;nullCatalogMeansCurrent=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=UTC"
                     userId="root"
                     password="tianjingle">
                  <property name="nullCatalogMeansCurrent" value="true" />
@@ -30,7 +30,6 @@
     <javaTypeResolver>
         <property name="forceBigDecimals" value="true"/>
     </javaTypeResolver>
-
 
     <!-- targetProject:生成PO类的位置 -->
     <javaModelGenerator targetPackage="com.inclination.scaffold.infrastraction.repository.po"
@@ -55,41 +54,65 @@
         <property name="enableSubPackages" value="true"/>
     </javaClientGenerator>
 
+    <table schema="scaffold" tableName="menu_resource" domainObjectName="MenuResourcePo"
+            enableCountByExample="false"
+            enableDeleteByExample="false"
+            enableSelectByExample="false"
+            enableUpdateByExample="false">
+    </table>
+    <table schema="scaffold" tableName="role" domainObjectName="RolePo"
+           enableCountByExample="false"
+           enableDeleteByExample="false"
+           enableSelectByExample="false"
+           enableUpdateByExample="false">
+    </table>
+    <table schema="scaffold" tableName="role_menu" domainObjectName="RoleMenuPo"
+           enableCountByExample="false"
+           enableDeleteByExample="false"
+           enableSelectByExample="false"
+           enableUpdateByExample="false">
+    </table>
+     <table schema="scaffold" tableName="resource" domainObjectName="ResourcePo"
+            enableCountByExample="false"
+            enableDeleteByExample="false"
+            enableSelectByExample="false"
+            enableUpdateByExample="false">
+     </table>
+    <table schema="scaffold" tableName="menu" domainObjectName="MenuPo"
+           enableCountByExample="false"
+           enableDeleteByExample="false"
+           enableSelectByExample="false"
+           enableUpdateByExample="false">
+    </table>
+    <table schema="scaffold" tableName="user" domainObjectName="UserPo"
+           enableCountByExample="false"
+           enableDeleteByExample="false"
+           enableSelectByExample="false"
+           enableUpdateByExample="false">
+    </table>
+    <table schema="scaffold" tableName="project" domainObjectName="ProjectPo"
+           enableCountByExample="false"
+           enableDeleteByExample="false"
+           enableSelectByExample="false"
+           enableUpdateByExample="false">
+    </table>
+    <table schema="scaffold" tableName="tool_project" domainObjectName="ToolProjectPo"
+           enableCountByExample="false"
+           enableDeleteByExample="false"
+           enableSelectByExample="false"
+           enableUpdateByExample="false">
+    </table>
 
-    <!--  <table schema="tianjingle" tableName="resource" domainObjectName="Resource"/>
-            <table schema="tianjingle" tableName="tmenu" domainObjectName="Tmenu"/>
-            <table schema="tianjingle" tableName="menu_resource" domainObjectName="MenuResource"/>
-            <table schema="tianjingle" tableName="role" domainObjectName="Role"/>
-            <table schema="tianjingle" tableName="role_menu" domainObjectName="RoleMenu"/>  -->
-    <table schema="tianjingle" tableName="testcnki" domainObjectName="TestCnki"/>
-    <!--        <table schema="okcs_discuss_java" tableName="user" domainObjectName="User"-->
-    <!--               enableCountByExample="false"-->
-    <!--               enableDeleteByExample="false"-->
-    <!--               enableSelectByExample="false"-->
-    <!--               enableUpdateByExample="false">-->
-    <!--        </table>-->
-    <!--     <table schema="okcs_discuss_java" tableName="discuss_user_literature" domainObjectName="UserLiterature"
-                enableCountByExample="false"
-                enableDeleteByExample="false"
-                enableSelectByExample="false"
-                enableUpdateByExample="false">
-         </table>
-         <table schema="okcs_discuss_java" tableName="discuss_user_literature_tag" domainObjectName="UserLiteratureTag"
-                enableCountByExample="false"
-                enableDeleteByExample="false"
-                enableSelectByExample="false"
-                enableUpdateByExample="false">
-         </table>-->
-    <!--        <table schema="okcs_discuss_java" tableName="discuss%">-->
-    <!--               enableCountByExample="false"-->
-    <!--               enableUpdateByExample="false"-->
-    <!--               enableDeleteByExample="false"-->
-    <!--               enableSelectByExample="false"-->
-    <!--               selectByExampleQueryId="false">-->
-    <!--            <property name="enableSubPackages" value="true"/>-->
-    <!--去除前缀discuss_-->
-    <!--            <domainObjectRenamingRule searchString="^Discuss" replaceString="" />-->
-    <!--        </table>-->
+
+<!--            <table schema="scaffold" tableName="%">-->
+<!--                   enableCountByExample="false"-->
+<!--                   enableUpdateByExample="false"-->
+<!--                   enableDeleteByExample="false"-->
+<!--                   enableSelectByExample="false"-->
+<!--                   selectByExampleQueryId="false">-->
+<!--                <property name="enableSubPackages" value="true"/>-->
+<!--                <domainObjectRenamingRule searchString="^Discuss" replaceString="" />-->
+<!--            </table>-->
 
 </context>
 </generatorConfiguration>

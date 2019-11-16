@@ -61,11 +61,10 @@
 		</dependency>
 
 		<!--短信服务-->
-<!--		<dependency>-->
-<!--			<groupId>com.github.jackieonway.sms</groupId>-->
-<!--			<artifactId>sms-spring-boot-starter</artifactId>-->
-<!--			<version>0.0.1-SNAPSHOT</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>com.github.jackieonway.sms</groupId>
+			<artifactId>sms-spring-boot-starter</artifactId>
+		</dependency>
 
 		<!--时间处理-->
 		<!-- https://mvnrepository.com/artifact/joda-time/joda-time -->

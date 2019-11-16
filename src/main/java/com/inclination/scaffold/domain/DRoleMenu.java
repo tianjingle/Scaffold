@@ -8,26 +8,32 @@ import com.inclination.scaffold.api.response.rolemenu.RoleMenuManagerAllResponse
 import com.inclination.scaffold.api.response.rolemenu.RoleMenuManagerResponse;
 import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.constant.exception.TException;
-import com.inclination.scaffold.infrastraction.repository.RoleMenuMapper;
-import com.inclination.scaffold.infrastraction.repository.TmenuMapper;
-import com.inclination.scaffold.infrastraction.repository.po.RoleMenu;
-import com.inclination.scaffold.infrastraction.repository.po.RoleMenuExample;
-import com.inclination.scaffold.infrastraction.repository.po.Tmenu;
+import com.inclination.scaffold.infrastraction.repository.MenuPoMapper;
+import com.inclination.scaffold.infrastraction.repository.RoleMenuPoMapper;
+import com.inclination.scaffold.infrastraction.repository.po.*;
 import com.inclination.scaffold.utils.ModelMapUtils;
+import tk.mybatis.mapper.entity.Example;
 
 public class DRoleMenu {
 	
 	private Integer id;
 
-	private Integer roid;
+	private Integer roleId;
 
-	private Integer tmid;
+	private Integer menuId;
 
 	private String flag;
-	
-	
-	public String getFlag() {
-		return flag;
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
+	}
+
+	public void setMenuId(Integer menuId) {
+		this.menuId = menuId;
 	}
 
 	public void setFlag(String flag) {
@@ -38,34 +44,31 @@ public class DRoleMenu {
 		return id;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public Integer getRoleId() {
+		return roleId;
 	}
 
-	public Integer getRoid() {
-		return roid;
+	public Integer getMenuId() {
+		return menuId;
 	}
 
-	public void setRoid(Integer roid) {
-		this.roid = roid;
+	public String getFlag() {
+		return flag;
 	}
 
-	public Integer getTmid() {
-		return tmid;
-	}
-
-	public void setTmid(Integer tmid) {
-		this.tmid = tmid;
-	}
 	/**
 	 * 角色资源的插入
 	 * @param roleMenuMapper
 	 * @throws TException
 	 */
-	public void addRoleMenu(RoleMenuMapper roleMenuMapper) throws TException {
+	public void addRoleMenu(RoleMenuPoMapper roleMenuMapper) throws TException {
 		// TODO Auto-generated method stub
-		RoleMenu po=ModelMapUtils.map(this, RoleMenu.class);
-		if(roleMenuMapper.countbyCount(po)>0){
+		RoleMenuPo po=ModelMapUtils.map(this, RoleMenuPo.class);
+		Example example=new Example(RoleMenuPo.class);
+		Example.Criteria criteria=example.createCriteria()
+				.andEqualTo("roleId",po.getRoleId())
+				.andEqualTo("menuId",po.getMenuId());
+		if(roleMenuMapper.selectCountByExample(po)>0){
 			throw new TException(TErrorCode.ERROR_EXISIT_ROLEMENU_CODE,TErrorCode.ERROR_EXISIT_ROLEMENU_MSG);
 		}else if(roleMenuMapper.insert(po)!=1){
 		    throw new TException(TErrorCode.ERROR_INSERT_ROLEMENU_CODE,TErrorCode.ERROR_INSERT_ROLEMENU_MSG);
@@ -76,13 +79,13 @@ public class DRoleMenu {
 	 * @param roleMenuMapper
 	 * @throws TException
 	 */
-	public void modifyRoleMenu(RoleMenuMapper roleMenuMapper) throws TException {
+	public void modifyRoleMenu(RoleMenuPoMapper roleMenuMapper) throws TException {
 		// TODO Auto-generated method stub
-		RoleMenu po=ModelMapUtils.map(this, RoleMenu.class);
-		RoleMenuExample example =new RoleMenuExample();
-		RoleMenuExample.Criteria criteria=example.createCriteria();
-		criteria.andRoidEqualTo(this.roid);
-		criteria.andTmidEqualTo(this.tmid);
+		RoleMenuPo po=ModelMapUtils.map(this, RoleMenuPo.class);
+		Example example =new Example(RoleMenuPo.class);
+		Example.Criteria criteria=example.createCriteria();
+		criteria.andEqualTo("roleId",this.getRoleId());
+		criteria.andEqualTo("menuId",this.getMenuId());
 		roleMenuMapper.deleteByExample(example);
 		if("Y".equals(this.flag)){
 			roleMenuMapper.insert(po);
@@ -94,23 +97,23 @@ public class DRoleMenu {
 		}*/
 	}
 
-	public void deleteRoleMenu(RoleMenuMapper roleMenuMapper) throws TException {
+	public void deleteRoleMenu(RoleMenuPoMapper roleMenuMapper) throws TException {
 		// TODO Auto-generated method stub
 		if(roleMenuMapper.deleteByPrimaryKey(this.id)!=1){
 			throw new TException(TErrorCode.ERROR_DELETE_ROLEMENU_CODE,TErrorCode.ERROR_DELETE_ROLEMENU_MSG);
 		}
 	}
 
-	public RoleMenuManagerAllResponse findMyMenuWithFlag(TmenuMapper menuMapping, RoleMenuMapper roleMenuMapper) {
+	public RoleMenuManagerAllResponse findMyMenuWithFlag(MenuPoMapper menuMapping, RoleMenuPoMapper roleMenuMapper) {
 		// TODO Auto-generated method stub
-		List<Tmenu> menulist=menuMapping.selectBySelective(new Tmenu());
+		List<MenuPo> menulist=menuMapping.selectAll();
 		Map<String,Object> map=new HashMap<>();
-		RoleMenuExample example=new RoleMenuExample();
-		RoleMenuExample.Criteria criteria=example.createCriteria();
-		criteria.andRoidEqualTo(this.roid);
-		List<RoleMenu> roleMenuList=roleMenuMapper.selectByExample(example);
+		Example example=new Example(RoleMenuPo.class);
+		Example.Criteria criteria=example.createCriteria();
+		criteria.andEqualTo("roleId",this.getRoleId());
+		List<RoleMenuPo> roleMenuList=roleMenuMapper.selectByExample(example);
 		for(int i=0;i<roleMenuList.size();i++){
-			map.put(String.valueOf(roleMenuList.get(i).getTmid()), roleMenuList.get(i));
+			map.put(String.valueOf(roleMenuList.get(i).getMenuId()), roleMenuList.get(i));
 		}
 		for(int i=0;i<menulist.size();i++){
 			if(map.get(menulist.get(i).getId())!=null){

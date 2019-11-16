@@ -2,53 +2,22 @@ package com.inclination.scaffold.api.response.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 @ApiModel
+@Data
 public class UserManageLoginResponse {
 
 	@ApiModelProperty(name="id",value="用户seq")
 	private int id;
 	
 	@ApiModelProperty(name="username",value="用户名称")
-	private String username;
+	private String userName;
 	
 	@ApiModelProperty(name="loginid",value="手机号")
-	private String loginid;
+	private String loginId;
 	
 	@ApiModelProperty(name="useremil",value="邮箱")
-	private String useremil;
+	private String userEmil;
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getLoginid() {
-		return loginid;
-	}
-
-	public void setLoginid(String loginid) {
-		this.loginid = loginid;
-	}
-
-	public String getUseremil() {
-		return useremil;
-	}
-
-	public void setUseremil(String useremil) {
-		this.useremil = useremil;
-	}
-	
-	
 }

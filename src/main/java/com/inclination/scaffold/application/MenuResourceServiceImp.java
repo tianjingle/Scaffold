@@ -1,5 +1,8 @@
 package com.inclination.scaffold.application;
 
+import com.inclination.scaffold.api.response.menuresource.MenuResourceResponse;
+import com.inclination.scaffold.infrastraction.repository.MenuResourcePoMapper;
+import com.inclination.scaffold.infrastraction.repository.ResourcePoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,8 +13,6 @@ import com.inclination.scaffold.application.menuresource.MenuResourceDto;
 import com.inclination.scaffold.application.menuresource.MenuResourceService;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.DMenuResource;
-import com.inclination.scaffold.infrastraction.repository.MenuResourceMapper;
-import com.inclination.scaffold.infrastraction.repository.ResourceMapper;
 import com.inclination.scaffold.utils.ModelMapUtils;
 
 @Service
@@ -21,13 +22,13 @@ public class MenuResourceServiceImp implements MenuResourceService {
 	 * 注入数据库服务
 	 */
 	@Autowired
-	private MenuResourceMapper menuResourceMapper;
+	private MenuResourcePoMapper menuResourceMapper;
 
 	/**
 	 * 注入资源的resource
 	 */
 	@Autowired
-	private ResourceMapper resourceMapper;
+	private ResourcePoMapper resourceMapper;
 	
 	@Override
 	@Transactional
@@ -55,7 +56,7 @@ public class MenuResourceServiceImp implements MenuResourceService {
 	public MenuResourceQryResponse menuResourceFinds() {
 		// TODO Auto-generated method stub
 		MenuResourceQryResponse response=new MenuResourceQryResponse();
-		response.setList(menuResourceMapper.findAll());
+		response.setList(ModelMapUtils.map(menuResourceMapper.selectAll(), MenuResourceResponse.class));
 		return response;
 	}
 
@@ -64,7 +65,7 @@ public class MenuResourceServiceImp implements MenuResourceService {
 		// TODO Auto-generated method stub
 		
 		DMenuResource domain=new DMenuResource();
-		domain.setMenusid(menuid);
+		domain.setMenuId(menuid);
 		return domain.findMyResourceWithFlag(resourceMapper,menuResourceMapper);
 
 	}

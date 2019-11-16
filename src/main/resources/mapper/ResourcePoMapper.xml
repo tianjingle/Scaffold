@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inclination.scaffold.infrastraction.repository.ResourcePoMapper">
+  <resultMap id="BaseResultMap" type="com.inclination.scaffold.infrastraction.repository.po.ResourcePo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="resource_name" jdbcType="VARCHAR" property="resourceName" />
+    <result column="resource_url" jdbcType="VARCHAR" property="resourceUrl" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="flag" jdbcType="VARCHAR" property="flag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, resource_name, resource_url, content, flag
+  </sql>
+
+  <select id="selectBySelective" parameterType="com.inclination.scaffold.infrastraction.repository.po.ResourcePo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from resource
+    where 1=1
+    <if test="resourceName!=null">and resource_name like concat('%',#{resourceName,jdbcType=VARCHAR},'%')</if>
+    <if test="resourceUrl!=null">and resource_url like concat('%',#{resourceUrl,jdbcType=VARCHAR},'%')</if>
+    <if test="content!=null">and content like concat('%',#{content,jdbcType=VARCHAR},'%')</if>
+    <if test="flag!=null">and flag like concat('%',#{flag,jdbcType=VARCHAR},'%')</if>
+  </select>
+</mapper>

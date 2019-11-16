@@ -6,6 +6,10 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.inclination.scaffold.infrastraction.repository.ToolProjectPoMapper;
+import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
+import com.inclination.scaffold.infrastraction.repository.po.ToolProjectPo;
+import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +23,9 @@ import com.inclination.scaffold.application.users.UserDto;
 import com.inclination.scaffold.application.users.UserService;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.User;
-import com.inclination.scaffold.infrastraction.repository.ToolprojecturlMapper;
-import com.inclination.scaffold.infrastraction.repository.UserMapper;
-import com.inclination.scaffold.infrastraction.repository.po.Toolprojecturl;
-import com.inclination.scaffold.infrastraction.repository.po.ToolprojecturlExample;
-import com.inclination.scaffold.infrastraction.repository.po.UserExample;
 import com.inclination.scaffold.utils.ModelMapUtils;
+import tk.mybatis.mapper.entity.Example;
+
 /**
  * 
  * @author tianjingle
@@ -56,13 +57,15 @@ public class UserServiceImp implements UserService {
 	 * 数据库
 	 */
 	@Autowired
-	private UserMapper userMapping;
+	private UserPoMapper userMapping;
 	
 	/**
 	 * 创建工具软件管理的数据库服务
 	 */
 	@Autowired
-	private ToolprojecturlMapper toolprojecturlMapper;
+	private ToolProjectPoMapper toolprojecturlMapper;
+
+
 	@Override
 	@Transactional
 	public void createUser(UserDto dto) throws Exception {
@@ -77,9 +80,9 @@ public class UserServiceImp implements UserService {
 	@Override
 	public UserManagerQryResponse userFind(@Valid UserQryByPages request) {
 		// TODO Auto-generated method stub
-		User po=ModelMapUtils.map(request,User.class);
+		UserPo po=ModelMapUtils.map(request,UserPo.class);
 		Page hpage=PageHelper.startPage((int)request.getPage(), request.getLimit());
-		List<com.inclination.scaffold.infrastraction.repository.po.User> list=userMapping.selectBySelective(po);
+		List<com.inclination.scaffold.infrastraction.repository.po.UserPo> list=userMapping.selectBySelective(po);
 		UserManagerQryResponse response = new UserManagerQryResponse();
 		response.setList(ModelMapUtils.map(list, UserManageResponse.class));
 		response.PageBaseQueryEntity(request.getPage(),request.getLimit(), 
@@ -106,31 +109,31 @@ public class UserServiceImp implements UserService {
 	 * @throws Exception
 	 */
 	public void createUserEnvironment(UserDto dto) throws Exception{
-		String username=dto.getUsername();
-		String password=dto.getUserpassword();
-		String email=dto.getUseremil();
+		String username=dto.getUserName();
+		String password=dto.getUserPassword();
+		String email=dto.getUserEmil();
 		
 		//查数据库获取各种系统的地址信息
-		ToolprojecturlExample example = new ToolprojecturlExample();
-		ToolprojecturlExample.Criteria criteria=example.createCriteria();
-		criteria.andIdIsNotNull();
-		List<Toolprojecturl> list=toolprojecturlMapper.selectByExample(example);
+		Example example = new Example(ToolProjectPo.class);
+		Example.Criteria criteria=example.createCriteria();
+		criteria.andIsNotNull("id");
+		List<ToolProjectPo> list=toolprojecturlMapper.selectByExample(example);
 		Map<String,Object> map=new HashMap<String,Object>();
-		for (Toolprojecturl toolprojecturl : list) {
-			map.put(toolprojecturl.getUrlname(), toolprojecturl);
+		for (ToolProjectPo toolprojecturl : list) {
+			map.put(toolprojecturl.getName(), toolprojecturl);
 		}
-		Toolprojecturl git=(Toolprojecturl)map.get("gitUrl");
+		ToolProjectPo git=(ToolProjectPo)map.get("gitUrl");
 		String gitUrl=git.getUrl();
-		Toolprojecturl jenkins=(Toolprojecturl)map.get("jenkinsUrl");
+		ToolProjectPo jenkins=(ToolProjectPo)map.get("jenkinsUrl");
 		String jenkinsUrl=jenkins.getUrl()+"securityRealm/createAccount";
 		System.out.println(jenkinsUrl);
-		Toolprojecturl apollo=(Toolprojecturl)map.get("apolloUrl");
+		ToolProjectPo apollo=(ToolProjectPo)map.get("apolloUrl");
 		String apolloUrl=apollo.getUrl();
 		/**
 		 * apollo 管理员的账户和密码
 		 */
-		String apolloUsername=apollo.getName();
-		String apollopassword=apollo.getPassword();
+		String apolloUsername=apollo.getUserName();
+		String apollopassword=apollo.getUserPassword();
 		
 		//create git`s user
 		boolean gitResult=repositoryCreate.createUser(username, password, email, gitUrl);
@@ -189,13 +192,13 @@ public class UserServiceImp implements UserService {
 	@Override
 	public UserDto usersLogin(UserDto dto) {
 		// TODO Auto-generated method stub
-		com.inclination.scaffold.infrastraction.repository.po.User po=
-				ModelMapUtils.map(dto,com.inclination.scaffold.infrastraction.repository.po.User.class);
-		UserExample example=new UserExample();
-		UserExample.Criteria criteria=example.createCriteria();
-		criteria.andUsernameEqualTo(po.getUsername());
-		criteria.andUserpasswordEqualTo(po.getUserpassword());
-		List<com.inclination.scaffold.infrastraction.repository.po.User> list=
+		com.inclination.scaffold.infrastraction.repository.po.UserPo po=
+				ModelMapUtils.map(dto,com.inclination.scaffold.infrastraction.repository.po.UserPo.class);
+		Example example=new Example(UserPo.class);
+		Example.Criteria criteria=example.createCriteria();
+		criteria.andEqualTo("userName",po.getUserName());
+		criteria.andEqualTo("userPassword",po.getUserPassword());
+		List<com.inclination.scaffold.infrastraction.repository.po.UserPo> list=
 				userMapping.selectByExample(example);
 		if(null!=list&&list.size()>0){
 			return ModelMapUtils.map(list.get(0), UserDto.class);

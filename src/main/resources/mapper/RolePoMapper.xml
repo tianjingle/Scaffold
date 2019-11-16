@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inclination.scaffold.infrastraction.repository.RolePoMapper">
+  <resultMap id="BaseResultMap" type="com.inclination.scaffold.infrastraction.repository.po.RolePo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="menu_id" jdbcType="VARCHAR" property="menuId" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="flag" jdbcType="VARCHAR" property="flag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, role_name, menu_id, content, flag
+  </sql>
+
+  <select id="selectBySelective" parameterType="com.inclination.scaffold.infrastraction.repository.po.RolePo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from role
+    where 1=1
+    <if test="roleName!=null">and rolename like concat('%',#{roleName,jdbcType=VARCHAR},'%')</if>
+    <if test="menuId!=null">and menuid like concat('%',#{menuId,jdbcType=VARCHAR},'%')</if>
+    <if test="content!=null">and content like concat('%',#{content,jdbcType=VARCHAR},'%')</if>
+    <if test="flag!=null">and flag like concat('%',#{flag,jdbcType=VARCHAR},'%')</if>
+  </select>
+</mapper>

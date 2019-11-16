@@ -2,6 +2,8 @@ package com.inclination.scaffold.application;
 
 import java.util.List;
 
+import com.inclination.scaffold.infrastraction.repository.ResourcePoMapper;
+import com.inclination.scaffold.infrastraction.repository.po.ResourcePo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +17,6 @@ import com.inclination.scaffold.application.resource.ResourceDto;
 import com.inclination.scaffold.application.resource.ResourceService;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.DResource;
-import com.inclination.scaffold.infrastraction.repository.ResourceMapper;
-import com.inclination.scaffold.infrastraction.repository.po.Resource;
 import com.inclination.scaffold.utils.ModelMapUtils;
 
 @Service
@@ -26,7 +26,7 @@ public class ResourceServiceImp implements ResourceService{
 	 * 注入资源的数据库服务
 	 */
 	@Autowired
-	private ResourceMapper resourceMapper;
+	private ResourcePoMapper resourceMapper;
 	
 	@Override
 	@Transactional
@@ -52,9 +52,9 @@ public class ResourceServiceImp implements ResourceService{
 	@Override
 	public ResourceManagerQryResponse resourceQryByPages(ResourceQryByPage request) {
 		// TODO Auto-generated method stub
-		Resource po=ModelMapUtils.map(request, Resource.class);
+		ResourcePo po=ModelMapUtils.map(request, ResourcePo.class);
 		Page hpage=PageHelper.startPage((int)request.getPage(), request.getLimit());
-		List<Resource> list=resourceMapper.selectBySelective(po);
+		List<ResourcePo> list=resourceMapper.selectBySelective(po);
 		ResourceManagerQryResponse response = new ResourceManagerQryResponse();
 		response.setList(ModelMapUtils.map(list, ResourceManagerResponse.class));
 		response.PageBaseQueryEntity(request.getPage(),request.getLimit(), 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inclination.scaffold.infrastraction.repository.UserPoMapper">
+  <resultMap id="BaseResultMap" type="com.inclination.scaffold.infrastraction.repository.po.UserPo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="login_id" jdbcType="VARCHAR" property="loginId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
+    <result column="user_emil" jdbcType="VARCHAR" property="userEmil" />
+    <result column="ro_id" jdbcType="INTEGER" property="roId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, login_id, user_name, user_password, user_emil, ro_id
+  </sql>
+  <select id="findUserByNamePass" parameterType="com.inclination.scaffold.infrastraction.repository.po.UserPo" resultType="java.lang.Integer">
+	select count(*) from user
+	where user_name=#{userName,jdbcType=VARCHAR} and user_password = #{userPassword,jdbcType=VARCHAR}
+	</select>
+
+  <select id="selectBySelective" parameterType="com.inclination.scaffold.infrastraction.repository.po.UserPo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where 1=1
+    <if test="loginId!=null">and login_id like concat('%',#{loginId,jdbcType=VARCHAR},'%')</if>
+    <if test="userPassword!=null">and user_password like concat('%',#{userPassword,jdbcType=VARCHAR},'%')</if>
+    <if test="userEmil!=null">and user_emil like concat('%',#{userEmil,jdbcType=VARCHAR},'%')</if>
+    <if test="roId!=null">and ro_id like concat('%',#{roId,jdbcType=INTEGER},'%')</if>
+  </select>
+</mapper>

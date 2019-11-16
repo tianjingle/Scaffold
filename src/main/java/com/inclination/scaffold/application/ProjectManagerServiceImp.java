@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.inclination.scaffold.infrastraction.repository.ProjectPoMapper;
+import com.inclination.scaffold.infrastraction.repository.po.ProjectPo;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.eclipse.jgit.api.Git;
@@ -31,11 +33,6 @@ import com.inclination.scaffold.application.project.ProjectInformationDto;
 import com.inclination.scaffold.application.project.ProjectManagerGitCreateDto;
 import com.inclination.scaffold.application.project.ProjectManagerService;
 import com.inclination.scaffold.application.users.UserDto;
-import com.inclination.scaffold.infrastraction.repository.ProjectMapper;
-import com.inclination.scaffold.infrastraction.repository.ToolprojecturlMapper;
-import com.inclination.scaffold.infrastraction.repository.po.Project;
-import com.inclination.scaffold.infrastraction.repository.po.Toolprojecturl;
-import com.inclination.scaffold.infrastraction.repository.po.ToolprojecturlExample;
 import com.inclination.scaffold.utils.InputStreamRunnable;
 import com.inclination.scaffold.utils.ModelMapUtils;
 
@@ -55,7 +52,7 @@ public class ProjectManagerServiceImp implements ProjectManagerService{
 	 * 项目管理的服务
 	 */
 	@Autowired
-	private ProjectMapper projectMpper;
+	private ProjectPoMapper projectMpper;
 	/**
 	 * 当用户登录成功之后，点击创建工程，并填写好项目名称的时候，点击创建创建仓库即运行此段代码
 	 * 此处的username、password为管理员分配给用户的账号
@@ -64,9 +61,9 @@ public class ProjectManagerServiceImp implements ProjectManagerService{
 	@Override
 	public void createGitRepository(ProjectManagerGitCreateDto map, UserDto dto) {
 		// TODO Auto-generated method stub
-		String orgModel=dto.getUsername()+"-org";
-		String username=dto.getUsername();
-		String password=dto.getUserpassword();
+		String orgModel=dto.getUserName()+"-org";
+		String username=dto.getUserName();
+		String password=dto.getUserPassword();
 		String artifactId=map.getProjectName();
 		/**
 		 * gitUrl 为git的地址 这里从前端传递过来
@@ -110,10 +107,10 @@ public class ProjectManagerServiceImp implements ProjectManagerService{
 	
 	public void crateApolloProject(ProjectInformationDto projectDto, UserDto dto){
 		
-		String username=dto.getUsername();
-		String password=dto.getUserpassword();
-		String apollourl=projectDto.getApollourl();
-		String artifactId=projectDto.getArtifactid();
+		String username=dto.getUserName();
+		String password=dto.getUserPassword();
+		String apollourl=projectDto.getApolloUrl();
+		String artifactId=projectDto.getArtifactId();
 		String usermsg=username+":"+password;
 		String base64usermsg=Base64.encodeBase64String(usermsg.getBytes());
 		HttpHeaders headers=new HttpHeaders();
@@ -140,17 +137,17 @@ public class ProjectManagerServiceImp implements ProjectManagerService{
 
 	public void crateGitProject(ProjectInformationDto projectDto, UserDto dto){
 		String artifactId=projectDto.getVersion();
-		String packageName=projectDto.getArtifactid();
+		String packageName=projectDto.getArtifactId();
 		String protectPath=System.getProperty("user.dir")+"/config"+artifactId;
 		String packagePath=packageName.replaceAll("\\.","/");
-		String gitUrl=projectDto.getGiturl();
+		String gitUrl=projectDto.getGitUrl();
 		//项目路径
 		File file=new File(protectPath);
 		//将代码上传到git
 		try{
 			FileUtils.deleteDirectory(file.getParentFile());
 			Git git=Git.cloneRepository()
-					.setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUsername(),dto.getUserpassword()))
+					.setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUserName(),dto.getUserPassword()))
 					.setURI(gitUrl)
 					.setDirectory(file)
 					.call();
@@ -158,10 +155,10 @@ public class ProjectManagerServiceImp implements ProjectManagerService{
 			String dateStr=format.format(new Date());
 			
 			String cmd="mvn archetype:generate"
-					+ " -DgroupId="+projectDto.getGroupid()
-					+ " -DartifactId="+projectDto.getArtifactid()
+					+ " -DgroupId="+projectDto.getGroupId()
+					+ " -DartifactId="+projectDto.getArtifactId()
 					+ " -Dversion=1.0.0-SNAPSHOT"
-					+ " -Dpackage="+projectDto.getGroupid()
+					+ " -Dpackage="+projectDto.getGroupId()
 			    	+ " -DdevIp=127.0.0.3"
 					+ " -DarchetypeGroupId=com.example"
 					+ " -DarchetypeArtifactId=demo-archetype"
@@ -175,7 +172,7 @@ public class ProjectManagerServiceImp implements ProjectManagerService{
 			
 			git.commit().setMessage("上传到仓库..").call();
 			
-			git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUsername(),dto.getUserpassword())).call();
+			git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUserName(),dto.getUserPassword())).call();
 			
 			git.close();
 			
@@ -189,16 +186,16 @@ public class ProjectManagerServiceImp implements ProjectManagerService{
 		//查数据库获取各种系统的地址信息
 
 		
-		String jenkinsUrl=projectDto.getJenkinsurl();
-		String username=dto.getUsername();
-		String password=dto.getUserpassword();
-		String jobName=projectDto.getArtifactid()+"-Center";
+		String jenkinsUrl=projectDto.getJenkinsUrl();
+		String username=dto.getUserName();
+		String password=dto.getUserPassword();
+		String jobName=projectDto.getArtifactId()+"-Center";
 		String orgModel="test";
 		
 		
 		RequestStatus result=null;
 		for (String env : envs) {
-			result=jenkinsService.createJob(jenkinsUrl,dto.getUsername(),dto.getUserpassword(),jobName,gitUrl,env);
+			result=jenkinsService.createJob(jenkinsUrl,dto.getUserName(),dto.getUserPassword(),jobName,gitUrl,env);
 			if(!result.value()){
 				break;
 			}
@@ -206,7 +203,7 @@ public class ProjectManagerServiceImp implements ProjectManagerService{
 		}
 		createInvoke(username,password,jenkinsUrl,gitUrl,orgModel,jobName,"dev");
 		if(result.value()){
-			projectMpper.insert(ModelMapUtils.map(projectDto, Project.class));
+			projectMpper.insert(ModelMapUtils.map(projectDto, ProjectPo.class));
 			//这里保存到数据库
 		}
 		

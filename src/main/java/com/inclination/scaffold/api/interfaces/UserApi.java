@@ -72,7 +72,7 @@ public class UserApi {
 	}
 	/**
 	 * 分页查询
-	 * @param request 查询条件
+	 * @param entity 查询条件
 	 * @return 返回查询的结果
 	 */
 	@GetMapping(value="/query-page")

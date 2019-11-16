@@ -133,22 +133,22 @@ public class test {
 	public void pushGit(@Valid @RequestBody ProjectManagerCreateRequest request,HttpSession session) throws IOException{
 		UserDto dto=(UserDto) session.getAttribute("CurrentUser");
 		ProjectInformationDto projectDto=ModelMapUtils.map(request, ProjectInformationDto.class);
-		projectDto.setCreatetime(new Date());
-		projectDto.setLoginid(dto.getLoginid());
-		String artifactId=projectDto.getArtifactid();
+		projectDto.setCreateTime(new Date());
+		projectDto.setLoginId(dto.getLoginId());
+		String artifactId=projectDto.getArtifactId();
 		File f=new File(System.getProperty("user.dir"));
 		String protectPath=f.getParent()+"/config1.0";
-		String gitUrl=projectDto.getGiturl();
+		String gitUrl=projectDto.getGitUrl();
 		//项目路径
 		File file=new File(protectPath);
-		File newFile=new File(file.getParent()+"/"+projectDto.getArtifactid());
-		String home=projectDto.getGroupid();
+		File newFile=new File(file.getParent()+"/"+projectDto.getArtifactId());
+		String home=projectDto.getGroupId();
 		String packagePath=home.replaceAll("\\.",".");
 		//将代码上传到git
 		try{
 			//FileUtils.deleteDirectory(file.getParentFile());
 			Git git=Git.cloneRepository()
-					.setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUsername(),dto.getUserpassword()))
+					.setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUserName(),dto.getUserPassword()))
 					.setURI(gitUrl)
 					.setDirectory(newFile)
 					.call();
@@ -156,7 +156,7 @@ public class test {
 
 			String cmd=" mvn archetype:generate"
 					+ " -DgroupId=net.cnki.demo"
-					+ " -DartifactId="+projectDto.getArtifactid()
+					+ " -DartifactId="+projectDto.getArtifactId()
 					+ " -Dversion=1.0.0-SNAPSHOT"
 					+ " -Dpackage=net.cnki.demo"
 			    	+ " -DdevIp=127.0.0.3"
@@ -170,9 +170,9 @@ public class test {
 			System.out.println(output);
 			git.add().addFilepattern(".").call();
 			
-			git.commit().setMessage("上传到仓库..").call();
+			git.commit().setMessage("UPLOAD..").call();
 			
-			git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUsername(),dto.getUserpassword())).call();
+			git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUserName(),dto.getUserPassword())).call();
 			
 			git.close();
 			

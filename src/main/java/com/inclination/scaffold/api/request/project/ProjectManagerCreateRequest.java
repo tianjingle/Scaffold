@@ -19,23 +19,23 @@ public class ProjectManagerCreateRequest {
 
 	@ApiModelProperty(name="giturl",value="git地址")
 	@NotBlank
-	private String giturl;
+	private String gitUrl;
 
 	@ApiModelProperty(name="jenkinsurl",value="jenkins地址")
 	@NotBlank
-	private String jenkinsurl;
+	private String jenkinsUrl;
 
 	@ApiModelProperty(name="apollourl",value="apollo地址")
 	@NotBlank
-	private String apollourl;
+	private String apolloUrl;
 	
 	@ApiModelProperty(name="artifactid",value="工程名称")
 	@NotBlank
-	private String artifactid;
+	private String artifactId;
 
 	@ApiModelProperty(name="groupid",value="项目包名")
 	@NotBlank
-	private String groupid;
+	private String groupId;
 
 	@ApiModelProperty(name="version",value="项目版本号")
 	@NotBlank
@@ -43,75 +43,10 @@ public class ProjectManagerCreateRequest {
 
 	@ApiModelProperty(name="gitorg",value="git组织名称")
 	@NotBlank
-	private String gitorg;
+	private String gitOrg;
 
 	@ApiModelProperty(name="apolloorg",value="apollo的组织")
 	@NotBlank
-	private String apolloorg;
+	private String apolloOrg;
 
-	public String getGiturl() {
-		return giturl;
-	}
-
-	public void setGiturl(String giturl) {
-		this.giturl = giturl;
-	}
-
-	public String getJenkinsurl() {
-		return jenkinsurl;
-	}
-
-	public void setJenkinsurl(String jenkinsurl) {
-		this.jenkinsurl = jenkinsurl;
-	}
-
-	public String getApollourl() {
-		return apollourl;
-	}
-
-	public void setApollourl(String apollourl) {
-		this.apollourl = apollourl;
-	}
-
-	public String getArtifactid() {
-		return artifactid;
-	}
-
-	public void setArtifactid(String artifactid) {
-		this.artifactid = artifactid;
-	}
-
-	public String getGroupid() {
-		return groupid;
-	}
-
-	public void setGroupid(String groupid) {
-		this.groupid = groupid;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	public String getGitorg() {
-		return gitorg;
-	}
-
-	public void setGitorg(String gitorg) {
-		this.gitorg = gitorg;
-	}
-
-	public String getApolloorg() {
-		return apolloorg;
-	}
-
-	public void setApolloorg(String apolloorg) {
-		this.apolloorg = apolloorg;
-	}
-
-	
 }

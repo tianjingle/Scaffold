@@ -2,6 +2,8 @@ package com.inclination.scaffold.application;
 
 import java.util.List;
 
+import com.inclination.scaffold.infrastraction.repository.RolePoMapper;
+import com.inclination.scaffold.infrastraction.repository.po.RolePo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +18,6 @@ import com.inclination.scaffold.application.role.RoleDto;
 import com.inclination.scaffold.application.role.RoleService;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.DRole;
-import com.inclination.scaffold.infrastraction.repository.RoleMapper;
-import com.inclination.scaffold.infrastraction.repository.po.Role;
 import com.inclination.scaffold.utils.ModelMapUtils;
 
 @Service
@@ -27,7 +27,7 @@ public class RoleServiceImp implements RoleService {
 	 * 注入操作数据库
 	 */
 	@Autowired
-	private RoleMapper roleMapping;
+	private RolePoMapper roleMapping;
 	
 	@Override
 	@Transactional
@@ -54,9 +54,9 @@ public class RoleServiceImp implements RoleService {
 	@Override
 	public RoleManageQryResponse findAllByPage(RoleQryByPage request) {
 		// TODO Auto-generated method stub
-		Role po=ModelMapUtils.map(request, Role.class);
+		RolePo po=ModelMapUtils.map(request, RolePo.class);
 		Page hpage=PageHelper.startPage((int)request.getPage(), request.getLimit());
-		List<Role> list=roleMapping.selectBySelective(po);
+		List<RolePo> list=roleMapping.selectBySelective(po);
 		RoleManageQryResponse response = new RoleManageQryResponse();
 		response.setList(ModelMapUtils.map(list, RoleManageResponse.class));
 		response.PageBaseQueryEntity(request.getPage(),request.getLimit(), 
@@ -67,7 +67,7 @@ public class RoleServiceImp implements RoleService {
 	@Override
 	public RoleManageAllResponse findAllRole() {
 		// TODO Auto-generated method stub
-		List<Role> list=roleMapping.selectBySelective(new Role());
+		List<RolePo> list=roleMapping.selectAll();
 		RoleManageAllResponse response=new RoleManageAllResponse();
 		response.setList(ModelMapUtils.map(list, RoleManageResponse.class));
 		return response;

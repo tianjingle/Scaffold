@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inclination.scaffold.infrastraction.repository.ProjectPoMapper">
+  <resultMap id="BaseResultMap" type="com.inclination.scaffold.infrastraction.repository.po.ProjectPo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="login_id" jdbcType="VARCHAR" property="loginId" />
+    <result column="git_url" jdbcType="VARCHAR" property="gitUrl" />
+    <result column="jenkins_url" jdbcType="VARCHAR" property="jenkinsUrl" />
+    <result column="apollo_url" jdbcType="VARCHAR" property="apolloUrl" />
+    <result column="artifact_id" jdbcType="VARCHAR" property="artifactId" />
+    <result column="group_id" jdbcType="VARCHAR" property="groupId" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+    <result column="git_org" jdbcType="VARCHAR" property="gitOrg" />
+    <result column="apollo_org" jdbcType="VARCHAR" property="apolloOrg" />
+    <result column="create_time" jdbcType="DATE" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, login_id, git_url, jenkins_url, apollo_url, artifact_id, group_id, version, git_org, 
+    apollo_org, create_time
+  </sql>
+</mapper>

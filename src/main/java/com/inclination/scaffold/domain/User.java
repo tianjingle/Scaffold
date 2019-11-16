@@ -2,76 +2,84 @@ package com.inclination.scaffold.domain;
 
 import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.constant.exception.TException;
-import com.inclination.scaffold.infrastraction.repository.UserMapper;
+import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
 import com.inclination.scaffold.utils.ModelMapUtils;
 
 public class User {
     
-	private int userId;
+	private int id;
 	
-	private String loginid;
+	private String loginId;
 	
-	private String username;
+	private String userName;
 	
-	private String userpassword;
+	private String userPassword;
 	
-	private String useremil;
+	private String userEmil;
 
     private Integer roid;
-    
 
-	
-	public int getUserId() {
-		return userId;
+
+
+	public int getId() {
+		return id;
 	}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setId(int userId) {
+		this.id = userId;
 	}
 
 	public String getLoginid() {
-		return loginid;
+		return loginId;
 	}
 
 	public void setLoginid(String loginid) {
-		this.loginid = loginid;
+		this.loginId = loginid;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getLoginId() {
+		return loginId;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public String getUserName() {
+		return userName;
 	}
 
-	public String getUserpassword() {
-		return userpassword;
+	public String getUserPassword() {
+		return userPassword;
 	}
 
-	public void setUserpassword(String userpassword) {
-		this.userpassword = userpassword;
-	}
-
-	public String getUseremil() {
-		return useremil;
-	}
-
-	public void setUseremil(String useremil) {
-		this.useremil = useremil;
+	public String getUserEmil() {
+		return userEmil;
 	}
 
 	public Integer getRoid() {
 		return roid;
 	}
 
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
+	}
+
+	public void setUserEmil(String userEmil) {
+		this.userEmil = userEmil;
+	}
+
 	public void setRoid(Integer roid) {
 		this.roid = roid;
 	}
 
-	public void userCreate(UserMapper userMapper) throws TException{
-		com.inclination.scaffold.infrastraction.repository.po.User po=
-				ModelMapUtils.map(this, com.inclination.scaffold.infrastraction.repository.po.User.class);
+	public void userCreate(UserPoMapper userMapper) throws TException{
+		com.inclination.scaffold.infrastraction.repository.po.UserPo po=
+				ModelMapUtils.map(this, com.inclination.scaffold.infrastraction.repository.po.UserPo.class);
 		Integer count=(Integer) userMapper.findUserByNamePass(po);
         if(count!=0){
         	throw new TException(TErrorCode.ERROR_INSERT_USER_CODE,TErrorCode.ERROR_INSERT_USER_MSG);
@@ -80,17 +88,17 @@ public class User {
 		}
 	}
 
-	public void delete(UserMapper userMapping) throws TException {
+	public void delete(UserPoMapper userMapping) throws TException {
 		// TODO Auto-generated method stub
-		if(userMapping.deleteByPrimaryKey(this.userId)!=1){
+		if(userMapping.deleteByPrimaryKey(this.id)!=1){
 			throw new TException(TErrorCode.ERROR_DELETE_USER_CODE,TErrorCode.ERROR_DELETE_USER_MSG);
 		}
 	}
 
-	public void update(UserMapper userMapping) throws TException {
+	public void update(UserPoMapper userMapping) throws TException {
 		// TODO Auto-generated method stub
-		com.inclination.scaffold.infrastraction.repository.po.User po=
-				ModelMapUtils.map(this, com.inclination.scaffold.infrastraction.repository.po.User.class);
+		com.inclination.scaffold.infrastraction.repository.po.UserPo po=
+				ModelMapUtils.map(this, com.inclination.scaffold.infrastraction.repository.po.UserPo.class);
 		Integer count=(Integer) userMapping.findUserByNamePass(po);
         if(count!=1){
         	throw new TException(TErrorCode.ERROR_INSERT_USER_CODE,TErrorCode.ERROR_INSERT_USER_MSG);
