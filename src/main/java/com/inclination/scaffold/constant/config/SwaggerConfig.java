@@ -17,10 +17,19 @@ public class SwaggerConfig {
 
 	@Bean
 	public Docket createRestApi(){
-		return new Docket(DocumentationType.SWAGGER_2).apiInfo(myapiInfo()).select().apis(RequestHandlerSelectors.basePackage("com.inclination.scaffold")).paths(PathSelectors.any()).build();
+		return new Docket(DocumentationType.SWAGGER_2)
+				.apiInfo(myapiInfo())
+				.select()
+				.apis(RequestHandlerSelectors
+						.basePackage("com.inclination.scaffold"))
+				.paths(PathSelectors.any()).build();
 	}
 	
 	private ApiInfo myapiInfo(){
-		return new ApiInfoBuilder().title("cloud technology").description("云技术").termsOfServiceUrl("http://blog.csdn.net/forezp").version("1.0").build();
+		return new ApiInfoBuilder()
+				.title("cloud technology")
+				.description("云技术")
+				.termsOfServiceUrl("http://blog.csdn.net/forezp")
+				.version("1.0").build();
 	}
 }

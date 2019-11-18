@@ -39,19 +39,19 @@ public class UserServiceImp implements UserService {
 	 * 创建git服务
 	 */
 	@Autowired
-	private RepositoryCreateImp repositoryCreate;
+	private RepositoryCreateImpl repositoryCreate;
 	
 	/**
 	 * 创建jenkins服务
 	 */
 	@Autowired
-	private JenkinsServiceImp jenkinsService;
+	private JenkinsServiceImpl jenkinsService;
 	
 	/**
 	 * 创建apollo服务
 	 */
 	@Autowired
-	private ApolloProjectCreateImp apolloProjectCreate;
+	private ApolloProjectCreateImpl apolloProjectCreate;
 	
 	/**
 	 * 数据库

@@ -4,20 +4,25 @@ import java.util.Properties;
 import com.inclination.scaffold.utils.MyMapper;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.webservices.WebServicesAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
+//import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import com.github.pagehelper.PageHelper;
+import org.springframework.context.annotation.Configuration;
 //import com.pengzu.sms.annotion.EnabledPengzuSmsAutoConfiguration;
 
 /***
  * 很久都没有开源了,"com.pengzu.sms"
  */
 //@EnabledPengzuSmsAutoConfiguration
-@EnableApolloConfig
-@SpringBootApplication
+//@EnableApolloConfig
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, WebServicesAutoConfiguration.class, SpringApplicationAdminJmxAutoConfiguration.class})
 @MapperScan(basePackages = "com.inclination.scaffold.infrastraction.repository",markerInterface = MyMapper.class)
 public class ScaffoldApplication extends SpringBootServletInitializer {
 
