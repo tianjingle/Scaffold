@@ -54,10 +54,23 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!--日志start-->
 		<!--异步日志打印-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+		<!--异步池-->
+		<dependency>
+			<groupId>com.lmax</groupId>
+			<artifactId>disruptor</artifactId>
+			<version>3.4.2</version>
+		</dependency>
+		<!--日志end-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<!--短信服务-->
@@ -255,10 +268,11 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 				<includes>
-					<include>config/log4j2-${profileActive}.xml}</include>
-					<include>mapper/*xml</include>
-					<include>META-INF/*.xml</include>
-					<include>application.properties</include>
+					<include>config/log4j2-${profileActive}.xml</include>
+					<include>db/**</include>
+					<include>mapper/*.xml</include>
+					<include>META-INF/*.properties</include>
+					<include>application.yml</include>
 					<include>static/**</include>
 					<include>templates/**</include>
 				</includes>

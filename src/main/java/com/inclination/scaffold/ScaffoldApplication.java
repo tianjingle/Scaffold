@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
  */
 //@EnabledPengzuSmsAutoConfiguration
 //@EnableApolloConfig
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, WebServicesAutoConfiguration.class, SpringApplicationAdminJmxAutoConfiguration.class})
+@SpringBootApplication
 @MapperScan(basePackages = "com.inclination.scaffold.infrastraction.repository",markerInterface = MyMapper.class)
 public class ScaffoldApplication extends SpringBootServletInitializer {
 
