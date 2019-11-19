@@ -17,7 +17,7 @@ public class User {
 	
 	private String userEmil;
 
-    private Integer roid;
+    private Integer roId;
 
 
 
@@ -53,9 +53,6 @@ public class User {
 		return userEmil;
 	}
 
-	public Integer getRoid() {
-		return roid;
-	}
 
 	public void setLoginId(String loginId) {
 		this.loginId = loginId;
@@ -73,8 +70,12 @@ public class User {
 		this.userEmil = userEmil;
 	}
 
-	public void setRoid(Integer roid) {
-		this.roid = roid;
+	public Integer getRoId() {
+		return roId;
+	}
+
+	public void setRoId(Integer roId) {
+		this.roId = roId;
 	}
 
 	public void userCreate(UserPoMapper userMapper) throws TException{

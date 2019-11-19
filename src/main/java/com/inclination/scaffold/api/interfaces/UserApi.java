@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.inclination.scaffold.api.entity.UserVo;
 import com.inclination.scaffold.api.entity.UserFindByPageVo;
-import com.inclination.scaffold.application.service.UserService;
+import com.inclination.scaffold.application.service.UsersService;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ViewData;
 
@@ -37,11 +37,11 @@ public class UserApi {
 	 * 注入菜单服务
 	 */
 	@Autowired
-	private UserService userService;
+	private UsersService userService;
 	
 	/**
 	  *   添加
-	 * @param user
+	 * @param userVo
 	 * @return
 	 */
     @ApiOperation(value="sdfjldf-添加", notes="sdfjldf-添加")
@@ -52,7 +52,7 @@ public class UserApi {
 
 	/**
 	 * 修改
-	 * @param request user
+	 * @param userVo user
 	 * @throws TException 
 	 */
 	@ApiOperation(value="sdfjldf-编辑", notes="sdfjldf-编辑")

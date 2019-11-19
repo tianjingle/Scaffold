@@ -4,6 +4,8 @@ import javax.persistence.*;
 
 @Table(name = "resource")
 public class ResourcePo {
+
+
     @Id
     private Integer id;
 

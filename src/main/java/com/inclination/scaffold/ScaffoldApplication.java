@@ -2,7 +2,6 @@ package com.inclination.scaffold;
 import java.util.Properties;
 
 import com.inclination.scaffold.utils.MyMapper;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 //import com.ctrip.framework.apollo.spring.annotation.EnableApolloConfig;
 import com.github.pagehelper.PageHelper;
 import org.springframework.context.annotation.Configuration;
+import tk.mybatis.spring.annotation.MapperScan;
 //import com.pengzu.sms.annotion.EnabledPengzuSmsAutoConfiguration;
 
 /***
@@ -29,20 +29,6 @@ public class ScaffoldApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication.run(ScaffoldApplication.class, args);
 	}
-	/**
-	 * pageHelper 分页管理
-	 * @return
-	 */
-	@Bean
-    public PageHelper pageHelper(){
-        PageHelper pageHelper = new PageHelper();
-        Properties p = new Properties();
-        p.setProperty("offsetAsPageNum", "true");
-        p.setProperty("rowBoundsWithCount", "true");
-        p.setProperty("reasonable", "true");
-        pageHelper.setProperties(p);
-        return pageHelper;
-    }
 
     /**
      * 配置Spring Boot支持外置Tomcat容器中部署

@@ -72,7 +72,8 @@ public class DResource {
 		// TODO Auto-generated method stub
 		ResourcePo po = ModelMapUtils.map(this, ResourcePo.class);
 		Example example =new Example(ResourcePo.class);
-		example.createCriteria().andEqualTo("resourceName",this.resourceName);
+		Example.Criteria criteria=example.createCriteria();
+		criteria.andEqualTo("resourceName",this.resourceName);
 		if (resourceMapper.selectCountByExample(po) != 0) {
 			throw new TException(TErrorCode.ERROR_EXISIT_RESOURCE_CODE, TErrorCode.ERROR_EXISIT_RESOURCE_MSG);
 		} else if (resourceMapper.insert(po) != 1) {
