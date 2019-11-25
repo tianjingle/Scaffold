@@ -74,7 +74,7 @@ public class DResource {
 		Example example =new Example(ResourcePo.class);
 		Example.Criteria criteria=example.createCriteria();
 		criteria.andEqualTo("resourceName",this.resourceName);
-		if (resourceMapper.selectCountByExample(po) != 0) {
+		if (resourceMapper.selectCountByExample(example)>0) {
 			throw new TException(TErrorCode.ERROR_EXISIT_RESOURCE_CODE, TErrorCode.ERROR_EXISIT_RESOURCE_MSG);
 		} else if (resourceMapper.insert(po) != 1) {
 			throw new TException(TErrorCode.ERROR_INSERT_RESOURCE_CODE, TErrorCode.ERROR_INSERT_RESOURCE_MSG);

@@ -1,5 +1,6 @@
 package com.inclination.scaffold.api.interfaces;
 
+import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,7 @@ import com.inclination.scaffold.application.menu.MenuDto;
 import com.inclination.scaffold.application.menu.MenuService;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ModelMapUtils;
-import com.inclination.scaffold.utils.ViewData;
+import com.inclination.scaffold.utils.ViewDataOld;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +33,7 @@ public class MenuManagerApi {
 	 */
 	@Autowired
 	private MenuService menuService;
+
 
 	/**
 	 * 菜单的新增

@@ -28,6 +28,7 @@
     <include refid="Base_Column_List" />
     from user
     where 1=1
+    <if test="userName!=null">and user_name like concat('%',#{userName,jdbcType=VARCHAR},'%')</if>
     <if test="loginId!=null">and login_id like concat('%',#{loginId,jdbcType=VARCHAR},'%')</if>
     <if test="userPassword!=null">and user_password like concat('%',#{userPassword,jdbcType=VARCHAR},'%')</if>
     <if test="userEmil!=null">and user_emil like concat('%',#{userEmil,jdbcType=VARCHAR},'%')</if>

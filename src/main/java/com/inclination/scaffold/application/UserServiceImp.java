@@ -10,6 +10,7 @@ import com.inclination.scaffold.infrastraction.repository.ToolProjectPoMapper;
 import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.ToolProjectPo;
 import com.inclination.scaffold.infrastraction.repository.po.UserPo;
+import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,7 +79,7 @@ public class UserServiceImp implements UserService {
 	}
 
 	@Override
-	public UserManagerQryResponse userFind(@Valid UserQryByPages request) {
+	public ViewData userFind(@Valid UserQryByPages request) {
 		// TODO Auto-generated method stub
 		UserPo po=ModelMapUtils.map(request,UserPo.class);
 		Page hpage=PageHelper.startPage((int)request.getPage(), request.getLimit());
@@ -87,7 +88,7 @@ public class UserServiceImp implements UserService {
 		response.setList(ModelMapUtils.map(list, UserManageResponse.class));
 		response.PageBaseQueryEntity(request.getPage(),request.getLimit(), 
 				(int)hpage.getPages(),(int)hpage.getTotal());
-		return response;
+		return ViewData.success(ModelMapUtils.map(list, UserManageResponse.class), (int) hpage.getPages(),hpage.getTotal());
 	}
 
 	@Override

@@ -1,112 +1,65 @@
 package com.inclination.scaffold.utils;
 
-import java.util.List;
-import java.util.Map;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiParam;
+import lombok.Data;
 
-@ApiModel
+/**
+ * 公共数据返回类
+ * @author tianjl
+ */
+@Data
 public class ViewData {
 
-	@ApiModelProperty(name="data",notes="返回的集合")
-	private List data;
+    /**
+     * 返回数据条数
+     */
+    private int count;
+    /**
+     * 匹配的总条数
+     */
+    private long total;
 
-	@ApiModelProperty(name="map",notes="菜单集合")
-	private Map<String,List> map;
-	
-	@ApiModelProperty(name="total",value="总记录数")
-	private int total;
-	
-	@ApiModelProperty(name="总条数",value="总记录数")	
-	private int pageSize;
-	
-	@ApiModelProperty(name="curPage",value="当前页数")	
-	private int curPage;
-	
-	@ApiModelProperty(name="pagetotal",value="总页数")
-	private int pagetotal;
-	
-	@ApiModelProperty(name="success",value="是否成功")
-	private boolean success;
-	/**
-	 * 分页
-	 * @param currentPage 当前页数
-	 * @param pageSize 每页条数
-	 * @param pageNum 总页数
-	 * @param totalElement 总条数
-	 */
-	public void PageBaseQueryEntity(int currentPage,int pageSize,int pageNum,int totalElement){
-		this.curPage=currentPage;
-		this.pageSize=pageSize;
-		this.pagetotal=pageNum;
-		this.total=totalElement;
-	}
+    /**
+     * 响应业务状态
+     */
+    private Boolean success;
+    /**
+     * 响应消息
+     */
+    private String message;
+    /**
+     * 响应中的数据
+     */
+    private Object content;
 
+    public ViewData() {
+    }
 
-	public int getPageSize() {
-		return pageSize;
-	}
+    public ViewData(Boolean success, String msg, Object content, int count, long total) {
+        this.success = success;
+        this.message = msg;
+        this.count = count;
+        this.total = total;
+        this.content = content;
+    }
 
+    public static ViewData success(Object content, int count, long total) {
+        return new ViewData(true, null, content, count, total);
+    }
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
+    public static ViewData success(Object content) {
+        return new ViewData(true, null, content, 1, 1);
+    }
 
+    public static ViewData success(Object content, String msg) {
+        return new ViewData(true, msg, content, 1, 1);
+    }
 
-	public int getCurPage() {
-		return curPage;
-	}
-
-
-	public void setCurPage(int curPage) {
-		this.curPage = curPage;
-	}
-
-
-	public int getPagetotal() {
-		return pagetotal;
-	}
-
-
-	public void setPagetotal(int pagetotal) {
-		this.pagetotal = pagetotal;
-	}
-
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
-	public Map<String, List> getMap() {
-		return map;
-	}
-
-	public void setMap(Map<String, List> map) {
-		this.map = map;
-	}
-
-
-	public List getData() {
-		return data;
-	}
-
-	public ViewData setData(List data) {
-		this.data = data;
-		return this;
-	}
-
-	public int getTotal() {
-		return total;
-	}
-
-	public void setTotal(int total) {
-		this.total = total;
-	}
+    public static ViewData error(String msg) {
+        return new ViewData(false, msg, null, 0, 0);
+    }
+    public static ViewData error(Object content){
+        return new ViewData(false, "", content, 0, 0);
+    }
 
 }

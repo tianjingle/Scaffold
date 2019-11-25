@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ import com.inclination.scaffold.application.users.UserDto;
 import com.inclination.scaffold.application.users.UserService;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ModelMapUtils;
-import com.inclination.scaffold.utils.ViewData;
+import com.inclination.scaffold.utils.ViewDataOld;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -62,7 +63,7 @@ public class UserManageApi {
 	 */
 	@GetMapping(value="/user-find",produces = "application/json;charset=utf-8")
 	@ApiOperation(value="查询用户",notes="查询用户")
-	public UserManagerQryResponse userQry(@ModelAttribute UserQryByPages request){
+	public ViewData userQry(@ModelAttribute UserQryByPages request){
 		return userManageServiceImp.userFind(request);
 	}
 	/**
@@ -89,7 +90,7 @@ public class UserManageApi {
 	
 	@GetMapping(value="/user-time-out",produces="application/json;charset=utf-8")
 	@ApiOperation(value="是否超时",notes="判断用户是否超时")
-	public ViewData timeOut(HttpServletRequest request,HttpServletResponse response,HttpSession session){
+	public ViewData timeOut(HttpServletRequest request, HttpServletResponse response, HttpSession session){
 		ViewData vd=new ViewData();
         if(null!=session.getAttribute("CurrentUser")&&!"".equals(session.getAttribute("1"))){
         	vd.setSuccess(true);
@@ -99,7 +100,7 @@ public class UserManageApi {
         return vd;
 	}
 	@PostMapping(value="/users-login")
-	public UserManageLoginResponse userLogin(@Valid @RequestBody UserManageLoginRequest request,HttpSession session){
+	public ViewData userLogin(@Valid @RequestBody UserManageLoginRequest request,HttpSession session){
 		UserDto dto=ModelMapUtils.map(request, UserDto.class);
 		UserDto loginDto=userManageServiceImp.usersLogin(dto);
 		UserManageLoginResponse response=ModelMapUtils.map(loginDto, UserManageLoginResponse.class);
@@ -108,6 +109,6 @@ public class UserManageApi {
 		}else{
 			return null;
 		}
-		return response;
+		return ViewData.success(response);
 	}
 }

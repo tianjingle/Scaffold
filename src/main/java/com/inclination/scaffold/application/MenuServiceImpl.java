@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.inclination.scaffold.infrastraction.repository.*;
 import com.inclination.scaffold.infrastraction.repository.po.MenuPo;
+import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,7 @@ import com.inclination.scaffold.application.menu.MenuService;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.DMenu;
 import com.inclination.scaffold.utils.ModelMapUtils;
-import com.inclination.scaffold.utils.ViewData;
+import com.inclination.scaffold.utils.ViewDataOld;
 
 @Service
 public class MenuServiceImpl implements MenuService{

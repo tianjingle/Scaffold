@@ -1,5 +1,10 @@
 server:
   port: 8091
+  servlet:
+    context-path: /scaffold
+
+logging:
+  config: classpath:config/log4j2-dev.xml
 spring:
   application:
     name: scaffold
@@ -21,14 +26,18 @@ spring:
      security-key: 414c40f8dcd85a9806db3be68ecde570
      appid: 1400218666
      sign: 100010506137
+  liquibase:
+    drop-first: false
+    enabled: true
+    url: jdbc:mysql://localhost:3307/scaffold?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&useSSL=false
+    password: tianjingle
+    user: root
+    change-log: classpath:db/changelog-master.xml
 
 mybatis:
   type-aliases-package: com.inclination.scaffold.infrastraction.repository.po
   mapper-locations: classpath:mapper/*.xml
 
-logging:
-  config: classpath:config/log4j2-dev.xml
-  
 pagehelper:
   helper-dialect: mysql
   reasonable: true
@@ -45,10 +54,3 @@ apollo:
       enabled: true
     namespaces: application,TEST1.common
 
-#liquibase:
-#  change-log: classpath:db/changelog-master.xml
-#  user: root
-#  password: tianjingle
-#  url: jdbc:mysql://localhost:3307/scaffold?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&useSSL=false
-#  enabled: true
-#  drop-first: false

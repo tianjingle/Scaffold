@@ -3,7 +3,7 @@ package com.inclination.scaffold.application.service;
 import com.inclination.scaffold.api.entity.UserVo;
 import com.inclination.scaffold.api.entity.UserFindByPageVo;
 import com.inclination.scaffold.constant.exception.TException;
-import com.inclination.scaffold.utils.ViewData;
+import com.inclination.scaffold.utils.ViewDataOld;
 
 /**
  * @Description: tianjingle
@@ -19,7 +19,7 @@ public interface UsersService {
 
 	void UserDelete(String id) throws TException;
 
-	ViewData findByPage(UserFindByPageVo entity);
+	ViewDataOld findByPage(UserFindByPageVo entity);
 
-	ViewData findAll(UserVo entity);
+	ViewDataOld findAll(UserVo entity);
 }

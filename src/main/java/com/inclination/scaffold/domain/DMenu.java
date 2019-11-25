@@ -12,6 +12,7 @@ import com.inclination.scaffold.infrastraction.repository.*;
 import com.inclination.scaffold.infrastraction.repository.po.*;
 import com.inclination.scaffold.utils.ModelMapUtils;
 import com.inclination.scaffold.utils.ViewData;
+import com.inclination.scaffold.utils.ViewDataOld;
 import tk.mybatis.mapper.entity.Example;
 
 public class DMenu {
@@ -86,14 +87,13 @@ public class DMenu {
 	}
 
 	public ViewData findUserMenuAndResources(RoleMenuPoMapper roleMenuMapper, MenuPoMapper menuMapping,
-			MenuResourcePoMapper menuResourceMapper, ResourcePoMapper resourceMapper) {
+											 MenuResourcePoMapper menuResourceMapper, ResourcePoMapper resourceMapper) {
 		// TODO Auto-generated method stub
 
 		Example example = new Example(RoleMenuPo.class);
 		Example.Criteria criteria=example.createCriteria();
 		criteria.andEqualTo("roleId",this.id);
 		List<RoleMenuPo> rmlist=roleMenuMapper.selectByExample(example);
-		ViewData vd=new ViewData();
 		List<Map> tianlist=new ArrayList<Map>();
 		Example menuExample = new Example(MenuPo.class);
 		Example.Criteria menuCriteria=menuExample.createCriteria();
@@ -113,10 +113,7 @@ public class DMenu {
 			map.put("name",menulist.get(i).getMenuName());
 			tianlist.add(map);
 		}
-		vd.setData(tianlist);
-		vd.setTotal(rmlist.size());
-		vd.setSuccess(true);
-		return vd;
+		return ViewData.success(tianlist);
 	}
 
 }

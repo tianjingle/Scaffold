@@ -15,7 +15,7 @@ import com.inclination.scaffold.api.entity.UserVo;
 import com.inclination.scaffold.api.entity.UserFindByPageVo;
 import com.inclination.scaffold.application.service.UsersService;
 import com.inclination.scaffold.constant.exception.TException;
-import com.inclination.scaffold.utils.ViewData;
+import com.inclination.scaffold.utils.ViewDataOld;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -77,7 +77,7 @@ public class UserApi {
 	 */
 	@GetMapping(value="/query-page")
 	@ApiOperation(value="sdfjldf-分页查询", notes="sdfjldf-分页查询")
-	public ViewData findByPage(@ModelAttribute UserFindByPageVo entity){
+	public ViewDataOld findByPage(@ModelAttribute UserFindByPageVo entity){
 		return userService.findByPage(entity);
 	}
 	/**
@@ -87,7 +87,7 @@ public class UserApi {
 	 */
 	@GetMapping(value="/finds-all")
 	@ApiOperation(value="sdfjldf-查询所有", notes="sdfjldf-按条件查询所有")
-	public ViewData find(@ModelAttribute UserVo entity){
+	public ViewDataOld find(@ModelAttribute UserVo entity){
 		return userService.findAll(entity);
 	}
 }

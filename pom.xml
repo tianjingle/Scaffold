@@ -146,6 +146,7 @@
 			<version>2.6</version>
 		</dependency>
 
+
 		<!--jenkins-rest-->
 		<!-- https://mvnrepository.com/artifact/com.cdancy/jenkins-rest -->
 		<dependency>
@@ -254,10 +255,10 @@
 		</activation>
 	</profile>
 	<profile>
-		<id>sit</id>
+		<id>prod</id>
 		<properties>
 			<defalut>http:localhost:8081</defalut>
-			<profileActive>sit</profileActive>
+			<profileActive>prod</profileActive>
 		</properties>
 	</profile>
 </profiles>
@@ -268,13 +269,13 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 				<includes>
-					<include>config/log4j2-${profileActive}.xml</include>
 					<include>db/**</include>
 					<include>mapper/*.xml</include>
 					<include>META-INF/*.properties</include>
 					<include>application.yml</include>
 					<include>static/**</include>
 					<include>templates/**</include>
+                    <include>config/log4j2-dev.xml</include>
 				</includes>
 			</resource>
 		</resources>

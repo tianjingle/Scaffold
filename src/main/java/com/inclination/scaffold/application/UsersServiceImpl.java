@@ -17,7 +17,7 @@ import com.inclination.scaffold.application.service.UsersService;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.UserDomain;
 import com.inclination.scaffold.utils.ModelMapUtils;
-import com.inclination.scaffold.utils.ViewData;
+import com.inclination.scaffold.utils.ViewDataOld;
 import tk.mybatis.mapper.entity.Example;
 
 /**
@@ -60,7 +60,7 @@ public class UsersServiceImpl implements UsersService {
 		domain.delete(id,userMapping);
 	}
 	@Override
-	public ViewData findByPage(UserFindByPageVo request) {
+	public ViewDataOld findByPage(UserFindByPageVo request) {
 		// TODO Auto-generated method stub
 		UserPo po=ModelMapUtils.map(request, UserPo.class);
 		Page hpage=PageHelper.startPage((int)request.getPage(), request.getLimit());
@@ -70,16 +70,16 @@ public class UsersServiceImpl implements UsersService {
 				.orLike("userName", po.getUserName())
 				.orLike("userEmil", po.getUserEmil());
 		List<UserPo> list=userMapping.selectByExample(example);
-		 ViewData response = new ViewData();
+		 ViewDataOld response = new ViewDataOld();
 		response.setData(list);
 		response.PageBaseQueryEntity(request.getPage(),request.getLimit(), 
 				(int)hpage.getPages(),(int)hpage.getTotal());
 		return response;
 	}
 	@Override
-	public ViewData findAll(UserVo entity) {
+	public ViewDataOld findAll(UserVo entity) {
 		List<UserPo> list=userMapping.selectAll();
-		ViewData response = new ViewData();
+		ViewDataOld response = new ViewDataOld();
 		response.setData(list);
 		return response;
 	}

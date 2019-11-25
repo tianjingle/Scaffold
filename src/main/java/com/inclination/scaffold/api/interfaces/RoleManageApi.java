@@ -82,7 +82,11 @@ public class RoleManageApi {
 	public RoleManageQryResponse findRole(@ModelAttribute RoleQryByPage request){
 		return roleService.findAllByPage(request);
 	}
-	
+
+	/***
+	 * 查询所有角色
+	 * @return
+	 */
 	@GetMapping(value="/role-manager-all")
 	@ApiOperation(value="所有角色查询",notes="所有角色查询")
 	public RoleManageAllResponse findAllRole(){
