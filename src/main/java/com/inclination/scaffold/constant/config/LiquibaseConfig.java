@@ -15,7 +15,6 @@ import javax.sql.DataSource;
  */
 
 @Configuration
-@EnableAutoConfiguration
 public class LiquibaseConfig {
 
     @Bean
