@@ -20,4 +20,6 @@ public class UserManageLoginResponse {
 	@ApiModelProperty(name="useremil",value="邮箱")
 	private String userEmil;
 
+	@ApiModelProperty(name="roid",value="權限")
+	private int roId;
 }

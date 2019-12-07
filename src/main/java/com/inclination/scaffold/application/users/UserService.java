@@ -17,5 +17,7 @@ public interface UserService {
 
 	void modifyUser(UserDto dto) throws TException;
 
-	UserDto usersLogin(UserDto dto);; 
+	UserDto usersLogin(UserDto dto);;
+
+	ViewData batchRemove(String userId);
 }

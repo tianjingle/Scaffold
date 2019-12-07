@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import com.inclination.scaffold.api.request.user.*;
 import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,10 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.inclination.scaffold.api.request.user.UserManageAddRequest;
-import com.inclination.scaffold.api.request.user.UserManageLoginRequest;
-import com.inclination.scaffold.api.request.user.UserManageModifyRequest;
-import com.inclination.scaffold.api.request.user.UserQryByPages;
 import com.inclination.scaffold.api.response.user.UserManageLoginResponse;
 import com.inclination.scaffold.api.response.user.UserManagerQryResponse;
 import com.inclination.scaffold.application.users.UserDto;
@@ -30,6 +27,8 @@ import com.inclination.scaffold.utils.ViewDataOld;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
+import java.util.List;
 
 /**
  * @version 1.0
@@ -55,7 +54,6 @@ public class UserManageApi {
 	public void userAdd(@Valid @RequestBody UserManageAddRequest user) throws Exception{
 		UserDto dto=ModelMapUtils.map(user, UserDto.class);
 		userManageServiceImp.createUser(dto);
-		
 	}
 	/**
 	 * 查询所有用户
@@ -65,6 +63,13 @@ public class UserManageApi {
 	@ApiOperation(value="查询用户",notes="查询用户")
 	public ViewData userQry(@ModelAttribute UserQryByPages request){
 		return userManageServiceImp.userFind(request);
+	}
+
+
+	@DeleteMapping(value = "/users-delete")
+	@ApiOperation(value = "批量刪除用戶",notes = "批量刪除用戶")
+	public ViewData batchDelete(String userIds){
+		return userManageServiceImp.batchRemove(userIds);
 	}
 	/**
 	 * 删除用户
@@ -100,12 +105,12 @@ public class UserManageApi {
         return vd;
 	}
 	@PostMapping(value="/users-login")
-	public ViewData userLogin(@Valid @RequestBody UserManageLoginRequest request,HttpSession session){
+	public ViewData userLogin(@Valid @RequestBody UserManageLoginRequest request,HttpServletRequest req){
 		UserDto dto=ModelMapUtils.map(request, UserDto.class);
 		UserDto loginDto=userManageServiceImp.usersLogin(dto);
 		UserManageLoginResponse response=ModelMapUtils.map(loginDto, UserManageLoginResponse.class);
 		if(response!=null){
-			session.setAttribute("CurrentUser", loginDto);
+			req.getSession().setAttribute("CurrentUser", loginDto);
 		}else{
 			return null;
 		}

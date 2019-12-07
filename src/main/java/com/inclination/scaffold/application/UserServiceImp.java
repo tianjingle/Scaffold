@@ -1,5 +1,6 @@
 package com.inclination.scaffold.application;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +76,9 @@ public class UserServiceImp implements UserService {
 		/**
 		 * 创建用户的脚手架的用户环境（jenkins、git、apollo）
 		 */
-		createUserEnvironment(dto);
+		if(dto.getRoId()!=1){
+			createUserEnvironment(dto);
+		}
 	}
 
 	@Override
@@ -205,5 +208,14 @@ public class UserServiceImp implements UserService {
 			return ModelMapUtils.map(list.get(0), UserDto.class);
 		}
 		return null;
+	}
+
+	@Override
+	public ViewData batchRemove(String userId) {
+		Example example=new Example(UserPo.class);
+		Example.Criteria criteria=example.createCriteria();
+		criteria.andIn("id", Arrays.asList(userId.split(",")));
+		userMapping.deleteByExample(example);
+		return ViewData.success(true);
 	}
 }

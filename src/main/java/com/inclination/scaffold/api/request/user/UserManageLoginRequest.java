@@ -11,7 +11,7 @@ import lombok.Data;
 public class UserManageLoginRequest {
 
 	@NotBlank(message="用户名不能为空")
-	@ApiModelProperty(name="username",value="用户名称")
+	@ApiModelProperty(name="userName",value="用户名称")
 	private String userName;
 	
 	@NotBlank(message="用户密码不能为空")

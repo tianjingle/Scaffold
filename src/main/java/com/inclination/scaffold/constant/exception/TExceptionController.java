@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.inclination.scaffold.utils.ViewData;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,19 +16,18 @@ public class TExceptionController{
 	
 	  @ResponseBody
 	  @ExceptionHandler(TException.class)
-	  public Error handleError(HttpServletRequest req, TException e) {
-		  Error ew=new Error(e.getCode(),e.getMsg());
-	      return ew; 
+	  public ViewData handleError(HttpServletRequest req, TException e) {
+	      return ViewData.error(e.getMsg());
 	  }
 	  @ResponseBody
 	  @ExceptionHandler(MethodArgumentNotValidException.class)
-	  public Error exceptionHander(HttpServletRequest req, MethodArgumentNotValidException e){
+	  public ViewData exceptionHander(HttpServletRequest req, MethodArgumentNotValidException e){
 		  List<ObjectError> errorList=e.getBindingResult().getAllErrors();
 		  String error="";
 		  for (ObjectError objectError : errorList) {
 			  error=objectError.getDefaultMessage();
 		}	  
-		  Error ew=new Error("0001",error);
-	      return ew; 
+//		  Error ew=new Error("0001",error);
+	      return ViewData.error(error);
 	  }
 }

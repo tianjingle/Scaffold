@@ -22,24 +22,23 @@ import lombok.NoArgsConstructor;
 public class UserManageAddRequest {
 	
 	@ApiModelProperty(name="userName",value="用户名称")
-	@NotBlank(message="不能为空")
+	@NotBlank(message="用戶名稱不能为空")
 	private String userName;
 	
 	@ApiModelProperty(name="loginid",value="手机号")
-	@NotBlank(message="不能为空")
+	@NotBlank(message="手機號碼不能为空")
     @Pattern(regexp = "^\\d{11}$", message = "手机号码格式错误")
 	private String loginId;
 	
 	@ApiModelProperty(name="userpassword",value="用户密码")
-	@NotBlank(message="不能为空")
+	@NotBlank(message="用戶密碼不能为空")
 	private String userPassword;
 	
 	@ApiModelProperty(name="useremil",value="邮箱")
-	@NotBlank(message="不能为空")
+	@NotBlank(message="用戶郵箱不能为空")
 	private String userEmil;
 	
 	@ApiModelProperty(name="roid",value="权限")
-	@NotNull(message="不能为空")
-    private Integer roId;
+    private int roId;
 	
 }

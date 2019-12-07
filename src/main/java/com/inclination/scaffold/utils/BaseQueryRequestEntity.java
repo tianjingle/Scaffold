@@ -11,8 +11,10 @@ public class BaseQueryRequestEntity {
 	
 	@ApiParam(name="limit",value="每页条数")	
 	private int limit = 15;// 每页的记录数
+
 	@ApiParam(name="start",value="当前页数")
 	private int start = 0;// 第几条开始
+
 	@ApiParam(name="start",value="当前页数")
 	private int page = 1; //第几页
 	public int getLimit() {

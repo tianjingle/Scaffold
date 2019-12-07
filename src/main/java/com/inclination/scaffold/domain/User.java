@@ -3,7 +3,9 @@ package com.inclination.scaffold.domain;
 import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
+import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import com.inclination.scaffold.utils.ModelMapUtils;
+import tk.mybatis.mapper.entity.Example;
 
 public class User {
     
@@ -81,8 +83,10 @@ public class User {
 	public void userCreate(UserPoMapper userMapper) throws TException{
 		com.inclination.scaffold.infrastraction.repository.po.UserPo po=
 				ModelMapUtils.map(this, com.inclination.scaffold.infrastraction.repository.po.UserPo.class);
-		Integer count=(Integer) userMapper.findUserByNamePass(po);
-        if(count!=0){
+		Example example=new Example(UserPo.class);
+		example.createCriteria().andEqualTo("loginId",po.getLoginId()).andEqualTo("userPassword",po.getUserPassword());
+		Integer count=(Integer) userMapper.selectCountByExample(example);
+        if(count>0){
         	throw new TException(TErrorCode.ERROR_INSERT_USER_CODE,TErrorCode.ERROR_INSERT_USER_MSG);
         }else if(userMapper.insert(po)!=1){
 			throw new TException(TErrorCode.ERROR_CREATE_USER_CODE,TErrorCode.ERROR_CREATE_USER_MSG);
@@ -100,8 +104,10 @@ public class User {
 		// TODO Auto-generated method stub
 		com.inclination.scaffold.infrastraction.repository.po.UserPo po=
 				ModelMapUtils.map(this, com.inclination.scaffold.infrastraction.repository.po.UserPo.class);
-		Integer count=(Integer) userMapping.findUserByNamePass(po);
-        if(count!=1){
+		Example example=new Example(UserPo.class);
+		example.createCriteria().andEqualTo("loginId",po.getLoginId()).andEqualTo("userPassword",po.getUserPassword());
+		Integer count=(Integer) userMapping.selectCountByExample(example);
+        if(count>0){
         	throw new TException(TErrorCode.ERROR_INSERT_USER_CODE,TErrorCode.ERROR_INSERT_USER_MSG);
         }else if(userMapping.updateByPrimaryKeySelective(po)!=1){
 			throw new TException(TErrorCode.ERROR_UPDATE_USER_CODE,TErrorCode.ERROR_UPDATE_USER_MSG);
