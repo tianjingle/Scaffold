@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.inclination.http.rest.RestTemplateUtil;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -58,7 +59,7 @@ public class ApolloProjectCreateImpl {
 		param.put("username", username);
 		param.put("password", password);
 		param.put("email", email);
-		ResponseEntity<String> response=RestTemplateUtil.sendJson(param, apolloUrl+"/users", apolloUsername, apollopassword);
+		ResponseEntity<String> response= RestTemplateUtil.sendJson(param, apolloUrl+"/users", apolloUsername, apollopassword);
 		if(response.getStatusCodeValue()==200){
 			return true;
 		}

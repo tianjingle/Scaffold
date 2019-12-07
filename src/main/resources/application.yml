@@ -54,3 +54,11 @@ apollo:
       enabled: true
     namespaces: application,TEST1.common
 
+rest:
+  http:
+    timeout: 1500
+    read:
+      timeout: 5000
+    connnection:
+      request:
+        timeout: 100

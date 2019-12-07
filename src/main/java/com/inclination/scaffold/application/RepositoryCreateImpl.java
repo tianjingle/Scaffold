@@ -3,6 +3,7 @@ package com.inclination.scaffold.application;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.inclination.http.rest.RestTemplateUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -32,7 +33,7 @@ public class RepositoryCreateImpl {
 		param.add("password", password);
 		param.add("retype", password);
 		param.add("email", email);
-		ResponseEntity<String> response=RestTemplateUtil.submitForm(param, gitUrl+"/user/sign_up", null, null);
+		ResponseEntity<String> response= RestTemplateUtil.submitForm(param, gitUrl+"/user/sign_up", null, null);
 		int status=response.getStatusCodeValue();
 		if(status==302){
 			return true;
