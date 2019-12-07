@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+  <properties>
+    <property name="project-name">discuss-server</property>
+    <property name="profile-active">oa</property>
+    <property name="log-dir">D:/log/logs/${project-name}/${profile-active}</property>
+    <property name="log-level">INFO</property>
+    <property name="log-pattern">[%date{yyyy-MM-dd HH:mm:ss.SSS}] [${hostName} ${project-name}] [%-5level] [%thread]([%c:%line]) %msg %n
+    </property>
+  </properties>
+
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${log-pattern}"/>
+    </Console>
+
+    <!--所有日志-->
+    <RollingRandomAccessFile
+      name="AllLog"
+      fileName="${log-dir}/all.log"
+      filePattern="${log-dir}/$${date:yyyy-MM}/all-%d{yyyy-MM-dd}-%i.log.gz"
+      immediateFlush="false"
+      append="true">
+      <PatternLayout pattern="${log-pattern}" charset="UTF-8"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+        <SizeBasedTriggeringPolicy size="100 MB"/>
+      </Policies>
+      <!--每天的最大压缩包个数，默认7个，超过了会覆盖之前的 -->
+      <DefaultRolloverStrategy max="50">
+        <Delete basePath="${log-dir}/" maxDepth="2">
+          <IfFileName glob="all-*.log.gz"/>
+          <IfLastModified age="30d"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingRandomAccessFile>
+
+    <!--INFO日志-->
+    <RollingRandomAccessFile
+      name="InfoLog"
+      fileName="${log-dir}/info.log"
+      filePattern="${log-dir}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log.gz"
+      immediateFlush="false"
+      append="true">
+      <PatternLayout pattern="${log-pattern}" charset="UTF-8"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+        <SizeBasedTriggeringPolicy size="100 MB"/>
+      </Policies>
+      <Filters>
+        <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+        <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+      </Filters>
+      <DefaultRolloverStrategy max="50">
+        <Delete basePath="${log-dir}/" maxDepth="2">
+          <IfFileName glob="info-*.log.gz"/>
+          <IfLastModified age="30d"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingRandomAccessFile>
+
+    <!--DEBUG日志-->
+    <RollingRandomAccessFile
+      name="DebugLog"
+      fileName="${log-dir}/debug.log"
+      filePattern="${log-dir}/$${date:yyyy-MM}/debug-%d{yyyy-MM-dd}-%i.log.gz"
+      immediateFlush="false"
+      append="true">
+      <PatternLayout pattern="${log-pattern}" charset="UTF-8"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+        <SizeBasedTriggeringPolicy size="100 MB"/>
+      </Policies>
+      <Filters>
+        <ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>
+        <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+      </Filters>
+      <DefaultRolloverStrategy max="50">
+        <Delete basePath="${log-dir}/" maxDepth="2">
+          <IfFileName glob="debug-*.log.gz"/>
+          <IfLastModified age="30d"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingRandomAccessFile>
+
+    <!--ERROR日志-->
+    <RollingRandomAccessFile
+      name="ErrLog"
+      fileName="${log-dir}/error.log"
+      filePattern="${log-dir}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log.gz"
+      immediateFlush="false"
+      append="true">
+      <PatternLayout pattern="${log-pattern}" charset="UTF-8"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+        <SizeBasedTriggeringPolicy size="100 MB"/>
+      </Policies>
+      <Filters>
+        <!--只记录error级别-->
+        <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+      </Filters>
+      <DefaultRolloverStrategy max="50">
+        <Delete basePath="${log-dir}/" maxDepth="2">
+          <IfFileName glob="error-*.log.gz"/>
+          <IfLastModified age="30d"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingRandomAccessFile>
+  </Appenders>
+
+  <Loggers>
+
+    <AsyncLogger level="INFO" name="org.springframework"/>
+
+    <!--只输入级别高于trace的日志-->
+    <AsyncRoot level="${log-level}">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="AllLog"/>
+      <AppenderRef ref="InfoLog"/>
+      <AppenderRef ref="DebugLog"/>
+      <AppenderRef ref="ErrLog"/>
+    </AsyncRoot>
+  </Loggers>
+</Configuration>
+
