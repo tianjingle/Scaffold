@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import com.inclination.http.rest.RestTemplateUtil;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -70,7 +71,7 @@ public class test {
 		param.add("password2", password);
 		param.add("fullname", username);
 		param.add("email", email);
-		ResponseEntity<String> response=RestTemplateUtil.submitForm(param, jenkinsurl, null, null);
+		ResponseEntity<String> response= RestTemplateUtil.submitForm(param, jenkinsurl, null, null);
 		boolean contains=response.getBody().contains(username);
 		if(!contains){
 			throw new Exception();
