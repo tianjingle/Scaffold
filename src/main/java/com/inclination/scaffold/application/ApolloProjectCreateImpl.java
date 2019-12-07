@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.alibaba.fastjson.JSON;
-import com.inclination.scaffold.utils.RestTemplateUtil;
 
 @Service
 public class ApolloProjectCreateImpl {

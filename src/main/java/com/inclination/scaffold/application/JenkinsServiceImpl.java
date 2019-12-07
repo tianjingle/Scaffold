@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.inclination.http.rest.RestTemplateUtil;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -20,7 +21,6 @@ import org.springframework.util.MultiValueMap;
 import com.alibaba.fastjson.JSON;
 import com.cdancy.jenkins.rest.JenkinsClient;
 import com.cdancy.jenkins.rest.domain.common.RequestStatus;
-import com.inclination.scaffold.utils.RestTemplateUtil;
 
 
 @Service

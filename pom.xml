@@ -206,7 +206,7 @@
 			<artifactId>druid-spring-boot-starter</artifactId>
 			<version>1.1.10</version>
 		</dependency>
-<!--代码整洁-->
+		<!--代码整洁-->
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -215,7 +215,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-<!--		swagger接口文档-->
+		<!--swagger接口文档-->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -241,6 +241,12 @@
 			<version>3.6.2</version>
 		</dependency>
 
+       <!--服务调用，http优化-->
+		<dependency>
+			<groupId>com.inclination</groupId>
+			<artifactId>rest-template-starter</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 <profiles>

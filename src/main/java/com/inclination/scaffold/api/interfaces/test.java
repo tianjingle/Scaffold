@@ -29,7 +29,6 @@ import com.inclination.scaffold.application.users.UserDto;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.InputStreamRunnable;
 import com.inclination.scaffold.utils.ModelMapUtils;
-import com.inclination.scaffold.utils.RestTemplateUtil;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
