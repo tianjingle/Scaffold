@@ -3,6 +3,7 @@ package com.inclination.scaffold.application;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.base.Strings;
 import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.infrastraction.repository.ResourcePoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.ResourcePo;
@@ -58,9 +59,7 @@ public class ResourceServiceImpl implements ResourceService{
 		// TODO Auto-generated method stub
 		ResourcePo po=ModelMapUtils.map(request, ResourcePo.class);
 		Page hpage=PageHelper.startPage((int)request.getPage(), request.getLimit());
-		Example example=new Example(ResourcePo.class);
-		example.createCriteria().andLike("resourceName",request.getResourceName()).orLike("resourceUrl",request.getResourceName());
-		List<ResourcePo> list=resourceMapper.selectByExample(example);
+		List<ResourcePo> list=resourceMapper.selectBySelective(po);
 		return ViewData.success(ModelMapUtils.map(list, ResourceManagerResponse.class),hpage.getPages(),hpage.getTotal());
 	}
 
