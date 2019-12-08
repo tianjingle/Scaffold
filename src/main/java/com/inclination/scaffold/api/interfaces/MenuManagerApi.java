@@ -1,6 +1,8 @@
 package com.inclination.scaffold.api.interfaces;
 
+import com.google.common.base.Strings;
 import com.inclination.scaffold.application.users.UserDto;
+import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -50,9 +52,9 @@ public class MenuManagerApi {
 	 * @param request 修改之后的菜单
 	 * @throws TException 
 	 */
-	@PatchMapping(value = "/menu-manager", produces = "application/json;charset=utf-8")
+	@PatchMapping(value = "/menu-manager")
 	@ApiOperation(value="菜单修改",notes="菜单修改")
-	public void menuModify(@ModelAttribute MenuModifyRequest request) throws TException {
+	public void menuModify(@RequestBody MenuModifyRequest request) throws TException {
 		menuService.modifyMenu(ModelMapUtils.map(request, MenuDto.class));
 	}
 	/**
@@ -60,12 +62,21 @@ public class MenuManagerApi {
 	 * @param id 菜单的id
 	 * @throws TException 抛出异常
 	 */
-	@DeleteMapping(value="/menu-manager/{id}",consumes="application/json",produces="application/json;charset=utf-8")
+	@DeleteMapping(value="/menu-manager/{id}")
 	@ApiOperation(value="菜单删除",notes="菜单删除")
 	public void menuDelete(@PathVariable String id) throws TException{
 		MenuDto dto=new MenuDto();
 		dto.setId(Integer.parseInt(id));
 		menuService.deleteMenu(dto);
+	}
+
+	@DeleteMapping(value = "/menu-batch-remove")
+	@ApiOperation(value = "菜单批量删除")
+	public ViewData menuBatchRemove(String ids) throws TException {
+		if(Strings.isNullOrEmpty(ids)){
+			throw new TException(TErrorCode.ERROR_DELETE_MENU_CODE,TErrorCode.ERROR_DELETE_MENU_MSG);
+		}
+		return menuService.menuBatchRemove(ids);
 	}
 	/**
 	 * 菜单的查询
@@ -74,7 +85,7 @@ public class MenuManagerApi {
 	 */
 	@GetMapping(value="/menu-manager")
 	@ApiOperation(value="菜单查询",notes="菜单查询")
-	public MenuManagerQryResponse findMenuByPages(@ModelAttribute MenuQryByPage request){
+	public ViewData findMenuByPages(@ModelAttribute MenuQryByPage request){
 		return menuService.findMenu(request);
 	}
 	/**

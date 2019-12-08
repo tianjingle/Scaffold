@@ -1,5 +1,9 @@
 package com.inclination.scaffold.api.interfaces;
 
+import com.google.common.base.Strings;
+import com.inclination.scaffold.constant.exception.TErrorCode;
+import com.inclination.scaffold.utils.ViewData;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -79,7 +83,7 @@ public class RoleManageApi {
 	 */
 	@GetMapping(value="/role-manager")
 	@ApiOperation(value="角色查询",notes="角色查询")
-	public RoleManageQryResponse findRole(@ModelAttribute RoleQryByPage request){
+	public ViewData findRole(@ModelAttribute RoleQryByPage request){
 		return roleService.findAllByPage(request);
 	}
 
@@ -91,5 +95,15 @@ public class RoleManageApi {
 	@ApiOperation(value="所有角色查询",notes="所有角色查询")
 	public RoleManageAllResponse findAllRole(){
 		return roleService.findAllRole();
+	}
+
+
+	@DeleteMapping(value = "/role-batch-remove")
+	@ApiOperation(value = "批量角色删除",notes = "批量删除角色")
+	public ViewData batchRemove(String ids) throws TException {
+		if(Strings.isNullOrEmpty(ids)){
+			throw new TException(TErrorCode.ERROR_DELETE_ROLE_CODE,TErrorCode.ERROR_DELETE_ROLE_MSG);
+		}
+		return roleService.batchRemove(ids);
 	}
 }

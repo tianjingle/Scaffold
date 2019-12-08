@@ -1,7 +1,10 @@
 package com.inclination.scaffold.application;
 
+import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 
+import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.infrastraction.repository.*;
 import com.inclination.scaffold.infrastraction.repository.po.MenuPo;
 import com.inclination.scaffold.utils.ViewData;
@@ -20,6 +23,7 @@ import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.DMenu;
 import com.inclination.scaffold.utils.ModelMapUtils;
 import com.inclination.scaffold.utils.ViewDataOld;
+import tk.mybatis.mapper.entity.Example;
 
 @Service
 public class MenuServiceImpl implements MenuService{
@@ -63,15 +67,11 @@ public class MenuServiceImpl implements MenuService{
 		ModelMapUtils.map(dto, DMenu.class).menuDelete(menuMapping);
 	}
 	@Override
-	public MenuManagerQryResponse findMenu(MenuQryByPage request) {
+	public ViewData findMenu(MenuQryByPage request) {
 		MenuPo po=ModelMapUtils.map(request, MenuPo.class);
 		Page hpage=PageHelper.startPage((int)request.getPage(), request.getLimit());
 		List<MenuPo> list=menuMapping.selectBySelective(po);
-		MenuManagerQryResponse response = new MenuManagerQryResponse();
-		response.setList(ModelMapUtils.map(list, MenuManagerResponse.class));
-		response.PageBaseQueryEntity(request.getPage(),request.getLimit(), 
-				(int)hpage.getPages(),(int)hpage.getTotal());
-		return response;
+		return ViewData.success(ModelMapUtils.map(list, MenuManagerResponse.class),hpage.getPages(),hpage.getTotal());
 	}
 	@Override
 	public ViewData findMenusByRoid(Integer roid) {
@@ -79,5 +79,16 @@ public class MenuServiceImpl implements MenuService{
 		domain.setId(roid);
 		return domain.findUserMenuAndResources(roleMenuMapper,menuMapping,menuResourceMapper,resourceMapper);
 		
+	}
+
+	@Override
+	@Transactional
+	public ViewData menuBatchRemove(String ids) throws TException {
+		Example example=new Example(MenuPo.class);
+		example.createCriteria().andIn("id", Arrays.asList(ids.split(",")));
+		if(menuMapping.deleteByExample(example)<1){
+			throw new TException(TErrorCode.ERROR_DELETE_MENU_CODE,TErrorCode.ERROR_DELETE_MENU_MSG);
+		}
+		return ViewData.success(true);
 	}
 }

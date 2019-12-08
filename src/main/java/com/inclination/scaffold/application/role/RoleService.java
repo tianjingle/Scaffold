@@ -4,6 +4,9 @@ import com.inclination.scaffold.api.request.role.RoleQryByPage;
 import com.inclination.scaffold.api.response.role.RoleManageAllResponse;
 import com.inclination.scaffold.api.response.role.RoleManageQryResponse;
 import com.inclination.scaffold.constant.exception.TException;
+import com.inclination.scaffold.utils.ViewData;
+
+import javax.swing.text.View;
 
 public interface RoleService {
 
@@ -13,8 +16,9 @@ public interface RoleService {
 
 	void deleteRole(RoleDto dto) throws TException;
 
-	RoleManageQryResponse findAllByPage(RoleQryByPage request);
+	ViewData findAllByPage(RoleQryByPage request);
 
 	RoleManageAllResponse findAllRole();
 
+    ViewData batchRemove(String ids) throws TException;
 }

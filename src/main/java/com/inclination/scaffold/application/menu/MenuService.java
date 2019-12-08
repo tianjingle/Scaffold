@@ -1,10 +1,8 @@
 package com.inclination.scaffold.application.menu;
 
 import com.inclination.scaffold.api.request.menu.MenuQryByPage;
-import com.inclination.scaffold.api.response.menu.MenuManagerQryResponse;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ViewData;
-import com.inclination.scaffold.utils.ViewDataOld;
 
 public interface MenuService {
 
@@ -14,8 +12,9 @@ public interface MenuService {
 
 	void deleteMenu(MenuDto dto) throws TException;
 
-	MenuManagerQryResponse findMenu(MenuQryByPage request);
+	ViewData findMenu(MenuQryByPage request);
 
 	ViewData findMenusByRoid(Integer roid);
 
+	ViewData menuBatchRemove(String ids) throws TException;
 }

@@ -23,8 +23,8 @@
     <include refid="Base_Column_List" />
     from role
     where 1=1
-    <if test="roleName!=null">and rolename like concat('%',#{roleName,jdbcType=VARCHAR},'%')</if>
-    <if test="menuId!=null">and menuid like concat('%',#{menuId,jdbcType=VARCHAR},'%')</if>
+    <if test="roleName!=null">and role_name like concat('%',#{roleName,jdbcType=VARCHAR},'%')</if>
+    <if test="menuId!=null">and menu_id like concat('%',#{menuId,jdbcType=VARCHAR},'%')</if>
     <if test="content!=null">and content like concat('%',#{content,jdbcType=VARCHAR},'%')</if>
     <if test="flag!=null">and flag like concat('%',#{flag,jdbcType=VARCHAR},'%')</if>
   </select>
