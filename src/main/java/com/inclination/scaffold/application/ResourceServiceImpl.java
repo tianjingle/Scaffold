@@ -1,9 +1,12 @@
 package com.inclination.scaffold.application;
 
+import java.util.Arrays;
 import java.util.List;
 
+import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.infrastraction.repository.ResourcePoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.ResourcePo;
+import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,7 @@ import com.inclination.scaffold.application.resource.ResourceService;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.domain.DResource;
 import com.inclination.scaffold.utils.ModelMapUtils;
+import tk.mybatis.mapper.entity.Example;
 
 @Service
 public class ResourceServiceImpl implements ResourceService{
@@ -50,16 +54,25 @@ public class ResourceServiceImpl implements ResourceService{
 	}
 
 	@Override
-	public ResourceManagerQryResponse resourceQryByPages(ResourceQryByPage request) {
+	public ViewData resourceQryByPages(ResourceQryByPage request) {
 		// TODO Auto-generated method stub
 		ResourcePo po=ModelMapUtils.map(request, ResourcePo.class);
 		Page hpage=PageHelper.startPage((int)request.getPage(), request.getLimit());
-		List<ResourcePo> list=resourceMapper.selectBySelective(po);
-		ResourceManagerQryResponse response = new ResourceManagerQryResponse();
-		response.setList(ModelMapUtils.map(list, ResourceManagerResponse.class));
-		response.PageBaseQueryEntity(request.getPage(),request.getLimit(), 
-				(int)hpage.getPages(),(int)hpage.getTotal());
-		return response;
+		Example example=new Example(ResourcePo.class);
+		example.createCriteria().andLike("resourceName",request.getResourceName()).orLike("resourceUrl",request.getResourceName());
+		List<ResourcePo> list=resourceMapper.selectByExample(example);
+		return ViewData.success(ModelMapUtils.map(list, ResourceManagerResponse.class),hpage.getPages(),hpage.getTotal());
+	}
+
+	@Override
+	@Transactional
+	public ViewData batchRemove(String resourceIds) throws TException {
+		Example example=new Example(ResourcePo.class);
+		example.createCriteria().andIn("id", Arrays.asList(resourceIds.split(",")));
+		if (resourceMapper.deleteByExample(example)<1){
+			throw new TException(TErrorCode.ERROR_DELETE_RESOURCE_CODE, TErrorCode.ERROR_DELETE_RESOURCE_MSG);
+		}
+		return ViewData.success(true);
 	}
 
 }

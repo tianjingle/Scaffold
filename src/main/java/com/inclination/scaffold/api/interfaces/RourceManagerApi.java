@@ -2,6 +2,9 @@ package com.inclination.scaffold.api.interfaces;
 
 import javax.validation.Valid;
 
+import com.google.common.base.Strings;
+import com.inclination.scaffold.constant.exception.TErrorCode;
+import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,7 +61,7 @@ public class RourceManagerApi {
 	 * @param id 删除资源的id
 	 * @throws TException 抛出错误
 	 */
-	@DeleteMapping(value="/resource-manager/{id}",consumes="application/json",produces="application/json;charset=utf-8")
+	@DeleteMapping(value="/resource-manager/{id}")
 	@ApiOperation(value="资源删除",notes="资源删除")
 	public void resourceDelete(@PathVariable String id) throws TException{
 		ResourceDto dto=new ResourceDto();
@@ -72,7 +75,21 @@ public class RourceManagerApi {
 	 */
 	@GetMapping(value="/resource-manager")
 	@ApiOperation(value="资源查询",notes="资源查询")
-	public ResourceManagerQryResponse resourceFinds(@ModelAttribute ResourceQryByPage request){
+	public ViewData resourceFinds(@ModelAttribute ResourceQryByPage request){
 		return resourceService.resourceQryByPages(request);
+	}
+
+	/**
+	 * 批量删除资源
+	 * @param resourceIds
+	 * @return
+	 */
+	@DeleteMapping(value = "/resource-batch-delete")
+	@ApiOperation(value = "资源批量删除",notes = "资源批量删除")
+	public ViewData batchRemoveResource(String resourceIds) throws TException {
+		if (Strings.isNullOrEmpty(resourceIds)){
+			throw new TException(TErrorCode.ERROR_DELETE_RESOURCE_CODE,TErrorCode.ERROR_DELETE_RESOURCE_MSG);
+		}
+		return resourceService.batchRemove(resourceIds);
 	}
 }

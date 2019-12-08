@@ -93,7 +93,8 @@ public class DResource {
 		ResourcePo po = ModelMapUtils.map(this, ResourcePo.class);
 		Example example =new Example(ResourcePo.class);
 		example.createCriteria().andEqualTo("resourceName",this.resourceName);
-		if (resourceMapper.selectCountByExample(po) != 0) {
+		long count=resourceMapper.selectCountByExample(example);
+		if ( count!= 0) {
 			throw new TException(TErrorCode.ERROR_EXISIT_RESOURCE_CODE, TErrorCode.ERROR_EXISIT_RESOURCE_MSG);
 		} else if (resourceMapper.updateByPrimaryKey(po) != 1) {
 			throw new TException(TErrorCode.ERROR_UPDATE_RESOURCE_CODE, TErrorCode.ERROR_UPDATE_RESOURCE_MSG);
