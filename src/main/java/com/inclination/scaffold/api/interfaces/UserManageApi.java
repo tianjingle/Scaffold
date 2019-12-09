@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.inclination.scaffold.api.request.user.*;
+import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -105,14 +106,14 @@ public class UserManageApi {
         return vd;
 	}
 	@PostMapping(value="/users-login")
-	public ViewData userLogin(@Valid @RequestBody UserManageLoginRequest request,HttpServletRequest req){
+	public ViewData userLogin(@Valid @RequestBody UserManageLoginRequest request,HttpServletRequest req) throws TException {
 		UserDto dto=ModelMapUtils.map(request, UserDto.class);
 		UserDto loginDto=userManageServiceImp.usersLogin(dto);
 		UserManageLoginResponse response=ModelMapUtils.map(loginDto, UserManageLoginResponse.class);
 		if(response!=null){
 			req.getSession().setAttribute("CurrentUser", loginDto);
 		}else{
-			return null;
+			throw new TException(TErrorCode.ERROR_LOGIN_USER_CODE,TErrorCode.ERROR_LOGIN_USER_MSG);
 		}
 		return ViewData.success(response);
 	}

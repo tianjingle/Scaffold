@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.inclination.scaffold.api.response.resource.ResourceManagerAllResponse;
 import com.inclination.scaffold.api.response.resource.ResourceManagerResponse;
+import com.inclination.scaffold.application.menuresource.MenuResourceDto;
 import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.repository.MenuResourcePoMapper;
@@ -65,11 +66,6 @@ public class DMenuResource {
 	public void addMenuResource(MenuResourcePoMapper menuResourceMapper) throws TException {
 		// TODO Auto-generated method stub
 		MenuResourcePo po=ModelMapUtils.map(this,MenuResourcePo.class);
-	    Example example=new Example(MenuResourcePo.class);
-	    Example.Criteria criteria=example.createCriteria();
-	    criteria.andEqualTo("menuId",this.getMenuId());
-	    criteria.andEqualTo("resourceId",this.resourceId);
-		menuResourceMapper.deleteByExample(example);
 		if("Y".equals(this.flag)){
 			if(menuResourceMapper.insert(po)!=1){
 				throw new TException(TErrorCode.ERROR_INSERT_MENURESOURCE_CODE,TErrorCode.ERROR_INSERT_MENURESOURCE_MSG);
@@ -129,7 +125,6 @@ public class DMenuResource {
 			map.put(String.valueOf(menuResourceList.get(i).getResourceId()), menuResourceList.get(i));
 		}
 		for (int i=0;i<resourceList.size();i++) {
-			MenuResourcePo temp= (MenuResourcePo) map.get(String.valueOf(resourceList.get(i).getId()));
 			if(map.get(String.valueOf(resourceList.get(i).getId()))!=null){
 				resourceList.get(i).setFlag("Y");
 			}else{

@@ -12,6 +12,7 @@ import com.inclination.scaffold.infrastraction.repository.MenuPoMapper;
 import com.inclination.scaffold.infrastraction.repository.RoleMenuPoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.*;
 import com.inclination.scaffold.utils.ModelMapUtils;
+import com.inclination.scaffold.utils.ViewData;
 import tk.mybatis.mapper.entity.Example;
 
 public class DRoleMenu {
@@ -79,22 +80,10 @@ public class DRoleMenu {
 	 * @param roleMenuMapper
 	 * @throws TException
 	 */
-	public void modifyRoleMenu(RoleMenuPoMapper roleMenuMapper) throws TException {
+	public void modifyRoleMenuNew(RoleMenuPoMapper roleMenuMapper) throws TException {
 		// TODO Auto-generated method stub
 		RoleMenuPo po=ModelMapUtils.map(this, RoleMenuPo.class);
-		Example example =new Example(RoleMenuPo.class);
-		Example.Criteria criteria=example.createCriteria();
-		criteria.andEqualTo("roleId",this.getRoleId());
-		criteria.andEqualTo("menuId",this.getMenuId());
-		roleMenuMapper.deleteByExample(example);
-		if("Y".equals(this.flag)){
-			roleMenuMapper.insert(po);
-		}
-/*		if(roleMenuMapper.countbyCount(po)>0){
-			throw new TException(TErrorCode.ERROR_EXISIT_ROLEMENU_CODE,TErrorCode.ERROR_EXISIT_ROLEMENU_MSG);
-		}else if(roleMenuMapper.updateByPrimaryKey(po)!=1){
-		    throw new TException(TErrorCode.ERROR_UPDATE_ROLEMENU_CODE,TErrorCode.ERROR_UPDATE_ROLEMENU_MSG);
-		}*/
+		roleMenuMapper.insert(po);
 	}
 
 	public void deleteRoleMenu(RoleMenuPoMapper roleMenuMapper) throws TException {
@@ -104,7 +93,7 @@ public class DRoleMenu {
 		}
 	}
 
-	public RoleMenuManagerAllResponse findMyMenuWithFlag(MenuPoMapper menuMapping, RoleMenuPoMapper roleMenuMapper) {
+	public ViewData findMyMenuWithFlag(MenuPoMapper menuMapping, RoleMenuPoMapper roleMenuMapper) {
 		// TODO Auto-generated method stub
 		List<MenuPo> menulist=menuMapping.selectAll();
 		Map<String,Object> map=new HashMap<>();
@@ -116,15 +105,13 @@ public class DRoleMenu {
 			map.put(String.valueOf(roleMenuList.get(i).getMenuId()), roleMenuList.get(i));
 		}
 		for(int i=0;i<menulist.size();i++){
-			if(map.get(menulist.get(i).getId())!=null){
+			if(map.get(String.valueOf(menulist.get(i).getId()))!=null){
 				menulist.get(i).setFlag("Y");
 			}else{
 				menulist.get(i).setFlag("N");
 			}
 		}
-		RoleMenuManagerAllResponse response =new RoleMenuManagerAllResponse();
-		response.setList(ModelMapUtils.map(menulist, RoleMenuManagerResponse.class));
-		return response;
+		return ViewData.success(ModelMapUtils.map(menulist, RoleMenuManagerResponse.class));
 	}
 
 }

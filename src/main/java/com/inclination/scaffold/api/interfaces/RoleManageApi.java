@@ -93,7 +93,7 @@ public class RoleManageApi {
 	 */
 	@GetMapping(value="/role-manager-all")
 	@ApiOperation(value="所有角色查询",notes="所有角色查询")
-	public RoleManageAllResponse findAllRole(){
+	public ViewData findAllRole(){
 		return roleService.findAllRole();
 	}
 

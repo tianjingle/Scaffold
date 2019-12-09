@@ -94,17 +94,20 @@ public class DMenu {
 		Example.Criteria criteria=example.createCriteria();
 		criteria.andEqualTo("roleId",this.id);
 		List<RoleMenuPo> rmlist=roleMenuMapper.selectByExample(example);
+
+		//角色-菜单
 		List<Map> tianlist=new ArrayList<Map>();
 		Example menuExample = new Example(MenuPo.class);
 		Example.Criteria menuCriteria=menuExample.createCriteria();
 		menuCriteria.andIn("id",rmlist.stream().map(RoleMenuPo::getMenuId).collect(Collectors.toList()));
 		List<MenuPo> menulist=menuMapping.selectByExample(menuExample);
+//获取改角色的所有菜单
 		for(int i=0;i<menulist.size();i++){
 			Map map = new HashMap();
-			Example menuresourceExample=new Example(MenuResourcePo.class);
-			Example.Criteria menuresourceCriteria=example.createCriteria();
-			menuresourceCriteria.andIn("menuId",menulist.stream().map(MenuPo::getId).collect(Collectors.toList()));
-			List<MenuResourcePo> mrlist=menuResourceMapper.selectByExample(menuresourceExample);
+			Example example1=new Example(MenuResourcePo.class);
+			example1.createCriteria().andEqualTo("menuId",menulist.get(i).getId());
+			//加载该菜单下的所有菜单-资源关系
+			List<MenuResourcePo> mrlist=menuResourceMapper.selectByExample(example1);
 			Example resourceExample =new Example(ResourcePo.class);
 			Example.Criteria resourceCriteria=resourceExample.createCriteria();
 			resourceCriteria.andIn("id",mrlist.stream().map(MenuResourcePo::getResourceId).collect(Collectors.toList()));

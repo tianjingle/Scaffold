@@ -13,6 +13,7 @@ public class MenuResourcePo {
     @Column(name = "menu_id")
     private Integer menuId;
 
+
     /**
      * 资源id
      */

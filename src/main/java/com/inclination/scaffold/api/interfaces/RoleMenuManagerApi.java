@@ -1,5 +1,6 @@
 package com.inclination.scaffold.api.interfaces;
 
+import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,13 +50,10 @@ public class RoleMenuManagerApi {
 	 * @param request
 	 * @throws TException
 	 */
-	@PatchMapping(value="/roles-menus-manager")
+	@PatchMapping(value="/roles-menus-manager/{id}")
 	@ApiOperation(value="角色资源修改",notes="角色资源修改")
-	public void modifyRoleMenus(@RequestBody RoleMenuModifyRequest[] request) throws TException{
-		for(int i=0;i<request.length;i++){
-			RoleMenuDto dto=ModelMapUtils.map(request[i], RoleMenuDto.class);
-			roleMenuService.roleMenuModify(dto);
-		}
+	public void modifyRoleMenus(@PathVariable String id,@RequestBody RoleMenuModifyRequest[] request) throws TException{
+		roleMenuService.roleMenuModify(id,request);
 	}
 	/**
 	 * 角色菜单删除
@@ -75,7 +73,7 @@ public class RoleMenuManagerApi {
 	 */
 	@GetMapping(value="/roles-menus-manager/{id}")
 	@ApiOperation(value="角色资源查询",notes="角色资源查询")
-	public RoleMenuManagerAllResponse findAllRoleMenuNew(@PathVariable Integer id){
+	public ViewData findAllRoleMenuNew(@PathVariable Integer id){
 		return roleMenuService.roleMenuFindNew(id);
 	}
 /*	

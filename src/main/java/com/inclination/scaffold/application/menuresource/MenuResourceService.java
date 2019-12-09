@@ -1,7 +1,7 @@
 package com.inclination.scaffold.application.menuresource;
 
+import com.inclination.scaffold.api.request.menuresource.MenuResourceAddRequest;
 import com.inclination.scaffold.api.response.menuresource.MenuResourceQryResponse;
-import com.inclination.scaffold.api.response.resource.ResourceManagerAllResponse;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ViewData;
 
@@ -9,10 +9,12 @@ public interface MenuResourceService {
 
 	/**
 	 * 菜单与资源之间的关系添加
+	 *
+	 * @param id
 	 * @param dto
-	 * @throws TException 
+	 * @throws TException
 	 */
-	void menuResourceAdd(MenuResourceDto dto) throws TException;
+	void menuResourceAdd(String id, MenuResourceAddRequest[] dto) throws TException;
 
 	/**
 	 * 菜单资源之间关系的修改

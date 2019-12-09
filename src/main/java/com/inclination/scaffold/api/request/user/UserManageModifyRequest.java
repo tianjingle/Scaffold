@@ -24,6 +24,6 @@ public class UserManageModifyRequest {
 	private String userEmil;
 
 	@ApiModelProperty(name="权限",value="权限")
-    private Integer roid;
+    private Integer roId;
 	
 }

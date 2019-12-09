@@ -107,7 +107,7 @@ public class User {
 		Example example=new Example(UserPo.class);
 		example.createCriteria().andEqualTo("loginId",po.getLoginId()).andEqualTo("userPassword",po.getUserPassword());
 		Integer count=(Integer) userMapping.selectCountByExample(example);
-        if(count>0){
+        if(count>1){
         	throw new TException(TErrorCode.ERROR_INSERT_USER_CODE,TErrorCode.ERROR_INSERT_USER_MSG);
         }else if(userMapping.updateByPrimaryKeySelective(po)!=1){
 			throw new TException(TErrorCode.ERROR_UPDATE_USER_CODE,TErrorCode.ERROR_UPDATE_USER_MSG);

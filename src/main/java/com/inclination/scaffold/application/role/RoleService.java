@@ -18,7 +18,7 @@ public interface RoleService {
 
 	ViewData findAllByPage(RoleQryByPage request);
 
-	RoleManageAllResponse findAllRole();
+	ViewData findAllRole();
 
     ViewData batchRemove(String ids) throws TException;
 }

@@ -1,6 +1,7 @@
 package com.inclination.scaffold.api.interfaces;
 
 
+import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,13 +39,10 @@ public class MenuResourceApi {
 	 * @param request
 	 * @throws TException 
 	 */
-	@PostMapping(value="/menus-resources-manager")
+	@PostMapping(value="/menus-resources-manager/{id}")
 	@ApiOperation(value="菜单资源新增",notes="菜单资源新增")
-	public void addMenuResource(@RequestBody MenuResourceAddRequest[] request) throws TException{
-		for(int i=0;i<request.length;i++){
-			MenuResourceDto dto=ModelMapUtils.map(request[i], MenuResourceDto.class);
-			menuResourceService.menuResourceAdd(dto);
-		}
+	public void addMenuResource(@PathVariable String id,@RequestBody MenuResourceAddRequest[] request) throws TException{
+			menuResourceService.menuResourceAdd(id,request);
 	}
 
 	/**

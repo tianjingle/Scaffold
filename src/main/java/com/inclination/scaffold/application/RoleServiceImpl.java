@@ -65,12 +65,10 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public RoleManageAllResponse findAllRole() {
+	public ViewData findAllRole() {
 		// TODO Auto-generated method stub
 		List<RolePo> list=roleMapping.selectAll();
-		RoleManageAllResponse response=new RoleManageAllResponse();
-		response.setList(ModelMapUtils.map(list, RoleManageResponse.class));
-		return response;
+		return ViewData.success(ModelMapUtils.map(list, RoleManageResponse.class));
 	}
 
 	@Override

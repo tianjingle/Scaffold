@@ -2,6 +2,10 @@ package com.inclination.scaffold.constant.exception;
 
 public class TErrorCode {
 
+	public static final String  ERROR_LOGIN_USER_CODE ="10000";
+
+	public static final String ERROR_LOGIN_USER_MSG="该账户不存在";
+
 	public static final String ERROR_INSERT_USER_CODE = "10001";
 
 	public static final String ERROR_INSERT_USER_MSG = "该用户名已经存在";
@@ -113,4 +117,6 @@ public class TErrorCode {
 	public static final String ERROR_DELETE_TOOLPROJECTURL_CODE = "70004";
 
 	public static final String ERROR_DELETE_TOOLPROJECTURL_MSG = "工具软件删除失败";
+
+
 }
