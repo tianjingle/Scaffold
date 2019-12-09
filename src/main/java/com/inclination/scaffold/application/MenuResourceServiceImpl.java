@@ -3,6 +3,7 @@ package com.inclination.scaffold.application;
 import com.inclination.scaffold.api.response.menuresource.MenuResourceResponse;
 import com.inclination.scaffold.infrastraction.repository.MenuResourcePoMapper;
 import com.inclination.scaffold.infrastraction.repository.ResourcePoMapper;
+import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +62,7 @@ public class MenuResourceServiceImpl implements MenuResourceService {
 	}
 
 	@Override
-	public ResourceManagerAllResponse menuResourceFindsNew(Integer menuid) {
+	public ViewData menuResourceFindsNew(Integer menuid) {
 		// TODO Auto-generated method stub
 		
 		DMenuResource domain=new DMenuResource();

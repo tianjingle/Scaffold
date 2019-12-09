@@ -3,6 +3,7 @@ package com.inclination.scaffold.application.menuresource;
 import com.inclination.scaffold.api.response.menuresource.MenuResourceQryResponse;
 import com.inclination.scaffold.api.response.resource.ResourceManagerAllResponse;
 import com.inclination.scaffold.constant.exception.TException;
+import com.inclination.scaffold.utils.ViewData;
 
 public interface MenuResourceService {
 
@@ -38,6 +39,6 @@ public interface MenuResourceService {
 	 * @param menuid
 	 * @return
 	 */
-	ResourceManagerAllResponse menuResourceFindsNew(Integer menuid);
+	ViewData menuResourceFindsNew(Integer menuid);
 
 }

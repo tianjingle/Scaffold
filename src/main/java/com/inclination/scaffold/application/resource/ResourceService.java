@@ -16,4 +16,6 @@ public interface ResourceService {
 	ViewData resourceQryByPages(ResourceQryByPage request);
 
     ViewData batchRemove(String resourceIds) throws TException;
+
+    ViewData getResourceAll();
 }

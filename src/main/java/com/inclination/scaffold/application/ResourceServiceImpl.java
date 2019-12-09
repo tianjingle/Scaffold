@@ -74,4 +74,10 @@ public class ResourceServiceImpl implements ResourceService{
 		return ViewData.success(true);
 	}
 
+	@Override
+	public ViewData getResourceAll() {
+		List<ResourcePo> list=resourceMapper.selectAll();
+		return ViewData.success(list);
+	}
+
 }

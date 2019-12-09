@@ -92,4 +92,11 @@ public class RourceManagerApi {
 		}
 		return resourceService.batchRemove(resourceIds);
 	}
+
+
+	@GetMapping(value = "/resource-all")
+	@ApiOperation(value="获取所有资料",notes = "获取所有资料")
+	public ViewData getResourceAll(){
+		return resourceService.getResourceAll();
+	}
 }

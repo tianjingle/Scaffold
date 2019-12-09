@@ -1,6 +1,7 @@
 package com.inclination.scaffold.api.interfaces;
 
 
+import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,7 +73,7 @@ public class MenuResourceApi {
 	
 	@GetMapping(value="/menus-resources-manager/{menuid}")
 	@ApiOperation(value="菜单资源查询",notes="菜单资源查询")
-	public ResourceManagerAllResponse findAllMenuResources(@PathVariable String menuid){
+	public ViewData findAllMenuResources(@PathVariable String menuid){
 		return menuResourceService.menuResourceFindsNew(Integer.parseInt(menuid));
 	}
 /*	@GetMapping(value="/menus-resources-manager-old")

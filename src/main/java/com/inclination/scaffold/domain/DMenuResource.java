@@ -12,6 +12,7 @@ import com.inclination.scaffold.infrastraction.repository.MenuResourcePoMapper;
 import com.inclination.scaffold.infrastraction.repository.ResourcePoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.*;
 import com.inclination.scaffold.utils.ModelMapUtils;
+import com.inclination.scaffold.utils.ViewData;
 import tk.mybatis.mapper.entity.Example;
 
 public class DMenuResource {
@@ -116,7 +117,7 @@ public class DMenuResource {
 		}
 	}
 
-	public ResourceManagerAllResponse findMyResourceWithFlag(ResourcePoMapper resourceMapper,MenuResourcePoMapper menuResourceMapper) {
+	public ViewData findMyResourceWithFlag(ResourcePoMapper resourceMapper, MenuResourcePoMapper menuResourceMapper) {
 		// TODO Auto-generated method stub
 		List<ResourcePo> resourceList=resourceMapper.selectAll();
 		Example example=new Example(MenuResourcePo.class);
@@ -134,9 +135,7 @@ public class DMenuResource {
 				resourceList.get(i).setFlag("N");
 			}
 		}
-		ResourceManagerAllResponse response=new ResourceManagerAllResponse();
-		response.setList(ModelMapUtils.map(resourceList, ResourceManagerResponse.class));
-		return response;
+		return ViewData.success(ModelMapUtils.map(resourceList, ResourceManagerResponse.class));
 	}
 
 }
