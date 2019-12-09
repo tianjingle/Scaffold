@@ -68,7 +68,7 @@ public class DMenuResource {
 	    Example example=new Example(MenuResourcePo.class);
 	    Example.Criteria criteria=example.createCriteria();
 	    criteria.andEqualTo("menuId",this.getMenuId());
-	    criteria.andEqualTo("resourceid",this.resourceId);
+	    criteria.andEqualTo("resourceId",this.resourceId);
 		menuResourceMapper.deleteByExample(example);
 		if("Y".equals(this.flag)){
 			if(menuResourceMapper.insert(po)!=1){
@@ -129,6 +129,7 @@ public class DMenuResource {
 			map.put(String.valueOf(menuResourceList.get(i).getResourceId()), menuResourceList.get(i));
 		}
 		for (int i=0;i<resourceList.size();i++) {
+			MenuResourcePo temp= (MenuResourcePo) map.get(String.valueOf(resourceList.get(i).getId()));
 			if(map.get(String.valueOf(resourceList.get(i).getId()))!=null){
 				resourceList.get(i).setFlag("Y");
 			}else{
