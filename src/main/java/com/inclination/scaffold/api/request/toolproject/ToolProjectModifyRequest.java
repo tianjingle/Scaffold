@@ -1,6 +1,7 @@
 package com.inclination.scaffold.api.request.toolproject;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,8 +18,8 @@ import lombok.NoArgsConstructor;
 public class ToolProjectModifyRequest {
 
 	@ApiModelProperty(name = "id", value = "外部工具软件主键id")
-	@NotBlank(message = "主键不能为空")
-	private String id;
+	@NotNull(message = "主键不能为空")
+	private Integer id;
 	
 	@ApiModelProperty(name = "name", value = "外部工具软件的名称")
 	@NotBlank(message = "外部工具软件的名称不能为空")

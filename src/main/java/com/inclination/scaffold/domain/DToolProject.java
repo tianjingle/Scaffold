@@ -81,7 +81,7 @@ public class DToolProject {
 		Example example=new Example(ToolProjectPo.class);
 		Example.Criteria criteria=example.createCriteria();
 		criteria.andEqualTo("name",this.name);
-		if(toolprojecturlMapper.selectCountByExample(example)>0){
+		if(toolprojecturlMapper.selectCountByExample(example)>1){
 			throw new TException(TErrorCode.ERROR_EXISIT_TOOLPROJECTURL_CODE,TErrorCode.ERROR_EXISIT_TOOLPROJECTURL_MSG);
 		}else{
 			if(toolprojecturlMapper.updateByPrimaryKey(po)!=1){

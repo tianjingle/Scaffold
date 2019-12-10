@@ -108,10 +108,13 @@ public class DMenu {
 			example1.createCriteria().andEqualTo("menuId",menulist.get(i).getId());
 			//加载该菜单下的所有菜单-资源关系
 			List<MenuResourcePo> mrlist=menuResourceMapper.selectByExample(example1);
-			Example resourceExample =new Example(ResourcePo.class);
-			Example.Criteria resourceCriteria=resourceExample.createCriteria();
-			resourceCriteria.andIn("id",mrlist.stream().map(MenuResourcePo::getResourceId).collect(Collectors.toList()));
-			List<ResourcePo> relist=resourceMapper.selectByExample(resourceExample);
+			List<ResourcePo> relist=new ArrayList<>();
+			if(mrlist.size()>0){
+				Example resourceExample =new Example(ResourcePo.class);
+				Example.Criteria resourceCriteria=resourceExample.createCriteria();
+				resourceCriteria.andIn("id",mrlist.stream().map(MenuResourcePo::getResourceId).collect(Collectors.toList()));
+				relist=resourceMapper.selectByExample(resourceExample);
+			}
 			map.put("child", relist);
 			map.put("name",menulist.get(i).getMenuName());
 			tianlist.add(map);

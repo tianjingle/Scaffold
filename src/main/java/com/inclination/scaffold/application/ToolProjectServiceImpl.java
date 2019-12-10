@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.inclination.scaffold.infrastraction.repository.ToolProjectPoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.ToolProjectPo;
+import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,15 +49,12 @@ public class ToolProjectServiceImpl implements ToolProjectService {
 		ModelMapUtils.map(dto, DToolProject.class).toolProjectDelete(toolProjectPoMapper);
 	}
 	@Override
-	public ToolProjectQryAllResponse findAll() {
+	public ViewData findAll() {
 		// TODO Auto-generated method stub
 		Example example = new Example(ToolProjectPo.class);
 		Example.Criteria criteria=example.createCriteria();
-		criteria.andIsNotNull("Id");
+		criteria.andIsNotNull("id");
 		List<ToolProjectPo> list=toolProjectPoMapper.selectByExample(example);
-		ToolProjectQryAllResponse response=new ToolProjectQryAllResponse();
-		response.setList(ModelMapUtils.map(list, ToolProjectResponse.class));
-		return response;
+		return ViewData.success(list);
 	}
-
 }

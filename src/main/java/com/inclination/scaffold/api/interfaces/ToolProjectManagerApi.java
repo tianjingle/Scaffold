@@ -2,6 +2,7 @@ package com.inclination.scaffold.api.interfaces;
 
 import javax.validation.Valid;
 
+import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,7 +58,7 @@ public class ToolProjectManagerApi {
 	}
 	@GetMapping(value="/tools-projects-manager")
 	@ApiOperation(value="获取外部工具项目信息",notes="获取外部工具项目的信息")
-	public ToolProjectQryAllResponse findToolProjectAll(){
+	public ViewData findToolProjectAll(){
 		return toolProjectService.findAll();
 	}
 	
