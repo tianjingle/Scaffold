@@ -10,8 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Strings;
+import com.inclination.scaffold.api.request.project.ProjectQryByPage;
 import com.inclination.scaffold.infrastraction.repository.ProjectPoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.ProjectPo;
+import com.inclination.scaffold.utils.ViewData;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.eclipse.jgit.api.Git;
@@ -35,6 +38,7 @@ import com.inclination.scaffold.application.project.ProjectManagerService;
 import com.inclination.scaffold.application.users.UserDto;
 import com.inclination.scaffold.utils.InputStreamRunnable;
 import com.inclination.scaffold.utils.ModelMapUtils;
+import tk.mybatis.mapper.entity.Example;
 
 
 @Service
@@ -104,7 +108,19 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		 */
 		crateApolloProject(projectDto,dto);
 	}
-	
+
+	@Override
+	public ViewData doSearchProject(ProjectQryByPage request, String loginId) {
+		Example example=new Example(ProjectPo.class);
+		if (Strings.isNullOrEmpty(request.getArtifactId())){
+			example.createCriteria().andEqualTo("artifactId",request.getArtifactId());
+		}else{
+			example.createCriteria().andEqualTo("loginId",loginId);
+		}
+		List<ProjectPo> list=projectMpper.selectByExample(example);
+		return ViewData.success(list);
+	}
+
 	public void crateApolloProject(ProjectInformationDto projectDto, UserDto dto){
 		
 		String username=dto.getUserName();

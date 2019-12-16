@@ -5,10 +5,10 @@ import java.util.Date;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import com.inclination.scaffold.api.request.project.ProjectQryByPage;
+import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.inclination.scaffold.api.request.project.ProjectManagerCreateRequest;
 import com.inclination.scaffold.api.request.project.ProjectManagerGitCreateRequest;
@@ -66,4 +66,14 @@ public class ProjectManagerApi {
 		projectManagerService.createScaffoldProject(projectDto,dto);
 	}
 
+	/**
+	 * 查询项目资料
+	 * @param request
+	 * @return
+	 */
+	@GetMapping(value = "/projects-scaffold-find")
+	@ApiOperation(value="查询项目资料",notes = "查询项目资料")
+	public ViewData parseScaffold(@ModelAttribute ProjectQryByPage request,@SessionAttribute("CurrentUser") UserDto user){
+		return projectManagerService.doSearchProject(request,user.getLoginId());
+	}
 }
