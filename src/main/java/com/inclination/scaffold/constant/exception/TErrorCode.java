@@ -2,6 +2,10 @@ package com.inclination.scaffold.constant.exception;
 
 public class TErrorCode {
 
+	public static final String  ERROR_TIME_OUT_CODE ="00000";
+
+	public static final String ERROR_TIME_OUT_MSG="系统超时，请重新登录";
+
 	public static final String  ERROR_LOGIN_USER_CODE ="10000";
 
 	public static final String ERROR_LOGIN_USER_MSG="该账户不存在";

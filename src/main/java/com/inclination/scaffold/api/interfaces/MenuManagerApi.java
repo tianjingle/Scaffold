@@ -90,12 +90,14 @@ public class MenuManagerApi {
 	}
 	/**
 	 * 查询用户的访问菜单列表
-	 * @param roid 权限位
 	 * @return 返回结果集
 	 */
-	@GetMapping(value="/user-menus/{roid}")
+	@GetMapping(value="/user-menus")
 	@ApiOperation(value="用户的访问菜单列表",notes="用户访问的菜单列表")
-	public ViewData findUserMenu(@PathVariable Integer roid){
-		return menuService.findMenusByRoid(roid);
+	public ViewData findUserMenu(@SessionAttribute("CurrentUser")UserDto user) throws TException {
+		if(user==null){
+			throw new TException(TErrorCode.ERROR_TIME_OUT_CODE,TErrorCode.ERROR_TIME_OUT_MSG);
+		}
+		return menuService.findMenusByRoid(user.getRoId());
 	}
 }

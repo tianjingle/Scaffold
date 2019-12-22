@@ -14,6 +14,7 @@ import com.google.common.base.Strings;
 import com.inclination.scaffold.api.request.project.ProjectQryByPage;
 import com.inclination.scaffold.infrastraction.repository.ProjectPoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.ProjectPo;
+import com.inclination.scaffold.utils.CMDExecuteUtil;
 import com.inclination.scaffold.utils.ViewData;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -106,7 +107,7 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		/**
 		 * 创建apollo项目
 		 */
-		crateApolloProject(projectDto,dto);
+		//crateApolloProject(projectDto,dto);
 	}
 
 	@Override
@@ -122,7 +123,6 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 	}
 
 	public void crateApolloProject(ProjectInformationDto projectDto, UserDto dto){
-		
 		String username=dto.getUserName();
 		String password=dto.getUserPassword();
 		String apollourl=projectDto.getApolloUrl();
@@ -151,7 +151,7 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		
 	}
 
-	public void crateGitProject(ProjectInformationDto projectDto, UserDto dto){
+	public boolean crateGitProject(ProjectInformationDto projectDto, UserDto dto){
 		String artifactId=projectDto.getVersion();
 		String packageName=projectDto.getArtifactId();
 		String protectPath=System.getProperty("user.dir")+"/config"+artifactId;
@@ -169,7 +169,6 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 					.call();
 			SimpleDateFormat format=new SimpleDateFormat("yyyy/MM/dd HH:mm");
 			String dateStr=format.format(new Date());
-			
 			String cmd="mvn archetype:generate"
 					+ " -DgroupId="+projectDto.getGroupId()
 					+ " -DartifactId="+projectDto.getArtifactId()
@@ -182,47 +181,40 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 				 	+ " -B"
 					+ " -DarchetypeCatalog=local"
 					+ " -DinteractiveMode=false";
-			String output=executeCommand(cmd,file.getParentFile());
+			String output= CMDExecuteUtil.executeCommand(cmd,file.getParentFile());
 			System.out.println(output);
 			git.add().addFilepattern(".").call();
-			
 			git.commit().setMessage("上传到仓库..").call();
-			
 			git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUserName(),dto.getUserPassword())).call();
-			
 			git.close();
-			
 		}catch(GitAPIException e){
 			e.printStackTrace();
+			return false;
 		}catch(IOException e1){
 			e1.printStackTrace();
+			return false;
 		}
 		String []envs={"dev","sit","uat"};
 		//创建jenkins job
 		//查数据库获取各种系统的地址信息
-
-		
 		String jenkinsUrl=projectDto.getJenkinsUrl();
 		String username=dto.getUserName();
 		String password=dto.getUserPassword();
 		String jobName=projectDto.getArtifactId()+"-Center";
 		String orgModel="test";
-		
-		
 		RequestStatus result=null;
 		for (String env : envs) {
 			result=jenkinsService.createJob(jenkinsUrl,dto.getUserName(),dto.getUserPassword(),jobName,gitUrl,env);
 			if(!result.value()){
-				break;
+				return false;
 			}
-			
 		}
 		createInvoke(username,password,jenkinsUrl,gitUrl,orgModel,jobName,"dev");
 		if(result.value()){
 			projectMpper.insert(ModelMapUtils.map(projectDto, ProjectPo.class));
 			//这里保存到数据库
 		}
-		
+		return true;
 	}
 
 	private void createInvoke(String username, String password, String jenkinsUrl, String gitUrl, String orgModel,
@@ -254,44 +246,5 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		System.out.println(responseStr);
 	}
 
-	private String executeCommand(String cmd, File file) {
-		// TODO Auto-generated method stub
-		//根据运行环境判断运行命令
-		String osName=System.getProperty("os.name");
-		System.out.println(osName);
-		String []command={"","",cmd};
-		if(osName.contains("Windows")){
-			command[0]="cmd.exe";
-			command[1]="/c";
-		}else{
-			command[0]="/bin/sh";
-			command[1]="-c";
-		}
-		
-		StringBuffer output=new StringBuffer();
-		Process p;
-		InputStreamReader inputStreamReader=null;
-		BufferedReader reader=null;
-		try{
-			p=Runtime.getRuntime().exec(command,null,file);
-			Thread t=new Thread(new InputStreamRunnable(p.getErrorStream()));
-			t.start();
-			inputStreamReader=new InputStreamReader(p.getInputStream(),"utf-8");
-			reader=new BufferedReader(inputStreamReader);
-			String line="";
-			while((line=reader.readLine())!=null){
-				output.append(line+"\n");
-			}
-		}catch(IOException e){
-			e.printStackTrace();
-		}finally{
-			try{
-				inputStreamReader.close();
-				reader.close();
-			}catch(IOException e){
-				e.printStackTrace();
-			}
-		}
-		return output.toString();
-	}
+
 }
