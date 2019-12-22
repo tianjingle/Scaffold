@@ -113,7 +113,7 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 	@Override
 	public ViewData doSearchProject(ProjectQryByPage request, String loginId) {
 		Example example=new Example(ProjectPo.class);
-		if (Strings.isNullOrEmpty(request.getArtifactId())){
+		if (!Strings.isNullOrEmpty(request.getArtifactId())){
 			example.createCriteria().andEqualTo("artifactId",request.getArtifactId());
 		}else{
 			example.createCriteria().andEqualTo("loginId",loginId);
