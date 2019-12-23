@@ -12,6 +12,7 @@ import java.util.Map;
 
 import com.google.common.base.Strings;
 import com.inclination.scaffold.api.request.project.ProjectQryByPage;
+import com.inclination.scaffold.constant.config.ToolProjectProperties;
 import com.inclination.scaffold.infrastraction.repository.ProjectPoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.ProjectPo;
 import com.inclination.scaffold.utils.CMDExecuteUtil;
@@ -45,6 +46,14 @@ import tk.mybatis.mapper.entity.Example;
 @Service
 public class ProjectManagerServiceImpl implements ProjectManagerService{
 
+
+	/**
+	 * 配置信息
+	 */
+	@Autowired
+	private ToolProjectProperties projectProperties;
+
+
 	private RestTemplate restTemplate = new RestTemplate();
 	
 	/**
@@ -63,17 +72,15 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 	 * 此处的username、password为管理员分配给用户的账号
 	 * orgModel为组织的编号
 	 */
-	@Override
-	public void createGitRepository(ProjectManagerGitCreateDto map, UserDto dto) {
+	public boolean createGitRepository(String artifactId, UserDto dto) {
 		// TODO Auto-generated method stub
 		String orgModel=dto.getUserName()+"-org";
 		String username=dto.getUserName();
 		String password=dto.getUserPassword();
-		String artifactId=map.getProjectName();
 		/**
 		 * gitUrl 为git的地址 这里从前端传递过来
 		 */
-		String gitUrl=map.getGitUrl();
+		String gitUrl=projectProperties.getGitUrl();
 		String userMsg=username+":"+password;
 		String base64userMsg=Base64.encodeBase64String(userMsg.getBytes());
 		HttpHeaders header=new HttpHeaders();
@@ -97,12 +104,17 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		}catch(Exception e){
 			e.printStackTrace();
 			System.out.println("仓库创建失败...");
+			return false;
 		}
+		return true;
 	}
 	@Override
 	public void createScaffoldProject(ProjectInformationDto projectDto,UserDto dto) {
 		// TODO Auto-generated method stub
-		crateGitProject(projectDto,dto);
+		if (createGitRepository(projectDto.getArtifactId(),dto)){
+			crateGitProject(projectDto,dto);
+		}
+
 		
 		/**
 		 * 创建apollo项目
@@ -154,7 +166,7 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 	public boolean crateGitProject(ProjectInformationDto projectDto, UserDto dto){
 		String artifactId=projectDto.getVersion();
 		String packageName=projectDto.getArtifactId();
-		String protectPath=System.getProperty("user.dir")+"/config"+artifactId;
+		String protectPath=System.getProperty("user.dir")+"/project-temp/"+artifactId;
 		String packagePath=packageName.replaceAll("\\.","/");
 		String gitUrl=projectDto.getGitUrl();
 		//项目路径
@@ -163,8 +175,8 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		try{
 			FileUtils.deleteDirectory(file.getParentFile());
 			Git git=Git.cloneRepository()
-					.setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUserName(),dto.getUserPassword()))
-					.setURI(gitUrl)
+					.setCredentialsProvider(new UsernamePasswordCredentialsProvider(projectProperties.getGitAdmin(),projectProperties.getGitPassword()))
+					.setURI(projectProperties.getGitUrl())
 					.setDirectory(file)
 					.call();
 			SimpleDateFormat format=new SimpleDateFormat("yyyy/MM/dd HH:mm");
@@ -187,11 +199,8 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 			git.commit().setMessage("上传到仓库..").call();
 			git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUserName(),dto.getUserPassword())).call();
 			git.close();
-		}catch(GitAPIException e){
+		}catch(GitAPIException | IOException e){
 			e.printStackTrace();
-			return false;
-		}catch(IOException e1){
-			e1.printStackTrace();
 			return false;
 		}
 		String []envs={"dev","sit","uat"};

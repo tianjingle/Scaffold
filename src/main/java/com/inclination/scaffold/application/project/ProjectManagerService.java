@@ -6,7 +6,6 @@ import com.inclination.scaffold.utils.ViewData;
 
 public interface ProjectManagerService {
 
-	void createGitRepository(ProjectManagerGitCreateDto map, UserDto dto);
 
 	void createScaffoldProject(ProjectInformationDto projectDto, UserDto dto);
 

@@ -44,12 +44,12 @@ public class ProjectManagerApi {
 	 * @param request
 	 * @param session
 	 */
-	@PostMapping(value="/projects-repository-create")
-	@ApiOperation(value="创建git仓库",notes="创建git仓库")
-	public void repositoryCreate(@Valid @RequestBody ProjectManagerGitCreateRequest request,HttpSession session){
-		UserDto dto=(UserDto) session.getAttribute("CurrentUser");
-		projectManagerService.createGitRepository(ModelMapUtils.map(request, ProjectManagerGitCreateDto.class),dto);
-	}
+//	@PostMapping(value="/projects-repository-create")
+//	@ApiOperation(value="创建git仓库",notes="创建git仓库")
+//	public void repositoryCreate(@Valid @RequestBody ProjectManagerGitCreateRequest request,HttpSession session){
+//		UserDto dto=(UserDto) session.getAttribute("CurrentUser");
+//		projectManagerService.createGitRepository(ModelMapUtils.map(request, ProjectManagerGitCreateDto.class),dto);
+//	}
 	
 	/**
 	 * 创建脚手架工程

@@ -62,3 +62,13 @@ rest:
     connnection:
       request:
         timeout: 100
+
+Scaffold:
+  tool:
+    project:
+      git-url: http://127.0.0.1:3000/
+      git-admin: root
+      git-password: tianjingle
+      jenkins-url: http://127.0.0.1:9001/
+      jenkins-admin: admin
+      jenkins-password: tianjingle
