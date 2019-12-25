@@ -86,7 +86,6 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		HttpHeaders header=new HttpHeaders();
 		header.setContentType(MediaType.APPLICATION_JSON_UTF8);
 		header.set("Authorization", "Basic "+base64userMsg);
-		
 		Map<String,Object> param=new HashMap<>();
 		param.put("auto_init", false);
 		param.put("description", "");
@@ -114,8 +113,6 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		if (createGitRepository(projectDto.getArtifactId(),dto)){
 			crateGitProject(projectDto,dto);
 		}
-
-		
 		/**
 		 * 创建apollo项目
 		 */
@@ -158,25 +155,23 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		try{
 			ResponseEntity<String> resEntity=this.restTemplate.exchange(apollourl+"/apps", HttpMethod.POST,entity,String.class);
 		}catch(Exception e){
-			
 		}
-		
 	}
 
 	public boolean crateGitProject(ProjectInformationDto projectDto, UserDto dto){
-		String artifactId=projectDto.getVersion();
+		String artifactId=projectDto.getArtifactId();
 		String packageName=projectDto.getArtifactId();
 		String protectPath=System.getProperty("user.dir")+"/project-temp/"+artifactId;
 		String packagePath=packageName.replaceAll("\\.","/");
-		String gitUrl=projectDto.getGitUrl();
+		String gitUrl=projectProperties.getGitUrl()+""+dto.getUserName()+"-org/"+artifactId+".git";
 		//项目路径
 		File file=new File(protectPath);
 		//将代码上传到git
 		try{
 			FileUtils.deleteDirectory(file.getParentFile());
 			Git git=Git.cloneRepository()
-					.setCredentialsProvider(new UsernamePasswordCredentialsProvider(projectProperties.getGitAdmin(),projectProperties.getGitPassword()))
-					.setURI(projectProperties.getGitUrl())
+					.setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUserName(),dto.getUserPassword()))
+					.setURI(gitUrl)
 					.setDirectory(file)
 					.call();
 			SimpleDateFormat format=new SimpleDateFormat("yyyy/MM/dd HH:mm");
@@ -203,10 +198,10 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 			e.printStackTrace();
 			return false;
 		}
-		String []envs={"dev","sit","uat"};
+		String []envs={"dev"};
 		//创建jenkins job
 		//查数据库获取各种系统的地址信息
-		String jenkinsUrl=projectDto.getJenkinsUrl();
+		String jenkinsUrl=projectProperties.getJenkinsUrl();
 		String username=dto.getUserName();
 		String password=dto.getUserPassword();
 		String jobName=projectDto.getArtifactId()+"-Center";

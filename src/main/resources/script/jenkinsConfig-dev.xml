@@ -27,8 +27,7 @@
 		<configVersion>2</configVersion>
 		<userRemoteConfigs>
 			<hudson.plugins.git.UserRemoteConfig>
-				<url>http://git.test.com/eppsqps/eppsqps_git.git</url>
-				<credentialsId>273ff0b1-aba9-46ed-a35e-69039c4aeace</credentialsId>
+				<url></url>
 			</hudson.plugins.git.UserRemoteConfig>
 		</userRemoteConfigs>
 		<branches>

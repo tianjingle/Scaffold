@@ -17,17 +17,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProjectManagerCreateRequest {
 
-	@ApiModelProperty(name="giturl",value="git地址")
-	@NotBlank
-	private String gitUrl;
-
-	@ApiModelProperty(name="jenkinsurl",value="jenkins地址")
-	@NotBlank
-	private String jenkinsUrl;
-
-	@ApiModelProperty(name="apollourl",value="apollo地址")
-	@NotBlank
-	private String apolloUrl;
 	
 	@ApiModelProperty(name="artifactid",value="工程名称")
 	@NotBlank
@@ -42,11 +31,9 @@ public class ProjectManagerCreateRequest {
 	private String version;
 
 	@ApiModelProperty(name="gitorg",value="git组织名称")
-	@NotBlank
 	private String gitOrg;
 
 	@ApiModelProperty(name="apolloorg",value="apollo的组织")
-	@NotBlank
 	private String apolloOrg;
 
 }

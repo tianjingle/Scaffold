@@ -31,7 +31,7 @@ public class JenkinsServiceImpl {
 		// TODO Auto-generated method stub
 		JenkinsClient client = JenkinsClient.builder().endPoint(url).credentials(username + ":" + password).build();
         //System.getProperty("user.dir") 项目的地址
-		File config=new File(System.getProperty("user.dir")+"/jenkinsConfig-"+env+".xml");
+		File config=new File(System.getProperty("user.dir")+"/script/jenkinsConfig-"+env+".xml");
 		SAXReader reader=new SAXReader();
 		Document document=null;
 		try{
@@ -47,7 +47,6 @@ public class JenkinsServiceImpl {
 				Element urlEle=element.element("url");
 				if(null!=urlEle){
 					urlEle.setText(gitUrl);
-					
 				}else{
 					urlEle=DocumentHelper.createElement("url");
 					urlEle.setText(gitUrl);
