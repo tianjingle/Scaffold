@@ -1,6 +1,7 @@
 package com.inclination.scaffold.api.request.user;
 
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -35,7 +36,7 @@ public class UserManageAddRequest {
 	private String userPassword;
 	
 	@ApiModelProperty(name="useremil",value="邮箱")
-	@NotBlank(message="用戶郵箱不能为空")
+	@Email(message="您的邮箱不符合规范")
 	private String userEmil;
 	
 	@ApiModelProperty(name="roid",value="权限")

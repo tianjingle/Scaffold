@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.inclination.scaffold.constant.config.ToolProjectProperties;
 import com.inclination.scaffold.infrastraction.repository.ToolProjectPoMapper;
 import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.ToolProjectPo;
@@ -60,12 +61,10 @@ public class UserServiceImp implements UserService {
 	 */
 	@Autowired
 	private UserPoMapper userMapping;
-	
-	/**
-	 * 创建工具软件管理的数据库服务
-	 */
+
+
 	@Autowired
-	private ToolProjectPoMapper toolprojecturlMapper;
+	private ToolProjectProperties toolProjectProperties;
 
 
 	@Override
@@ -116,28 +115,15 @@ public class UserServiceImp implements UserService {
 		String username=dto.getUserName();
 		String password=dto.getUserPassword();
 		String email=dto.getUserEmil();
-		
-		//查数据库获取各种系统的地址信息
-		Example example = new Example(ToolProjectPo.class);
-		Example.Criteria criteria=example.createCriteria();
-		criteria.andIsNotNull("id");
-		List<ToolProjectPo> list=toolprojecturlMapper.selectByExample(example);
-		Map<String,Object> map=new HashMap<String,Object>();
-		for (ToolProjectPo toolprojecturl : list) {
-			map.put(toolprojecturl.getName(), toolprojecturl);
-		}
-		ToolProjectPo git=(ToolProjectPo)map.get("gitUrl");
-		String gitUrl=git.getUrl();
-		ToolProjectPo jenkins=(ToolProjectPo)map.get("jenkinsUrl");
-		String jenkinsUrl=jenkins.getUrl()+"securityRealm/createAccount";
-		System.out.println(jenkinsUrl);
-		ToolProjectPo apollo=(ToolProjectPo)map.get("apolloUrl");
-		String apolloUrl=apollo.getUrl();
+
+		String gitUrl=toolProjectProperties.getGitUrl();
+		String jenkinsUrl=toolProjectProperties.getJenkinsUrl()+"securityRealm/createAccount";
+//		String apolloUrl=toolProjectProperties.getJenkinsUrl();
 		/**
 		 * apollo 管理员的账户和密码
 		 */
-		String apolloUsername=apollo.getUserName();
-		String apollopassword=apollo.getUserPassword();
+//		String apolloUsername=toolProjectProperties.get
+//		String apollopassword=toolProjectProperties.getUserPassword();
 		
 		//create git`s user
 		boolean gitResult=repositoryCreate.createUser(username, password, email, gitUrl);
@@ -155,18 +141,18 @@ public class UserServiceImp implements UserService {
 		/**
 		 * create apollo user
 		 */
-		boolean apolloResult=apolloProjectCreate.createUser(username,password,email,apolloUrl,apolloUsername,apollopassword);
-		if(!apolloResult){
-			throw new Exception("apollo创建失败..");
-		}
-		
+//		boolean apolloResult=apolloProjectCreate.createUser(username,password,email,apolloUrl,apolloUsername,apollopassword);
+//		if(!apolloResult){
+//			throw new Exception("apollo创建失败..");
+//		}
+//
 		/**
 		 * these is place where add role for this user
 		 * 
 		 * ignore code....please complate 
 		 */
 		
-		boolean myview=jenkinsService.createMyView(username,password,jenkins.getUrl(),username);
+		boolean myview=jenkinsService.createMyView(username,password,toolProjectProperties.getJenkinsUrl(),username);
 		
 		if(!myview){
 			throw new Exception("jenkins视图创建失败");

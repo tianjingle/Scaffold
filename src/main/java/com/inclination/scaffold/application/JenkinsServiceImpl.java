@@ -128,15 +128,11 @@ public class JenkinsServiceImpl {
 			MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
 			param.add("name",  viewName);
 			param.add("mode", "hudson.model.ListView");
-			
-			
 			Map<String,String> map=new HashMap<>();
 			map.put("name", viewName);
 			map.put("mode","hudson.model.ListView");
-			
 			String paramStr=JSON.toJSONString(map);
 			param.add("json", paramStr);
-			
 			//创建Monitor视图
 			MultiValueMap<String,Object> param2=new LinkedMultiValueMap<>();
 			param2.add("name", viewName+"-monitor");
@@ -146,12 +142,7 @@ public class JenkinsServiceImpl {
 			map2.put("name", viewName+"-monitor");
 			map2.put("mode", "com.smartcodeltd.jenkinsci.plugins.buildmonitor.BuildMonitorView");
 			String paramStr2=JSON.toJSONString(map2);
-			
 			param2.add("json", paramStr2);
-			
-			
-			
-			
 			try{
 				ResponseEntity<String> response=RestTemplateUtil.submitForm(param, jenkinsUrl+"createView", username, password);
 				//ResponseEntity<String> response2=RestTemplateUtil.submitForm(param2, jenkinsUrl, username, password);
