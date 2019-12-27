@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<actions />
+	<description />
+	<keepDependencies>false</keepDependencies>
+	<properties>
+		<com.tikal.hudson.plugins.notification.HudsonNotificationProperty
+			plugin="notification@1.7">
+			<endpoints>
+				<com.tikal.hudson.plugins.notification.Endpoint>
+					<protocol>HTTP</protocol>
+					<format>JSON</format>
+					<url>http://***test/buildjob/jenkinsNotify</url>
+				</com.tikal.hudson.plugins.notification.Endpoint>
+			</endpoints>
+		</com.tikal.hudson.plugins.notification.HudsonNotificationProperty>
+		<jenkins.model.BuildDiscarderProperty>
+			<strategy class="hudson.tasks.LogRotator">
+				<daysToKeep>7</daysToKeep>
+				<numToKeep>-1</numToKeep>
+				<artifactDaysToKeep>-1</artifactDaysToKeep>
+				<artifactNumToKeep>-1</artifactNumToKeep>
+			</strategy>
+		</jenkins.model.BuildDiscarderProperty>
+	</properties>
+	<scm class="hudson.plugins.git.GitSCM" plugin="git@2.2.12">
+		<configVersion>2</configVersion>
+		<userRemoteConfigs>
+			<hudson.plugins.git.UserRemoteConfig>
+				<url></url>
+			</hudson.plugins.git.UserRemoteConfig>
+		</userRemoteConfigs>
+		<branches>
+			<hudson.plugins.git.BranchSpec>
+				<name>refs/heads/eppsqps_V20180720</name>
+			</hudson.plugins.git.BranchSpec>
+		</branches>
+		<doGenerateSubmoduleConfigurations>false
+		</doGenerateSubmoduleConfigurations>
+		<submoduleCfg class="list" />
+		<extensions>
+			<hudson.plugins.git.extensions.impl.CleanBeforeCheckout />
+		</extensions>
+	</scm>
+	<assignedNode>mesos</assignedNode>
+	<canRoam>false</canRoam>
+	<disabled>false</disabled>
+	<blockBuildWhenDownstreamBuilding>false
+	</blockBuildWhenDownstreamBuilding>
+	<blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+	<jdk>jdk1.8.0</jdk>
+	<triggers>
+		<org.jenkinsci.plugins.gogs.GogsTrigger plugin="gogs-webhook@1.0.15">
+			<spec></spec>
+		</org.jenkinsci.plugins.gogs.GogsTrigger>
+	</triggers>
+	<concurrentBuild>false</concurrentBuild>
+	<builders>
+		<hudson.tasks.Shell>
+			<command>
+				cat /opt/CI/jdosometest.sh &gt;/dev/null
+				#!/bin/bash
+				cd ${WORKSPACE}
+				sh /opt/CI/dosometest.sh ${WORKSPACE}/pom.xml
+			</command>
+		</hudson.tasks.Shell>
+
+		<hudson.tasks.Maven>
+			<targets>clean install -Dmaven.test.failure.ignore=true
+				-Dfile.encoding=UTF-8 -Dmaven.javadoc.skip=true
+				-Dmaven.yuicompressor.skip=true </targets>
+			<mavenName>maven3.0.5</mavenName>
+			<jvmOptions />
+			<pom>pom.xml</pom>
+			<usePrivateRepository>false</usePrivateRepository>
+			<settings class="jenkins.mvn.DefaultSettingsProvider" />
+			<globalSettings class="jenkins.mvn.DefaultGlobalSettingsProvider" />
+		</hudson.tasks.Maven>
+
+
+		<hudson.tasks.Shell>
+			<command>rm -rf $JENKINS_HOME/jobs/$JOB_NAME/modules</command>
+		</hudson.tasks.Shell>
+
+
+	</builders>
+
+
+	<publishers>
+		<hudson.plugins.sonar.SonarPublisher
+			plugin="sonar@2.1">
+			<jdk>JAVA_1.8.0_51</jdk>
+			<branch>eppsqps_eppsqps_git_20180723153957</branch>
+			<language>java</language>
+			<mavenOpts />
+			<jobAdditionalProperties>-Dsonar.sourceEncoding=UTF-8
+				-Dsonar.java.source=1.8.0_51</jobAdditionalProperties>
+			<mavenInstallationName>maven3.0.5</mavenInstallationName>
+			<rootPom>pom.xml</rootPom>
+			<settings class="jenkins.mvn.DefaultSettingsProvider" />
+			<globalSettings class="jenkins.mvn.DefaultGlobalSettingsProvider" />
+			<usePrivateRepository>false</usePrivateRepository>
+		</hudson.plugins.sonar.SonarPublisher>
+	</publishers>
+
+	<buildWrappers />
+</project>

@@ -158,13 +158,20 @@
 		<dependency>
 			<groupId>com.cdancy</groupId>
 			<artifactId>jenkins-rest</artifactId>
-			<version>0.0.16</version>
+			<version>0.0.20</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>guava</artifactId>
 					<groupId>com.google.guava</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.offbytwo.jenkins/jenkins-client -->
+		<dependency>
+			<groupId>com.offbytwo.jenkins</groupId>
+			<artifactId>jenkins-client</artifactId>
+			<version>0.3.8</version>
 		</dependency>
 
 		<!--apollo配置中心-->
@@ -258,6 +265,13 @@
 			</exclusions>
 		</dependency>
 
+<!--		jenkinsConfig.xml自动化，原理是通过bean的xml注解来做的-->
+		<dependency>
+			<groupId>com.github.csxiaoshang</groupId>
+			<artifactId>xml-jenkins</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
         <!--数据库修改变动-->
 		<dependency>
 			<groupId>org.liquibase</groupId>
@@ -312,6 +326,7 @@
 					<include>static/**</include>
 					<include>templates/**</include>
                     <include>config/log4j2-dev.xml</include>
+                    <include>script/*.xml</include>
 				</includes>
 			</resource>
 		</resources>

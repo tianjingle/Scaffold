@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,6 +42,8 @@ import com.inclination.scaffold.application.users.UserDto;
 import com.inclination.scaffold.utils.InputStreamRunnable;
 import com.inclination.scaffold.utils.ModelMapUtils;
 import tk.mybatis.mapper.entity.Example;
+
+import javax.xml.bind.JAXBException;
 
 
 @Service
@@ -108,10 +111,14 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		return true;
 	}
 	@Override
-	public void createScaffoldProject(ProjectInformationDto projectDto,UserDto dto) {
+	public void createScaffoldProject(ProjectInformationDto projectDto,UserDto dto) throws URISyntaxException {
 		// TODO Auto-generated method stub
 		if (createGitRepository(projectDto.getArtifactId(),dto)){
-			crateGitProject(projectDto,dto);
+			try {
+				crateGitProject(projectDto,dto);
+			} catch (IOException | JAXBException e) {
+				e.printStackTrace();
+			}
 		}
 		/**
 		 * 创建apollo项目
@@ -158,7 +165,7 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		}
 	}
 
-	public boolean crateGitProject(ProjectInformationDto projectDto, UserDto dto){
+	public boolean crateGitProject(ProjectInformationDto projectDto, UserDto dto) throws URISyntaxException, IOException, JAXBException {
 		String artifactId=projectDto.getArtifactId();
 		String packageName=projectDto.getArtifactId();
 		String protectPath=System.getProperty("user.dir")+"/project-temp/"+artifactId;
@@ -205,17 +212,28 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		String username=dto.getUserName();
 		String password=dto.getUserPassword();
 		String jobName=projectDto.getArtifactId()+"-Center";
-		String orgModel="test";
+		String orgModel=dto.getUserName() +"-org";
 		RequestStatus result=null;
+		boolean flag=false;
 		for (String env : envs) {
-			result=jenkinsService.createJob(jenkinsUrl,dto.getUserName(),dto.getUserPassword(),jobName,gitUrl,env);
-			if(!result.value()){
+			flag=jenkinsService.createByJenkinsClient(jenkinsUrl,dto.getUserName(),dto.getUserPassword(),jobName,gitUrl,env);
+			//result=jenkinsService.createJob(jenkinsUrl,dto.getUserName(),dto.getUserPassword(),jobName,gitUrl,env);
+//			if(!result.value()){
+//				return false;
+//			}
+			if(!flag){
 				return false;
 			}
 		}
 		createInvoke(username,password,jenkinsUrl,gitUrl,orgModel,jobName,"dev");
-		if(result.value()){
-			projectMpper.insert(ModelMapUtils.map(projectDto, ProjectPo.class));
+		if(flag){
+			ProjectPo po=ModelMapUtils.map(projectDto, ProjectPo.class);
+			po.setGitUrl(gitUrl);
+			po.setGitOrg(orgModel);
+			po.setJenkinsUrl(jenkinsUrl);
+			po.setApolloUrl("");
+			po.setCreateTime(new Date());
+			projectMpper.insert(po);
 			//这里保存到数据库
 		}
 		return true;
@@ -223,19 +241,19 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 
 	private void createInvoke(String username, String password, String jenkinsUrl, String gitUrl, String orgModel,
 			String jobName, String env) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stu
 		//创建git钩子
 		RestTemplate restTemplate=new RestTemplate();
-		String userMsg=username+":"+password;
-		String base64UserMsg=Base64.encodeBase64String(userMsg.getBytes());
-		HttpHeaders headers=new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.set("Authorization", "Basic" +base64UserMsg);
+
+		String userMsg=projectProperties.getGitAdmin()+":"+projectProperties.getGitPassword();
+		String base64userMsg=Base64.encodeBase64String(userMsg.getBytes());
+		HttpHeaders header=new HttpHeaders();
+		header.setContentType(MediaType.APPLICATION_JSON_UTF8);
+		header.set("Authorization", "Basic "+base64userMsg);
 		Map<String,Object> param=new HashMap<>();
 		param.put("active", true);
 		Map<String,Object> config=new HashMap<>();
-		config.put("url", jenkinsUrl+"/gogs-webhook/?job="+jobName+"-"+env);
+		config.put("url", jenkinsUrl+"gogs-webhook/?job="+jobName+"-"+env);
 		config.put("content_type", "json");
 		param.put("config", config);
 		List<String> events=new ArrayList<>();
@@ -244,8 +262,9 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		param.put("type", "gogs");
 		String paramStr=JSONObject.toJSONString(param);
 		System.out.println(paramStr);
-		HttpEntity<String> entity=new HttpEntity<>(paramStr,headers);
-		ResponseEntity<String> resEntity=restTemplate.exchange(gitUrl.substring(0,gitUrl.indexOf("/"))+"/api/v1/repos/"+orgModel+"/"+jobName+"/hooks",HttpMethod.POST,entity,String.class);
+		HttpEntity<String> entity=new HttpEntity<>(paramStr,header);
+		String api=projectProperties.getGitUrl()+"api/v1/repos/"+orgModel+"/"+jobName+"/hooks";
+		ResponseEntity<String> resEntity=restTemplate.exchange(api,HttpMethod.POST,entity,String.class);
 		String responseStr=resEntity.getBody();
 		System.out.println(responseStr);
 	}

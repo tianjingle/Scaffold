@@ -1,12 +1,19 @@
 package com.inclination.scaffold.application;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.csxiaoshang.xml.XmlUtils;
+import com.csxiaoshang.xml.model.root.Project;
 import com.inclination.http.rest.RestTemplateUtil;
+import com.offbytwo.jenkins.JenkinsServer;
+import com.offbytwo.jenkins.model.Job;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -22,16 +29,42 @@ import com.alibaba.fastjson.JSON;
 import com.cdancy.jenkins.rest.JenkinsClient;
 import com.cdancy.jenkins.rest.domain.common.RequestStatus;
 
+import javax.xml.bind.JAXBException;
+
 
 @Service
 public class JenkinsServiceImpl {
 
-	public RequestStatus createJob(String url, String username, String password, String jobName, String gitUrl,
-			String env) {
-		// TODO Auto-generated method stub
-		JenkinsClient client = JenkinsClient.builder().endPoint(url).credentials(username + ":" + password).build();
-        //System.getProperty("user.dir") 项目的地址
-		File config=new File(System.getProperty("user.dir")+"/script/jenkinsConfig-"+env+".xml");
+
+	public boolean createByJenkinsClient(String url, String username, String password, String jobName, String gitUrl,String env) throws URISyntaxException, IOException, JAXBException {
+
+        JenkinsServer jenkins=new JenkinsServer(new URI(url),username,password);
+		Map<String, Job> jobs = jenkins.getJobs();
+		Document document=getJenkinsFiles(gitUrl,env,username);
+		Project project=null;
+
+		try {
+			project= XmlUtils.getProject();
+			XmlUtils.setGitUrl(project,gitUrl);
+			XmlUtils.setHudsonShell(project,"ls -l");
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		String config=XmlUtils.getConfigXml(project);
+		System.out.println(config);
+		jenkins.createJob(jobName+"-"+env,document.asXML());
+	    return true;
+	}
+
+
+	public Document getJenkinsFiles(String gitUrl,String env,String username){
+
+		String filePath=System.getProperty("user.dir")+"/jenkinsConfig-"+env+".xml";
+		File config=new File(filePath);
 		SAXReader reader=new SAXReader();
 		Document document=null;
 		try{
@@ -41,7 +74,6 @@ public class JenkinsServiceImpl {
 			//修改git地址
 			//得到git地址节点
 			Node node=getChildNodes(root,"hudson.plugins.git.UserRemoteConfig");
-			
 			if(node instanceof Element){
 				Element element=(Element) node;
 				Element urlEle=element.element("url");
@@ -59,17 +91,20 @@ public class JenkinsServiceImpl {
 				Element auth=(Element) authorization;
 				List<Element> permissions=auth.elements("permission");
 				for (Element element : permissions) {
-				   String permissionText=element.getText();
-				   permissionText=permissionText.substring(0,permissionText.indexOf(":"))+":"+username;
-				   element.setText(permissionText);
+					String permissionText=element.getText();
+					permissionText=permissionText.substring(0,permissionText.indexOf(":"))+":"+username;
+					element.setText(permissionText);
 				}
 			}
-			
 		}catch(DocumentException e){
 			e.printStackTrace();
 		}
-		
-		
+		return document;
+	}
+	public RequestStatus createJob(String url, String username, String password, String jobName, String gitUrl,String env) {
+		// TODO Auto-generated method stub
+		JenkinsClient client = JenkinsClient.builder().endPoint(url).credentials(username + ":" + password).build();
+		Document document=getJenkinsFiles(gitUrl,env,username);
 		//创建jenkins job
 		RequestStatus create=client.api().jobsApi().create(null, jobName+"-"+env, document.asXML());
 		if(create.value()){
