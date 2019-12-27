@@ -49,11 +49,15 @@
 	</blockBuildWhenDownstreamBuilding>
 	<blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
 	<jdk>jdk1.8.0</jdk>
+
+
 	<triggers>
 		<org.jenkinsci.plugins.gogs.GogsTrigger plugin="gogs-webhook@1.0.15">
 			<spec></spec>
 		</org.jenkinsci.plugins.gogs.GogsTrigger>
 	</triggers>
+
+
 	<concurrentBuild>false</concurrentBuild>
 	<builders>
 		<hudson.tasks.Shell>

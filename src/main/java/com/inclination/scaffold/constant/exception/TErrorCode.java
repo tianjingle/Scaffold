@@ -123,4 +123,17 @@ public class TErrorCode {
 	public static final String ERROR_DELETE_TOOLPROJECTURL_MSG = "工具软件删除失败";
 
 
+	public static final String ERROR_GIT_PROJECT_CREATE_CODE = "90001";
+
+	public static final String ERROR_GIT_PROJECT_CREATE_MSG = "git项目创建失败";
+
+	public static final String ERROR_SCAFFOLD_PROJECT_CREATE_CODE = "90002";
+
+	public static final String ERROR_SCAFFOLD_PROJECT_CREATE_MSG = "项目创建失败，请稍候再试";
+
+
+	public static final String ERROR_NO_MODEL_MAVEN_CODE = "90004";
+
+	public static final String ERROR_NO_MODEL_MAVEN_MSG = "缺少项目模板";
+
 }

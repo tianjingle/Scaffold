@@ -1,16 +1,13 @@
 package com.inclination.scaffold.application;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
-import com.inclination.scaffold.constant.config.ToolProjectProperties;
-import com.inclination.scaffold.infrastraction.repository.ToolProjectPoMapper;
+import com.inclination.scaffold.constant.config.OtherSystemProperties;
+import com.inclination.scaffold.infrastraction.otherSystem.JenkinsServiceImpl;
 import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
-import com.inclination.scaffold.infrastraction.repository.po.ToolProjectPo;
 import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,13 +46,7 @@ public class UserServiceImp implements UserService {
 	 */
 	@Autowired
 	private JenkinsServiceImpl jenkinsService;
-	
-	/**
-	 * 创建apollo服务
-	 */
-	@Autowired
-	private ApolloProjectCreateImpl apolloProjectCreate;
-	
+
 	/**
 	 * 数据库
 	 */
@@ -64,7 +55,7 @@ public class UserServiceImp implements UserService {
 
 
 	@Autowired
-	private ToolProjectProperties toolProjectProperties;
+	private OtherSystemProperties otherSystemProperties;
 
 
 	@Override
@@ -116,8 +107,8 @@ public class UserServiceImp implements UserService {
 		String password=dto.getUserPassword();
 		String email=dto.getUserEmil();
 
-		String gitUrl=toolProjectProperties.getGitUrl();
-		String jenkinsUrl=toolProjectProperties.getJenkinsUrl()+"securityRealm/createAccount";
+		String gitUrl= otherSystemProperties.getGitUrl();
+		String jenkinsUrl= otherSystemProperties.getJenkinsUrl()+"securityRealm/createAccount";
 //		String apolloUrl=toolProjectProperties.getJenkinsUrl();
 		/**
 		 * apollo 管理员的账户和密码
@@ -152,17 +143,15 @@ public class UserServiceImp implements UserService {
 		 * ignore code....please complate 
 		 */
 		
-		boolean myview=jenkinsService.createMyView(username,password,toolProjectProperties.getJenkinsUrl(),username);
+		boolean myview=jenkinsService.createMyView(username,password, otherSystemProperties.getJenkinsUrl(),username);
 		
 		if(!myview){
 			throw new Exception("jenkins视图创建失败");
 		}
-		
 		/**
 		 * create git org 
 		 */
 		boolean gitOrg=repositoryCreate.createOrg(username,password,gitUrl,username);
-		
 		if(!gitOrg){
 			throw new Exception("创建git组织");
 		}
@@ -170,13 +159,9 @@ public class UserServiceImp implements UserService {
 		 * create apollo org
 		 */
 /*		boolean apolloOrg=apolloProjectCreate.createOrg(username);
-		
 		if(!apolloOrg){
 			throw new Exception("apollo部门创建失败");
 		}*/
-		
-		
-		
 	}
 
 	@Override

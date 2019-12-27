@@ -39,18 +39,7 @@ public class ProjectManagerApi {
 	 */
 	@Autowired
 	private ProjectManagerService projectManagerService;
-	
-	/**
-	 * 创建项目的git仓库，然后才可以往上边提交创建的maven项目
-	 * @param request
-	 * @param session
-	 */
-//	@PostMapping(value="/projects-repository-create")
-//	@ApiOperation(value="创建git仓库",notes="创建git仓库")
-//	public void repositoryCreate(@Valid @RequestBody ProjectManagerGitCreateRequest request,HttpSession session){
-//		UserDto dto=(UserDto) session.getAttribute("CurrentUser");
-//		projectManagerService.createGitRepository(ModelMapUtils.map(request, ProjectManagerGitCreateDto.class),dto);
-//	}
+
 	
 	/**
 	 * 创建脚手架工程

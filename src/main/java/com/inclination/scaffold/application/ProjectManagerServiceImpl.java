@@ -1,45 +1,25 @@
 package com.inclination.scaffold.application;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.common.base.Strings;
 import com.inclination.scaffold.api.request.project.ProjectQryByPage;
-import com.inclination.scaffold.constant.config.ToolProjectProperties;
+import com.inclination.scaffold.constant.config.OtherSystemProperties;
+import com.inclination.scaffold.constant.exception.TErrorCode;
+import com.inclination.scaffold.constant.exception.TException;
+import com.inclination.scaffold.infrastraction.otherSystem.git.GitService;
+import com.inclination.scaffold.infrastraction.otherSystem.jenkins.JenkinsService;
 import com.inclination.scaffold.infrastraction.repository.ProjectPoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.ProjectPo;
-import com.inclination.scaffold.utils.CMDExecuteUtil;
 import com.inclination.scaffold.utils.ViewData;
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.cdancy.jenkins.rest.domain.common.RequestStatus;
 import com.inclination.scaffold.application.project.ProjectInformationDto;
-import com.inclination.scaffold.application.project.ProjectManagerGitCreateDto;
 import com.inclination.scaffold.application.project.ProjectManagerService;
 import com.inclination.scaffold.application.users.UserDto;
-import com.inclination.scaffold.utils.InputStreamRunnable;
 import com.inclination.scaffold.utils.ModelMapUtils;
 import tk.mybatis.mapper.entity.Example;
 
@@ -51,72 +31,43 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 
 
 	/**
-	 * 配置信息
+	 * 基础组件的配置信息
 	 */
 	@Autowired
-	private ToolProjectProperties projectProperties;
+	private OtherSystemProperties projectProperties;
 
+	/***
+	 * git服务
+	 */
+	@Autowired
+	private GitService gitService;
 
-	private RestTemplate restTemplate = new RestTemplate();
-	
 	/**
 	 * 注入jenkins 服务
 	 */
 	@Autowired
-	private JenkinsServiceImpl jenkinsService;
+	private JenkinsService jenkinsService;
 	
 	/**
 	 * 项目管理的服务
 	 */
 	@Autowired
 	private ProjectPoMapper projectMpper;
-	/**
-	 * 当用户登录成功之后，点击创建工程，并填写好项目名称的时候，点击创建创建仓库即运行此段代码
-	 * 此处的username、password为管理员分配给用户的账号
-	 * orgModel为组织的编号
-	 */
-	public boolean createGitRepository(String artifactId, UserDto dto) {
-		// TODO Auto-generated method stub
-		String orgModel=dto.getUserName()+"-org";
-		String username=dto.getUserName();
-		String password=dto.getUserPassword();
-		/**
-		 * gitUrl 为git的地址 这里从前端传递过来
-		 */
-		String gitUrl=projectProperties.getGitUrl();
-		String userMsg=username+":"+password;
-		String base64userMsg=Base64.encodeBase64String(userMsg.getBytes());
-		HttpHeaders header=new HttpHeaders();
-		header.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		header.set("Authorization", "Basic "+base64userMsg);
-		Map<String,Object> param=new HashMap<>();
-		param.put("auto_init", false);
-		param.put("description", "");
-		param.put("gitignores", "");
-		param.put("license", "");
-		param.put("name", artifactId);
-		param.put("private", false);
-		param.put("readme", "README.md");
-		String paramStr=JSONObject.toJSONString(param);
-		HttpEntity<String> entity=new HttpEntity<>(paramStr,header);
-		try{
-			ResponseEntity<String> resEntity=this.restTemplate.exchange(gitUrl+"api/v1/org/"+orgModel+"/repos", HttpMethod.POST,entity,String.class);
-			String responseStr=resEntity.getBody();
-			System.out.println("仓库创建成功...");
-		}catch(Exception e){
-			e.printStackTrace();
-			System.out.println("仓库创建失败...");
-			return false;
-		}
-		return true;
-	}
+
+
+
 	@Override
 	public void createScaffoldProject(ProjectInformationDto projectDto,UserDto dto) throws URISyntaxException {
 		// TODO Auto-generated method stub
-		if (createGitRepository(projectDto.getArtifactId(),dto)){
+		if (gitService.createGitRepository(projectDto.getArtifactId(),dto)){
 			try {
-				crateGitProject(projectDto,dto);
-			} catch (IOException | JAXBException e) {
+				try {
+					crateScaffoldProject(projectDto,dto);
+				} catch (TException e) {
+					e.printStackTrace();
+					throw new TException(TErrorCode.ERROR_GIT_PROJECT_CREATE_CODE,TErrorCode.ERROR_GIT_PROJECT_CREATE_MSG);
+				}
+			} catch (IOException | JAXBException | TException e) {
 				e.printStackTrace();
 			}
 		}
@@ -138,74 +89,20 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		return ViewData.success(list);
 	}
 
-	public void crateApolloProject(ProjectInformationDto projectDto, UserDto dto){
-		String username=dto.getUserName();
-		String password=dto.getUserPassword();
-		String apollourl=projectDto.getApolloUrl();
-		String artifactId=projectDto.getArtifactId();
-		String usermsg=username+":"+password;
-		String base64usermsg=Base64.encodeBase64String(usermsg.getBytes());
-		HttpHeaders headers=new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		headers.set("Authorization", "Basic "+base64usermsg);
-		Map<String,Object> param=new HashMap<>();
-		param.put("appId", artifactId);
-		param.put("name", artifactId);
-		param.put("orgId", username);
-		param.put("orgName", username);
-		param.put("ownerName", username);
-		List<String> admins=new ArrayList<>();
-		admins.add(username);
-		param.put("admins", admins);
-		String paramStr=JSON.toJSONString(param);
-		HttpEntity<String> entity=new HttpEntity<>(paramStr,headers);
-		try{
-			ResponseEntity<String> resEntity=this.restTemplate.exchange(apollourl+"/apps", HttpMethod.POST,entity,String.class);
-		}catch(Exception e){
-		}
-	}
 
-	public boolean crateGitProject(ProjectInformationDto projectDto, UserDto dto) throws URISyntaxException, IOException, JAXBException {
+
+	public boolean crateScaffoldProject(ProjectInformationDto projectDto, UserDto dto) throws URISyntaxException, IOException, JAXBException, TException {
 		String artifactId=projectDto.getArtifactId();
-		String packageName=projectDto.getArtifactId();
-		String protectPath=System.getProperty("user.dir")+"/project-temp/"+artifactId;
-		String packagePath=packageName.replaceAll("\\.","/");
 		String gitUrl=projectProperties.getGitUrl()+""+dto.getUserName()+"-org/"+artifactId+".git";
-		//项目路径
-		File file=new File(protectPath);
-		//将代码上传到git
-		try{
-			FileUtils.deleteDirectory(file.getParentFile());
-			Git git=Git.cloneRepository()
-					.setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUserName(),dto.getUserPassword()))
-					.setURI(gitUrl)
-					.setDirectory(file)
-					.call();
-			SimpleDateFormat format=new SimpleDateFormat("yyyy/MM/dd HH:mm");
-			String dateStr=format.format(new Date());
-			String cmd="mvn archetype:generate"
-					+ " -DgroupId="+projectDto.getGroupId()
-					+ " -DartifactId="+projectDto.getArtifactId()
-					+ " -Dversion=1.0.0-SNAPSHOT"
-					+ " -Dpackage="+projectDto.getGroupId()
-			    	+ " -DdevIp=127.0.0.3"
-					+ " -DarchetypeGroupId=com.example"
-					+ " -DarchetypeArtifactId=demo-archetype"
-					+ " -DarchetypeVersion=0.0.1-SNAPSHOT"
-				 	+ " -B"
-					+ " -DarchetypeCatalog=local"
-					+ " -DinteractiveMode=false";
-			String output= CMDExecuteUtil.executeCommand(cmd,file.getParentFile());
-			System.out.println(output);
-			git.add().addFilepattern(".").call();
-			git.commit().setMessage("上传到仓库..").call();
-			git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUserName(),dto.getUserPassword())).call();
-			git.close();
-		}catch(GitAPIException | IOException e){
-			e.printStackTrace();
-			return false;
+		if (!gitService.crateGitProject(projectDto,dto)){
+			throw new TException(TErrorCode.ERROR_SCAFFOLD_PROJECT_CREATE_CODE,TErrorCode.ERROR_SCAFFOLD_PROJECT_CREATE_MSG);
 		}
 		String []envs={"dev"};
+		if (Strings.isNullOrEmpty(projectProperties.getEnv())&&projectProperties.getEnv().contains(",")) {
+			envs=projectProperties.getEnv().split(",");
+		}else{
+			envs=new String[]{"dev"};
+		}
 		//创建jenkins job
 		//查数据库获取各种系统的地址信息
 		String jenkinsUrl=projectProperties.getJenkinsUrl();
@@ -213,19 +110,14 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		String password=dto.getUserPassword();
 		String jobName=projectDto.getArtifactId()+"-Center";
 		String orgModel=dto.getUserName() +"-org";
-		RequestStatus result=null;
 		boolean flag=false;
 		for (String env : envs) {
-			flag=jenkinsService.createByJenkinsClient(jenkinsUrl,dto.getUserName(),dto.getUserPassword(),jobName,gitUrl,env);
-			//result=jenkinsService.createJob(jenkinsUrl,dto.getUserName(),dto.getUserPassword(),jobName,gitUrl,env);
-//			if(!result.value()){
-//				return false;
-//			}
+			flag=jenkinsService.createJobByJenkinsClient(jenkinsUrl,dto.getUserName(),dto.getUserPassword(),jobName,gitUrl,env);
 			if(!flag){
 				return false;
 			}
 		}
-		createInvoke(username,password,jenkinsUrl,gitUrl,orgModel,jobName,"dev");
+		gitService.createInvoke(username,password,jenkinsUrl,gitUrl,orgModel,jobName,"dev");
 		if(flag){
 			ProjectPo po=ModelMapUtils.map(projectDto, ProjectPo.class);
 			po.setGitUrl(gitUrl);
@@ -234,39 +126,8 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 			po.setApolloUrl("");
 			po.setCreateTime(new Date());
 			projectMpper.insert(po);
-			//这里保存到数据库
 		}
 		return true;
-	}
-
-	private void createInvoke(String username, String password, String jenkinsUrl, String gitUrl, String orgModel,
-			String jobName, String env) {
-		// TODO Auto-generated method stu
-		//创建git钩子
-		RestTemplate restTemplate=new RestTemplate();
-
-		String userMsg=projectProperties.getGitAdmin()+":"+projectProperties.getGitPassword();
-		String base64userMsg=Base64.encodeBase64String(userMsg.getBytes());
-		HttpHeaders header=new HttpHeaders();
-		header.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		header.set("Authorization", "Basic "+base64userMsg);
-		Map<String,Object> param=new HashMap<>();
-		param.put("active", true);
-		Map<String,Object> config=new HashMap<>();
-		config.put("url", jenkinsUrl+"gogs-webhook/?job="+jobName+"-"+env);
-		config.put("content_type", "json");
-		param.put("config", config);
-		List<String> events=new ArrayList<>();
-		events.add("push");
-		param.put("events", events);
-		param.put("type", "gogs");
-		String paramStr=JSONObject.toJSONString(param);
-		System.out.println(paramStr);
-		HttpEntity<String> entity=new HttpEntity<>(paramStr,header);
-		String api=projectProperties.getGitUrl()+"api/v1/repos/"+orgModel+"/"+jobName+"/hooks";
-		ResponseEntity<String> resEntity=restTemplate.exchange(api,HttpMethod.POST,entity,String.class);
-		String responseStr=resEntity.getBody();
-		System.out.println(responseStr);
 	}
 
 

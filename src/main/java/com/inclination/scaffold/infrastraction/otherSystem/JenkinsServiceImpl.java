@@ -1,48 +1,32 @@
-package com.inclination.scaffold.application;
+package com.inclination.scaffold.infrastraction.otherSystem;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.csxiaoshang.xml.XmlUtils;
 import com.csxiaoshang.xml.model.root.Project;
 import com.inclination.http.rest.RestTemplateUtil;
+import com.inclination.scaffold.infrastraction.otherSystem.jenkins.JenkinsService;
 import com.offbytwo.jenkins.JenkinsServer;
-import com.offbytwo.jenkins.model.Job;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.dom4j.Node;
-import org.dom4j.io.SAXReader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.alibaba.fastjson.JSON;
-import com.cdancy.jenkins.rest.JenkinsClient;
-import com.cdancy.jenkins.rest.domain.common.RequestStatus;
 
 import javax.xml.bind.JAXBException;
 
 
 @Service
-public class JenkinsServiceImpl {
+public class JenkinsServiceImpl implements JenkinsService {
 
-
-	public boolean createByJenkinsClient(String url, String username, String password, String jobName, String gitUrl,String env) throws URISyntaxException, IOException, JAXBException {
-
+	public boolean createJobByJenkinsClient(String url, String username, String password, String jobName, String gitUrl,String env) throws URISyntaxException, IOException, JAXBException {
         JenkinsServer jenkins=new JenkinsServer(new URI(url),username,password);
-		Map<String, Job> jobs = jenkins.getJobs();
-		Document document=getJenkinsFiles(gitUrl,env,username);
 		Project project=null;
-
 		try {
 			project= XmlUtils.getProject();
 			XmlUtils.setGitUrl(project,gitUrl);
@@ -56,90 +40,19 @@ public class JenkinsServiceImpl {
 		}
 		String config=XmlUtils.getConfigXml(project);
 		System.out.println(config);
-		jenkins.createJob(jobName+"-"+env,document.asXML());
+		jenkins.createJob(jobName+"-"+env,config);
+		MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
+		param.add("name", jobName+"-"+env);
+		RestTemplateUtil.submitForm(param,url+"/view/"+username+"/addJobToView",username,password);
+		if("dev".equals(env)||"sit".equals(env)){
+			MultiValueMap<String,Object> param2=new LinkedMultiValueMap<>();
+			param2.add("name",jobName+"-"+env);
+			RestTemplateUtil.submitForm(param2, url+"/view/monitor/addJobToView", username, password);
+		}
 	    return true;
 	}
 
 
-	public Document getJenkinsFiles(String gitUrl,String env,String username){
-
-		String filePath=System.getProperty("user.dir")+"/jenkinsConfig-"+env+".xml";
-		File config=new File(filePath);
-		SAXReader reader=new SAXReader();
-		Document document=null;
-		try{
-			//解析xml
-			document=reader.read(config);
-			Element root=document.getRootElement();
-			//修改git地址
-			//得到git地址节点
-			Node node=getChildNodes(root,"hudson.plugins.git.UserRemoteConfig");
-			if(node instanceof Element){
-				Element element=(Element) node;
-				Element urlEle=element.element("url");
-				if(null!=urlEle){
-					urlEle.setText(gitUrl);
-				}else{
-					urlEle=DocumentHelper.createElement("url");
-					urlEle.setText(gitUrl);
-					element.add(urlEle);
-				}
-			}
-			//修改权限
-			Node authorization=getChildNodes(root,"hud.security.AuthorizationMatrixProperty");
-			if(null!=authorization&&authorization instanceof Element){
-				Element auth=(Element) authorization;
-				List<Element> permissions=auth.elements("permission");
-				for (Element element : permissions) {
-					String permissionText=element.getText();
-					permissionText=permissionText.substring(0,permissionText.indexOf(":"))+":"+username;
-					element.setText(permissionText);
-				}
-			}
-		}catch(DocumentException e){
-			e.printStackTrace();
-		}
-		return document;
-	}
-	public RequestStatus createJob(String url, String username, String password, String jobName, String gitUrl,String env) {
-		// TODO Auto-generated method stub
-		JenkinsClient client = JenkinsClient.builder().endPoint(url).credentials(username + ":" + password).build();
-		Document document=getJenkinsFiles(gitUrl,env,username);
-		//创建jenkins job
-		RequestStatus create=client.api().jobsApi().create(null, jobName+"-"+env, document.asXML());
-		if(create.value()){
-			MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
-			param.add("name", jobName+"-"+env);
-			RestTemplateUtil.submitForm(param,url+"/view/"+username+"/addJobToView",username,password);
-			if("dev".equals(env)||"sit".equals(env)){
-				MultiValueMap<String,Object> param2=new LinkedMultiValueMap<>();
-				param2.add("name",jobName+"-"+env);
-				RestTemplateUtil.submitForm(param2, url+"/view/"+username+"-monitor/addJobToView", username, password);
-			}
-		}
-		return create;
-	}
-
-	private Node getChildNodes(Node next2, String name) {
-		// TODO Auto-generated method stub
-		
-		if(null!=next2.getName()&&next2.getName().equals(name)){
-			return next2;
-		}
-		Node chileNodes=null;
-		if(next2 instanceof Element){
-			Element elem=(Element)next2;
-			Iterator<Node> it=elem.nodeIterator();
-			while(it.hasNext()){
-				Node next=it.next();
-				chileNodes=getChildNodes(next,name);
-				if(chileNodes!=null){
-					break;
-				}
-			}
-		}
-		return chileNodes;
-	}
 
 //创建用户
 	public boolean createUser(String username,String password,String email,String jenkinsurl) throws Exception{
@@ -171,7 +84,6 @@ public class JenkinsServiceImpl {
 			MultiValueMap<String,Object> param2=new LinkedMultiValueMap<>();
 			param2.add("name", viewName+"-monitor");
 			param2.add("mode", "com.smartcodeltd.jenkinsci.plugins.buildmonitor.BuilderView");
-			
 			Map<String,String> map2=new HashMap<>();
 			map2.put("name", viewName+"-monitor");
 			map2.put("mode", "com.smartcodeltd.jenkinsci.plugins.buildmonitor.BuildMonitorView");
@@ -179,8 +91,7 @@ public class JenkinsServiceImpl {
 			param2.add("json", paramStr2);
 			try{
 				ResponseEntity<String> response=RestTemplateUtil.submitForm(param, jenkinsUrl+"createView", username, password);
-				//ResponseEntity<String> response2=RestTemplateUtil.submitForm(param2, jenkinsUrl, username, password);
-				if(response.getStatusCodeValue()==302){ //&&response2.getStatusCodeValue()==302
+				if(response.getStatusCodeValue()==302){
 					return true;
 				}
 			}catch(Exception e){
@@ -209,35 +120,25 @@ public class JenkinsServiceImpl {
 		Map<String,Object> userProperty2=new HashMap<>();
 		userProperty2.put("address", email);
 		json.put("userProperty2",userProperty2);
-		
 		Map<String,Object> userProperty5=new HashMap<>();
 		userProperty5.put("primaryViewName","");
 		json.put("userProperty5",userProperty5);
-		
-		
 		Map<String,Object> userProperty6=new HashMap<>();
 		userProperty6.put("providerId", "default");
 		json.put("userProperty6", userProperty6);
-		
 		Map<String,Object> userProperty8=new HashMap<>();
 		userProperty8.put("password", newPwd);
 		userProperty8.put("password2", newPwd);
 		json.put("userProperty8", userProperty8);
-		
 		Map<String,Object> userProperty9=new HashMap<>();
 		userProperty9.put("zuthorizedKeys","");
 		json.put("userProperty9", userProperty9);
-		
-		
 		Map<String,Object> userProperty10=new HashMap<>();
 		userProperty10.put("insensitiveSearch", true);
 		json.put("userProperty10", userProperty10);
-		
 		json.put("core:apply", "");
 		param.add("json", JSON.toJSON(json));
-		
 		ResponseEntity<String> response=RestTemplateUtil.submitForm(param, jenkinsUrl+"/securityRealm/user/"+username+"/configSubmit", username, password);
-		
 		if(response.getStatusCodeValue()==302){
 			return true;
 		}
