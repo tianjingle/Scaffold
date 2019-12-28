@@ -4,6 +4,8 @@ import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.google.common.base.Strings;
 import com.inclination.scaffold.api.request.project.ProjectQryByPage;
 import com.inclination.scaffold.constant.config.OtherSystemProperties;
@@ -82,11 +84,14 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		Example example=new Example(ProjectPo.class);
 		if (!Strings.isNullOrEmpty(request.getArtifactId())){
 			example.createCriteria().andEqualTo("artifactId",request.getArtifactId());
+			example.setOrderByClause("id desc");
 		}else{
 			example.createCriteria().andEqualTo("loginId",loginId);
+			example.setOrderByClause("id desc");
 		}
+		Page hpage= PageHelper.startPage((int)request.getPage(), request.getLimit());
 		List<ProjectPo> list=projectMpper.selectByExample(example);
-		return ViewData.success(list);
+		return ViewData.success(list,hpage.getPages(),hpage.getTotal());
 	}
 
 
@@ -122,7 +127,7 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 			ProjectPo po=ModelMapUtils.map(projectDto, ProjectPo.class);
 			po.setGitUrl(gitUrl);
 			po.setGitOrg(orgModel);
-			po.setJenkinsUrl(jenkinsUrl);
+			po.setJenkinsUrl(jenkinsUrl+"job/"+jobName+"-dev");
 			po.setApolloUrl("");
 			po.setCreateTime(new Date());
 			projectMpper.insert(po);
