@@ -70,7 +70,7 @@ public class JenkinsServiceImpl implements JenkinsService {
 		if("dev".equals(env)&& !Strings.isNullOrEmpty(otherSystemProperties.getMonitorView())){
 			MultiValueMap<String,Object> param2=new LinkedMultiValueMap<>();
 			param2.add("name",jobName+"-"+env);
-			RestTemplateUtil.submitForm(param2, url+"/view/+"+otherSystemProperties.getMonitorView()+"/addJobToView", username, password);
+			RestTemplateUtil.submitForm(param2, url+"/view/"+otherSystemProperties.getMonitorView()+"/addJobToView", username, password);
 		}
 	    return true;
 	}
