@@ -8,9 +8,12 @@ import java.util.Map;
 
 import com.csxiaoshang.xml.XmlUtils;
 import com.csxiaoshang.xml.model.root.Project;
+import com.google.common.base.Strings;
 import com.inclination.http.rest.RestTemplateUtil;
+import com.inclination.scaffold.constant.config.OtherSystemProperties;
 import com.inclination.scaffold.infrastraction.otherSystem.jenkins.JenkinsService;
 import com.offbytwo.jenkins.JenkinsServer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -24,6 +27,26 @@ import javax.xml.bind.JAXBException;
 @Service
 public class JenkinsServiceImpl implements JenkinsService {
 
+	/***
+	 * 组件配置
+	 */
+	@Autowired
+	private OtherSystemProperties otherSystemProperties;
+
+
+	/**
+	 * 创建jenkins任务
+	 * @param url
+	 * @param username
+	 * @param password
+	 * @param jobName
+	 * @param gitUrl
+	 * @param env
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws IOException
+	 * @throws JAXBException
+	 */
 	public boolean createJobByJenkinsClient(String url, String username, String password, String jobName, String gitUrl,String env) throws URISyntaxException, IOException, JAXBException {
         JenkinsServer jenkins=new JenkinsServer(new URI(url),username,password);
 		Project project=null;
@@ -44,17 +67,24 @@ public class JenkinsServiceImpl implements JenkinsService {
 		MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
 		param.add("name", jobName+"-"+env);
 		RestTemplateUtil.submitForm(param,url+"/view/"+username+"/addJobToView",username,password);
-		if("dev".equals(env)||"sit".equals(env)){
+		if("dev".equals(env)&& !Strings.isNullOrEmpty(otherSystemProperties.getMonitorView())){
 			MultiValueMap<String,Object> param2=new LinkedMultiValueMap<>();
 			param2.add("name",jobName+"-"+env);
-			RestTemplateUtil.submitForm(param2, url+"/view/monitor/addJobToView", username, password);
+			RestTemplateUtil.submitForm(param2, url+"/view/+"+otherSystemProperties.getMonitorView()+"/addJobToView", username, password);
 		}
 	    return true;
 	}
 
 
-
-//创建用户
+	/**
+	 * 创建jenkins用户
+	 * @param username
+	 * @param password
+	 * @param email
+	 * @param jenkinsurl
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean createUser(String username,String password,String email,String jenkinsurl) throws Exception{
 		MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
 		param.add("username", username);
@@ -70,6 +100,14 @@ public class JenkinsServiceImpl implements JenkinsService {
 		return true;
 	}
 
+	/**
+	 * 创建jenkins视图
+	 * @param username
+	 * @param password
+	 * @param jenkinsUrl
+	 * @param viewName
+	 * @return
+	 */
 	public boolean createMyView(String username, String password, String jenkinsUrl, String viewName) {
 		// TODO Auto-generated method stub
 			MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
@@ -99,7 +137,16 @@ public class JenkinsServiceImpl implements JenkinsService {
 			}
 			return false;
 	}
-	
+
+	/**
+	 * 修改jenkins用户密码
+	 * @param username
+	 * @param password
+	 * @param newPwd
+	 * @param email
+	 * @param jenkinsUrl
+	 * @return
+	 */
 	public boolean updatePwd(String username,String password,String newPwd,String email,String jenkinsUrl){
 		MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
 		param.add("_.fullName", username);
@@ -144,6 +191,4 @@ public class JenkinsServiceImpl implements JenkinsService {
 		}
 		return false;
 	}
-	
-	
 }

@@ -20,6 +20,8 @@ public class OtherSystemProperties {
 
     private String jenkinsUrl;
 
+    private String MonitorView;
+
     private String jenkinsAdmin;
 
     private String jenkinsPassword;

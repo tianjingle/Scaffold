@@ -72,6 +72,7 @@ Scaffold:
       jenkins-url: http://127.0.0.1:9001/
       jenkins-admin: admin
       jenkins-password: tianjingle
+      monitor-view: monitor
   maven:
     env: dev
     script: mvn archetype:generate -DgroupId={0} -DartifactId={1} -Dversion=1.0.0-SNAPSHOT -Dpackage={2}  -DarchetypeGroupId=net.cnki -DarchetypeArtifactId=discuss-archetype -DarchetypeVersion=1.0.0-SNAPSHOT -B -DarchetypeCatalog=local -DinteractiveMode=false

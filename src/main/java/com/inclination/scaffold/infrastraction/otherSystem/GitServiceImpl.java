@@ -38,9 +38,10 @@ public class GitServiceImpl implements GitService {
 
 
     /**
-     * 当用户登录成功之后，点击创建工程，并填写好项目名称的时候，点击创建创建仓库即运行此段代码
-     * 此处的username、password为管理员分配给用户的账号
-     * orgModel为组织的编号
+     * 创建git仓库
+     * @param artifactId
+     * @param dto
+     * @return
      */
     public boolean createGitRepository(String artifactId, UserDto dto) {
         // TODO Auto-generated method stub
@@ -75,14 +76,18 @@ public class GitServiceImpl implements GitService {
         return true;
     }
 
+    /**
+     * 创建git项目
+     * @param projectDto
+     * @param dto
+     * @return
+     */
     public boolean crateGitProject(ProjectInformationDto projectDto, UserDto dto){
         String artifactId = projectDto.getArtifactId();
         String packageName = projectDto.getArtifactId();
         String protectPath = System.getProperty("user.dir") + "/project-temp/" + artifactId;
         String gitUrl = projectProperties.getGitUrl() + "" + dto.getUserName() + "-org/" + artifactId + ".git";
-        //项目路径
         File file = new File(protectPath);
-        //将代码上传到git
         try {
             FileUtils.deleteDirectory(file.getParentFile());
             Git git = Git.cloneRepository()
@@ -108,6 +113,17 @@ public class GitServiceImpl implements GitService {
         return true;
     }
 
+
+    /***
+     * 创建git勾子
+     * @param username
+     * @param password
+     * @param jenkinsUrl
+     * @param gitUrl
+     * @param orgModel
+     * @param jobName
+     * @param env
+     */
     public void createInvoke(String username, String password, String jenkinsUrl, String gitUrl, String orgModel,String jobName, String env) {
         // TODO Auto-generated method stu
         //创建git钩子
@@ -130,7 +146,7 @@ public class GitServiceImpl implements GitService {
         String paramStr=JSONObject.toJSONString(param);
         System.out.println(paramStr);
         HttpEntity<String> entity=new HttpEntity<>(paramStr,header);
-        String api=projectProperties.getGitUrl()+"api/v1/repos/"+orgModel+"/"+jobName.replace("-Center","")+"/hooks";
+        String api=projectProperties.getGitUrl()+"api/v1/repos/"+orgModel+"/"+jobName.replace("-service","")+"/hooks";
         ResponseEntity<String> resEntity=restTemplate.exchange(api,HttpMethod.POST,entity,String.class);
         String responseStr=resEntity.getBody();
         System.out.println(responseStr);

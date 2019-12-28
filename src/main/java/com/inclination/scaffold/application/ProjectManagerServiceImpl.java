@@ -108,7 +108,7 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		String jenkinsUrl=projectProperties.getJenkinsUrl();
 		String username=dto.getUserName();
 		String password=dto.getUserPassword();
-		String jobName=projectDto.getArtifactId()+"-Center";
+		String jobName=projectDto.getArtifactId()+"-service";
 		String orgModel=dto.getUserName() +"-org";
 		boolean flag=false;
 		for (String env : envs) {
