@@ -166,6 +166,13 @@ public class GitServiceImpl implements GitService {
         System.out.println(responseStr);
     }
 
+    /**
+     * 修改用户密码
+     * @param newUser
+     * @param oldUser
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     @Override
     public boolean updateUserPassword(UserDto newUser, UserPo oldUser) throws UnsupportedEncodingException {
         String gitUpdatePwdUrl=projectProperties.getGitUrl()+"user/settings/account";
@@ -196,6 +203,11 @@ public class GitServiceImpl implements GitService {
         return false;
     }
 
+    /**
+     * 设置cookie
+     * @param gitUpdatePwdUrl
+     * @param oldUser
+     */
     private void setCrsf(String gitUpdatePwdUrl, UserPo oldUser) {
         try{
             myRestTemplate.exchange(projectProperties.getGitUrl(),HttpMethod.GET,null,String.class,new Object[0]);
@@ -205,6 +217,11 @@ public class GitServiceImpl implements GitService {
         doSetCrsf(myRestTemplate.responseHeader, oldUser);
     }
 
+    /**
+     * 设置cookie
+     * @param responseHeader
+     * @param oldUser
+     */
     private void doSetCrsf(HttpHeaders responseHeader, UserPo oldUser){
         doSetInnerCookies(responseHeader);
         MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
@@ -226,6 +243,10 @@ public class GitServiceImpl implements GitService {
     }
 
 
+    /**
+     * 获取cookie
+     * @param responseHeader
+     */
     public void doSetInnerCookies(HttpHeaders responseHeader){
         if (responseHeader.containsKey("Set-Cookie")){
             List<String> cookies=responseHeader.get("Set-Cookie");

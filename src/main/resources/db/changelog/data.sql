@@ -1,19 +1,19 @@
 --liquibase formatted sql
---changeset tianjl:tianjingle-20191116-10
-INSERT INTO `tool_project` (`id`, `name`, `url`,`user_name`,`user_password`) VALUES ('1', 'gitUrl', '127.0.0.1:8009/','admin','tianjingle');
-INSERT INTO `tool_project` (`id`, `name`, `url`,`user_name`,`user_password`) VALUES ('2', 'jenkinsUrl', '127.0.0.1:8009/','admin','tianjingle');
-INSERT INTO `tool_project` (`id`, `name`, `url`,`user_name`,`user_password`) VALUES ('3', 'apolloUrl', '127.0.0.1:8009/','admin','tianjingle');
-
---liquibase formatted sql
 --changeset tianjl:tianjingle-20191122-1
-INSERT INTO `resource` (`id`, `resource_name`, `resource_url`, `content`, `flag`) VALUES ('1', '资源管理', '0', '资源管理', 'Y');
-INSERT INTO `resource` (`id`, `resource_name`, `resource_url`, `content`, `flag`) VALUES ('2', '菜单管理', '1', '用户管理', 'Y');
-INSERT INTO `resource` (`id`, `resource_name`, `resource_url`, `content`, `flag`) VALUES ('3', '角色管理', '3', '角色管理', 'Y');
-INSERT INTO `resource` (`id`, `resource_name`, `resource_url`, `content`, `flag`) VALUES ('4', '用户管理', '4', '用户管理', 'Y');
+INSERT INTO `resource` (`id`, `resource_name`, `resource_url`, `content`, `flag`) VALUES ('1', '菜单管理', '/menuManager', 'menuManager', 'Y');
+INSERT INTO `resource` (`id`, `resource_name`, `resource_url`, `content`, `flag`) VALUES ('2', '资源管理', '/resourceManager', 'ResourceManager', 'Y');
+INSERT INTO `resource` (`id`, `resource_name`, `resource_url`, `content`, `flag`) VALUES ('3', '角色管理', '/roleManager', 'roleManager', 'Y');
+INSERT INTO `resource` (`id`, `resource_name`, `resource_url`, `content`, `flag`) VALUES ('4', '用户管理', '/userManager', 'UserManager', 'Y');
+INSERT INTO `resource` (`id`, `resource_name`, `resource_url`, `content`, `flag`) VALUES ('5', '机构管理', '/orginazation', 'Orginazation', 'Y');
+INSERT INTO `resource` (`id`, `resource_name`, `resource_url`, `content`, `flag`) VALUES ('6', '我的项目', '/myProjectManager', 'MyProjectManager', 'Y');
+
 
 --liquibase formatted sql
 --changeset tianjl:tianjingle-20191122-2
-INSERT INTO `menu` (`id`, `menu_name`, `content`, `flag`) VALUES ('1', '权限管理', '权限管理', 'Y');
+INSERT INTO `menu` (`id`, `menu_name`, `content`, `flag`) VALUES ('1', '基础管理', '权限管理', 'Y');
+INSERT INTO `menu` (`id`, `menu_name`, `content`, `flag`) VALUES ('2', '开发平台', '项目开发', 'Y');
+INSERT INTO `menu` (`id`, `menu_name`, `content`, `flag`) VALUES ('3', '项目机构', '项目机构', 'Y');
+
 
 --liquibase formatted sql
 --changeset tianjl:tianjingle-20191122-3
@@ -21,6 +21,9 @@ INSERT INTO `menu_resource` (`id`, `menu_id`, `resource_id`) VALUES ('1', '1', '
 INSERT INTO `menu_resource` (`id`, `menu_id`, `resource_id`) VALUES ('2', '1', '2');
 INSERT INTO `menu_resource` (`id`, `menu_id`, `resource_id`) VALUES ('3', '1', '3');
 INSERT INTO `menu_resource` (`id`, `menu_id`, `resource_id`) VALUES ('4', '1', '4');
+INSERT INTO `menu_resource` (`id`, `menu_id`, `resource_id`) VALUES ('5', '2', '6');
+INSERT INTO `menu_resource` (`id`, `menu_id`, `resource_id`) VALUES ('6', '3', '5');
+
 
 --liquibase formatted sql
 --changeset tianjl:tianjingle-20191122-4

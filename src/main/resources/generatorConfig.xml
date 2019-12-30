@@ -54,49 +54,49 @@
         <property name="enableSubPackages" value="true"/>
     </javaClientGenerator>
 
-    <table schema="scaffold" tableName="menu_resource" domainObjectName="MenuResourcePo"
-            enableCountByExample="false"
-            enableDeleteByExample="false"
-            enableSelectByExample="false"
-            enableUpdateByExample="false">
-    </table>
-    <table schema="scaffold" tableName="role" domainObjectName="RolePo"
-           enableCountByExample="false"
-           enableDeleteByExample="false"
-           enableSelectByExample="false"
-           enableUpdateByExample="false">
-    </table>
-    <table schema="scaffold" tableName="role_menu" domainObjectName="RoleMenuPo"
-           enableCountByExample="false"
-           enableDeleteByExample="false"
-           enableSelectByExample="false"
-           enableUpdateByExample="false">
-    </table>
-     <table schema="scaffold" tableName="resource" domainObjectName="ResourcePo"
-            enableCountByExample="false"
-            enableDeleteByExample="false"
-            enableSelectByExample="false"
-            enableUpdateByExample="false">
-     </table>
-    <table schema="scaffold" tableName="menu" domainObjectName="MenuPo"
-           enableCountByExample="false"
-           enableDeleteByExample="false"
-           enableSelectByExample="false"
-           enableUpdateByExample="false">
-    </table>
-    <table schema="scaffold" tableName="user" domainObjectName="UserPo"
-           enableCountByExample="false"
-           enableDeleteByExample="false"
-           enableSelectByExample="false"
-           enableUpdateByExample="false">
-    </table>
-    <table schema="scaffold" tableName="project" domainObjectName="ProjectPo"
-           enableCountByExample="false"
-           enableDeleteByExample="false"
-           enableSelectByExample="false"
-           enableUpdateByExample="false">
-    </table>
-    <table schema="scaffold" tableName="tool_project" domainObjectName="ToolProjectPo"
+<!--    <table schema="scaffold" tableName="menu_resource" domainObjectName="MenuResourcePo"-->
+<!--            enableCountByExample="false"-->
+<!--            enableDeleteByExample="false"-->
+<!--            enableSelectByExample="false"-->
+<!--            enableUpdateByExample="false">-->
+<!--    </table>-->
+<!--    <table schema="scaffold" tableName="role" domainObjectName="RolePo"-->
+<!--           enableCountByExample="false"-->
+<!--           enableDeleteByExample="false"-->
+<!--           enableSelectByExample="false"-->
+<!--           enableUpdateByExample="false">-->
+<!--    </table>-->
+<!--    <table schema="scaffold" tableName="role_menu" domainObjectName="RoleMenuPo"-->
+<!--           enableCountByExample="false"-->
+<!--           enableDeleteByExample="false"-->
+<!--           enableSelectByExample="false"-->
+<!--           enableUpdateByExample="false">-->
+<!--    </table>-->
+<!--     <table schema="scaffold" tableName="resource" domainObjectName="ResourcePo"-->
+<!--            enableCountByExample="false"-->
+<!--            enableDeleteByExample="false"-->
+<!--            enableSelectByExample="false"-->
+<!--            enableUpdateByExample="false">-->
+<!--     </table>-->
+<!--    <table schema="scaffold" tableName="menu" domainObjectName="MenuPo"-->
+<!--           enableCountByExample="false"-->
+<!--           enableDeleteByExample="false"-->
+<!--           enableSelectByExample="false"-->
+<!--           enableUpdateByExample="false">-->
+<!--    </table>-->
+<!--    <table schema="scaffold" tableName="user" domainObjectName="UserPo"-->
+<!--           enableCountByExample="false"-->
+<!--           enableDeleteByExample="false"-->
+<!--           enableSelectByExample="false"-->
+<!--           enableUpdateByExample="false">-->
+<!--    </table>-->
+<!--    <table schema="scaffold" tableName="project" domainObjectName="ProjectPo"-->
+<!--           enableCountByExample="false"-->
+<!--           enableDeleteByExample="false"-->
+<!--           enableSelectByExample="false"-->
+<!--           enableUpdateByExample="false">-->
+<!--    </table>-->
+    <table schema="scaffold" tableName="organization" domainObjectName="OrganizationPo"
            enableCountByExample="false"
            enableDeleteByExample="false"
            enableSelectByExample="false"

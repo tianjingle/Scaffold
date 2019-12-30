@@ -122,6 +122,16 @@ public class TErrorCode {
 
 	public static final String ERROR_DELETE_TOOLPROJECTURL_MSG = "工具软件删除失败";
 
+	public static final String ERROR_ADD_ORG_CODE = "80001";
+
+	public static final String ERROR_ADD_ORG_MSG = "组织添加失败";
+
+
+	public static final String ERROR_UPDATE_ORG_CODE = "80001";
+
+	public static final String ERROR_UPDATE_ORG_MSG = "组织修改失败";
+
+	public static final String ERROR_DELETE_ORG_MSG = "组织修改失败";
 
 	public static final String ERROR_GIT_PROJECT_CREATE_CODE = "90001";
 

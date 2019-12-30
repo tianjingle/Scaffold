@@ -92,13 +92,12 @@ apollo_org varchar(64) COMMENT 'apollo工程的组织',
 create_time DateTime COMMENT '创建时间'
 );
 
+
+
 --liquibase formatted sql
---changeset tianjl:tianjingle-20191116-9
---创建工具项目的url--
-create table tool_project(
+--changeset tianjl:tianjingle-20191230-0
+create table organization(
 id int not null primary key auto_increment comment '主键',
-name varchar(128) not null comment 'url的名称',
-url varchar(128) not null comment 'url地址',
-user_name varchar(128) comment '用户名称',
-user_password varchar(128) comment '用户密码'
-);
+name varchar(128) not null comment '机构名称',
+content varchar(512)
+)
