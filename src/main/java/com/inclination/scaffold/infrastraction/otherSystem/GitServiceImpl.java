@@ -2,7 +2,6 @@ package com.inclination.scaffold.infrastraction.otherSystem;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
-import com.inclination.http.rest.RestTemplateUtil;
 import com.inclination.scaffold.application.project.ProjectInformationDto;
 import com.inclination.scaffold.application.users.UserDto;
 import com.inclination.scaffold.constant.config.OtherSystemProperties;
@@ -25,8 +24,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -53,6 +50,8 @@ public class GitServiceImpl implements GitService {
     static String lang="zh-CN";
 
     static String i_like_gitea="";
+
+    static String macaron_flash="";
     /**
      * 创建git仓库
      * @param artifactId
@@ -171,12 +170,8 @@ public class GitServiceImpl implements GitService {
     public boolean updateUserPassword(UserDto newUser, UserPo oldUser) throws UnsupportedEncodingException {
         String gitUpdatePwdUrl=projectProperties.getGitUrl()+"user/settings/account";
         MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
-        if (Strings.isNullOrEmpty(_csrf)){
-            setCrsf(gitUpdatePwdUrl);
-            param.add("_csrf",_csrf);
-        }else{
-            param.add("_csrf",_csrf);
-        }
+        setCrsf(gitUpdatePwdUrl,oldUser);
+        param.add("_csrf",_csrf);
         param.add("old_password",oldUser.getUserPassword());
         param.add("password",newUser.getUserPassword());
         param.add("retype",newUser.getUserPassword());
@@ -185,31 +180,53 @@ public class GitServiceImpl implements GitService {
         header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang);
         header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
-        if (null != oldUser.getUserName() && null != oldUser.getUserPassword()) {
-            String userMsg = oldUser.getUserName() + ":" + oldUser.getUserPassword();
-            String base64UserMsg = Base64.encodeBase64String(userMsg.getBytes());
-            header.set("Authorization", "Basic " + base64UserMsg);
-        }
         HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity(param, header);
         ResponseEntity<String> resEntity=myRestTemplate.exchange(gitUpdatePwdUrl,HttpMethod.POST,entity,String.class,new Object[0]);
         if(resEntity.getStatusCodeValue()==302){
+            header = new HttpHeaders();
+            header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang+"; macaron_flash="+macaron_flash);
+            header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+            entity = new HttpEntity(null, header);
+            myRestTemplate.exchange(gitUpdatePwdUrl,HttpMethod.GET,entity,String.class,new Object[0]);
             return true;
         }else if (resEntity.getStatusCodeValue()==400){
-            doSetCrsf(myRestTemplate.responseHeader);
+            doSetCrsf(myRestTemplate.responseHeader,oldUser);
         }
         return false;
     }
 
-    private void setCrsf(String gitUpdatePwdUrl) {
+    private void setCrsf(String gitUpdatePwdUrl, UserPo oldUser) {
         try{
-            myRestTemplate.exchange(gitUpdatePwdUrl,HttpMethod.POST,null,String.class,new Object[0]);
+            myRestTemplate.exchange(projectProperties.getGitUrl(),HttpMethod.GET,null,String.class,new Object[0]);
         }catch (Exception e){
 
         }
-        doSetCrsf(myRestTemplate.responseHeader);
+        doSetCrsf(myRestTemplate.responseHeader, oldUser);
     }
 
-    private void doSetCrsf(HttpHeaders responseHeader){
+    private void doSetCrsf(HttpHeaders responseHeader, UserPo oldUser){
+        doSetInnerCookies(responseHeader);
+        MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
+        param.add("_csrf",_csrf);
+        param.add("user_name",oldUser.getUserPassword());
+        param.add("password",oldUser.getUserPassword());
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang);
+        HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity(param, header);
+        myRestTemplate.exchange(projectProperties.getGitUrl()+"user/login",HttpMethod.POST,entity,String.class,new Object[0]);
+        doSetInnerCookies(myRestTemplate.responseHeader);
+        try{
+            myRestTemplate.exchange(projectProperties.getGitUrl(),HttpMethod.GET,null,String.class,new Object[0]);
+        }catch (Exception e){
+
+        }
+        doSetInnerCookies(myRestTemplate.responseHeader);
+    }
+
+
+    public void doSetInnerCookies(HttpHeaders responseHeader){
         if (responseHeader.containsKey("Set-Cookie")){
             List<String> cookies=responseHeader.get("Set-Cookie");
             List<Object> list=cookies.stream().filter(c->c.contains("_csrf=")||c.contains("i_like_gitea")||c.contains("lang")).collect(Collectors.toList());
@@ -222,11 +239,17 @@ public class GitServiceImpl implements GitService {
                     String[] cookieInfo = spit[i].split(";");
                     String[] a = cookieInfo[0].split("=");
                     if (a[0].contains("_csrf")) {
-                        _csrf = a[1];
+                        if (a.length>1){
+                            _csrf = a[1].replace("%3D%3D","==");
+                        }else{
+                            _csrf="";
+                        }
                     } else if (a[0].contains("i_like_gitea")) {
                         i_like_gitea =a[1];
                     } else if (a[0].contains("lang")) {
                         lang =a[1];
+                    }else if (a[0].contains("macaron_flash")){
+                        macaron_flash=a[1];
                     }
                 }
             }
