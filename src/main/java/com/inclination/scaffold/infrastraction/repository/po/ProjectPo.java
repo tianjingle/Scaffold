@@ -1,5 +1,7 @@
 package com.inclination.scaffold.infrastraction.repository.po;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -67,6 +69,7 @@ public class ProjectPo {
     /**
      * 创建时间
      */
+    @JsonFormat(shape = JsonFormat.Shape.SCALAR,pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Column(name = "create_time")
     private Date createTime;
 

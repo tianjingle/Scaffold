@@ -25,6 +25,8 @@ INSERT INTO `menu_resource` (`id`, `menu_id`, `resource_id`) VALUES ('4', '1', '
 --liquibase formatted sql
 --changeset tianjl:tianjingle-20191122-4
 INSERT INTO `role` (`id`, `role_name`, `menu_id`, `content`, `flag`) VALUES ('1', '系统管理员', '1', '系统管理员', 'Y');
+INSERT INTO `role` (`id`, `role_name`, `menu_id`, `content`, `flag`) VALUES ('2', '高级管理员', '1', '高级管理员', 'Y');
+INSERT INTO `role` (`id`, `role_name`, `menu_id`, `content`, `flag`) VALUES ('3', '开发者工程师', '1', '开发工程师', 'Y');
 
 --liquibase formatted sql
 --changeset tianjl:tianjingle-20191122-5

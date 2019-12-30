@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.inclination.scaffold.constant.config.OtherSystemProperties;
-import com.inclination.scaffold.infrastraction.otherSystem.JenkinsServiceImpl;
+import com.inclination.scaffold.application.project.ProjectManagerService;
+import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import com.inclination.scaffold.utils.ViewData;
@@ -35,17 +35,7 @@ import tk.mybatis.mapper.entity.Example;
 @Service
 public class UserServiceImp implements UserService {
 
-	/**
-	 * 创建git服务
-	 */
-	@Autowired
-	private RepositoryCreateImpl repositoryCreate;
-	
-	/**
-	 * 创建jenkins服务
-	 */
-	@Autowired
-	private JenkinsServiceImpl jenkinsService;
+
 
 	/**
 	 * 数据库
@@ -53,9 +43,11 @@ public class UserServiceImp implements UserService {
 	@Autowired
 	private UserPoMapper userMapping;
 
-
+	/**
+	 * 项目管理服务
+	 */
 	@Autowired
-	private OtherSystemProperties otherSystemProperties;
+	private ProjectManagerService projectManagerService;
 
 
 	@Override
@@ -64,10 +56,11 @@ public class UserServiceImp implements UserService {
 		// TODO Auto-generated method stub
 		ModelMapUtils.map(dto, User.class).userCreate(userMapping);
 		/**
+		 * 用户主要有超级管理员、高级管理员（部门负责人）、普通开发者
 		 * 创建用户的脚手架的用户环境（jenkins、git、apollo）
 		 */
 		if(dto.getRoId()!=1){
-			createUserEnvironment(dto);
+			projectManagerService.createUserEnvironment(dto);
 		}
 	}
 
@@ -95,73 +88,12 @@ public class UserServiceImp implements UserService {
 	@Transactional
 	public void modifyUser(UserDto dto) throws TException {
 		// TODO Auto-generated method stub
-	    ModelMapUtils.map(dto, User.class).update(userMapping);
-	}
-	/**
-	 * 创建用户成功之后，给用户创建jenkins、git、apollo账户
-	 * @param dto 
-	 * @throws Exception
-	 */
-	public void createUserEnvironment(UserDto dto) throws Exception{
-		String username=dto.getUserName();
-		String password=dto.getUserPassword();
-		String email=dto.getUserEmil();
-
-		String gitUrl= otherSystemProperties.getGitUrl();
-		String jenkinsUrl= otherSystemProperties.getJenkinsUrl()+"securityRealm/createAccount";
-//		String apolloUrl=toolProjectProperties.getJenkinsUrl();
-		/**
-		 * apollo 管理员的账户和密码
-		 */
-//		String apolloUsername=toolProjectProperties.get
-//		String apollopassword=toolProjectProperties.getUserPassword();
-		
-		//create git`s user
-		boolean gitResult=repositoryCreate.createUser(username, password, email, gitUrl);
-		if(!gitResult){
-			throw new Exception("git用户创建失败..");
+		UserPo po=ModelMapUtils.map(dto, User.class).update(userMapping);
+	    if (po.getUserName().equals(dto.getUserName())&&!dto.getUserPassword().equals(po.getUserPassword())){
+			if (!projectManagerService.updateUserPassword(dto,po)){
+				throw new TException(TErrorCode.ERROR_UPDATE_USER_CODE,TErrorCode.ERROR_UPDATE_USER_MSG);
+			}
 		}
-		/**
-		 * create jenkins user
-		 */
-		boolean jenkinsResult=jenkinsService.createUser(username, password, email, jenkinsUrl);
-		
-		if(!jenkinsResult){
-			throw new Exception("jenkins用户创建失败");
-		}
-		/**
-		 * create apollo user
-		 */
-//		boolean apolloResult=apolloProjectCreate.createUser(username,password,email,apolloUrl,apolloUsername,apollopassword);
-//		if(!apolloResult){
-//			throw new Exception("apollo创建失败..");
-//		}
-//
-		/**
-		 * these is place where add role for this user
-		 * 
-		 * ignore code....please complate 
-		 */
-		
-		boolean myview=jenkinsService.createMyView(username,password, otherSystemProperties.getJenkinsUrl(),username);
-		
-		if(!myview){
-			throw new Exception("jenkins视图创建失败");
-		}
-		/**
-		 * create git org 
-		 */
-		boolean gitOrg=repositoryCreate.createOrg(username,password,gitUrl,username);
-		if(!gitOrg){
-			throw new Exception("创建git组织");
-		}
-		/**
-		 * create apollo org
-		 */
-/*		boolean apolloOrg=apolloProjectCreate.createOrg(username);
-		if(!apolloOrg){
-			throw new Exception("apollo部门创建失败");
-		}*/
 	}
 
 	@Override

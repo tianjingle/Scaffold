@@ -151,8 +151,7 @@ public class JenkinsServiceImpl implements JenkinsService {
 		MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
 		param.add("_.fullName", username);
 		param.add("_.description" ,"");
-		param.add("_.", username);
-		param.add("_.apiToken", "Token is hidden");
+		param.add("showCondition","Chinese");
 		param.add("email.address", email);
 		param.add("_.primaryViewName", "");
 		param.add("providerId", "default");
@@ -164,28 +163,45 @@ public class JenkinsServiceImpl implements JenkinsService {
 		Map<String,Object> json=new HashMap<>();
 		json.put("fullName", username);
 		json.put("description", "");
-		Map<String,Object> userProperty2=new HashMap<>();
-		userProperty2.put("address", email);
-		json.put("userProperty2",userProperty2);
-		Map<String,Object> userProperty5=new HashMap<>();
-		userProperty5.put("primaryViewName","");
-		json.put("userProperty5",userProperty5);
+
+		Map<String,Object> userProperty1=new HashMap<>();
+		userProperty1.put("showCondition","Chinese");
+		json.put("userProperty1",userProperty1);
+		Map<String,Object> userProperty3=new HashMap<>();
+		userProperty3.put("address", email);
+		json.put("userProperty3",userProperty3);
+
+
 		Map<String,Object> userProperty6=new HashMap<>();
+		userProperty6.put("primaryViewName","");
+		json.put("userProperty6",userProperty6);
+		Map<String,Object> userProperty7=new HashMap<>();
 		userProperty6.put("providerId", "default");
-		json.put("userProperty6", userProperty6);
-		Map<String,Object> userProperty8=new HashMap<>();
-		userProperty8.put("password", newPwd);
-		userProperty8.put("password2", newPwd);
-		json.put("userProperty8", userProperty8);
+		json.put("userProperty7", userProperty7);
+
+
 		Map<String,Object> userProperty9=new HashMap<>();
-		userProperty9.put("zuthorizedKeys","");
+		userProperty9.put("password", newPwd);
+		userProperty9.put("password2", newPwd);
+		userProperty9.put("$redact","[password,password2]");
 		json.put("userProperty9", userProperty9);
+
+
 		Map<String,Object> userProperty10=new HashMap<>();
-		userProperty10.put("insensitiveSearch", true);
+		userProperty10.put("authorizedKeys","");
 		json.put("userProperty10", userProperty10);
+
+		Map<String,Object> userProperty12=new HashMap<>();
+		userProperty12.put("insensitiveSearch", true);
+		json.put("userProperty12", userProperty12);
+
 		json.put("core:apply", "");
-		param.add("json", JSON.toJSON(json));
-		ResponseEntity<String> response=RestTemplateUtil.submitForm(param, jenkinsUrl+"/securityRealm/user/"+username+"/configSubmit", username, password);
+
+
+		Object endJson=JSON.toJSON(json);
+		param.add("json", endJson);
+		String jenkinsTargetUrl=jenkinsUrl+"securityRealm/user/"+username+"/configSubmit";
+		ResponseEntity<String> response=RestTemplateUtil.submitForm(param, jenkinsTargetUrl, username, password);
 		if(response.getStatusCodeValue()==302){
 			return true;
 		}

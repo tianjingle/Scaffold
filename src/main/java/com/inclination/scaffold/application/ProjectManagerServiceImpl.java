@@ -1,5 +1,6 @@
 package com.inclination.scaffold.application;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.inclination.scaffold.infrastraction.otherSystem.git.GitService;
 import com.inclination.scaffold.infrastraction.otherSystem.jenkins.JenkinsService;
 import com.inclination.scaffold.infrastraction.repository.ProjectPoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.ProjectPo;
+import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +58,11 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 	@Autowired
 	private ProjectPoMapper projectMpper;
 
+	/**
+	 * 创建git服务
+	 */
+	@Autowired
+	private RepositoryCreateImpl repositoryCreate;
 
 
 	@Override
@@ -133,6 +140,90 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 			projectMpper.insert(po);
 		}
 		return true;
+	}
+
+	/**
+	 * 创建用户成功之后，给用户创建jenkins、git、apollo账户
+	 * @param dto
+	 * @throws Exception
+	 */
+	public void createUserEnvironment(UserDto dto) throws Exception {
+		String username = dto.getUserName();
+		String password = dto.getUserPassword();
+		String email = dto.getUserEmil();
+
+		String gitUrl = projectProperties.getGitUrl();
+		String jenkinsUrl = projectProperties.getJenkinsUrl() + "securityRealm/createAccount";
+//		String apolloUrl=toolProjectProperties.getJenkinsUrl();
+		/**
+		 * apollo 管理员的账户和密码
+		 */
+//		String apolloUsername=toolProjectProperties.get
+//		String apollopassword=toolProjectProperties.getUserPassword();
+		//create git`s user
+		boolean gitResult = repositoryCreate.createUser(username, password, email, gitUrl);
+		if (!gitResult) {
+			throw new Exception("git用户创建失败..");
+		}
+		/**
+		 * create jenkins user
+		 */
+		boolean jenkinsResult = jenkinsService.createUser(username, password, email, jenkinsUrl);
+
+		if (!jenkinsResult) {
+			throw new Exception("jenkins用户创建失败");
+		}
+		/**
+		 * create apollo user
+		 */
+//		boolean apolloResult=apolloProjectCreate.createUser(username,password,email,apolloUrl,apolloUsername,apollopassword);
+//		if(!apolloResult){
+//			throw new Exception("apollo创建失败..");
+//		}
+//
+		/**
+		 * these is place where add role for this user
+		 *
+		 * ignore code....please complate
+		 */
+
+		boolean myview = jenkinsService.createMyView(username, password, projectProperties.getJenkinsUrl(), username);
+
+		if (!myview) {
+			throw new Exception("jenkins视图创建失败");
+		}
+		/**
+		 * create git org
+		 */
+		boolean gitOrg = repositoryCreate.createOrg(username, password, gitUrl, username);
+		if (!gitOrg) {
+			throw new Exception("创建git组织");
+		}
+		/**
+		 * create apollo org
+		 */
+/*		boolean apolloOrg=apolloProjectCreate.createOrg(username);
+		if(!apolloOrg){
+			throw new Exception("apollo部门创建失败");
+		}*/
+	}
+
+	/**
+	 * 修改其他系统的用户密码
+	 *
+     * @param newUser
+     * @param oldUser
+     * @return
+	 */
+	@Override
+	public boolean updateUserPassword(UserDto newUser, UserPo oldUser) {
+		try {
+			gitService.updateUserPassword(newUser,oldUser);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		jenkinsService.updatePwd(newUser.getUserName(),oldUser.getUserPassword(),newUser.getUserPassword(),newUser.getUserEmil(),projectProperties.getJenkinsUrl());
+		return false;
 	}
 
 

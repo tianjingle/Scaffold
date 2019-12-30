@@ -89,7 +89,7 @@ group_id varchar(128) not null COMMENT '基础包名',
 version varchar(128) not null comment '版本号',
 git_org varchar(64) COMMENT 'git的组织',
 apollo_org varchar(64) COMMENT 'apollo工程的组织',
-create_time Date COMMENT '创建时间'
+create_time DateTime COMMENT '创建时间'
 );
 
 --liquibase formatted sql

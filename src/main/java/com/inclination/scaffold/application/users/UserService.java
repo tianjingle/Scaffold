@@ -3,7 +3,6 @@ package com.inclination.scaffold.application.users;
 import javax.validation.Valid;
 
 import com.inclination.scaffold.api.request.user.UserQryByPages;
-import com.inclination.scaffold.api.response.user.UserManagerQryResponse;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ViewData;
 
@@ -15,7 +14,7 @@ public interface UserService {
 
 	void deleteUser(UserDto dto) throws TException;
 
-	void modifyUser(UserDto dto) throws TException;
+	void modifyUser(UserDto userDto) throws TException;
 
 	UserDto usersLogin(UserDto dto);;
 

@@ -2,9 +2,11 @@ package com.inclination.scaffold.infrastraction.otherSystem.git;
 
 import com.inclination.scaffold.application.project.ProjectInformationDto;
 import com.inclination.scaffold.application.users.UserDto;
+import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
 public interface GitService {
@@ -39,4 +41,11 @@ public interface GitService {
      * @param env
      */
     void createInvoke(String username, String password, String jenkinsUrl, String gitUrl, String orgModel,String jobName, String env);
+
+    /**
+     * 修改gitea账户
+     * @param newUser
+     * @param oldUser
+     */
+    boolean updateUserPassword(UserDto newUser, UserPo oldUser) throws UnsupportedEncodingException;
 }

@@ -2,13 +2,16 @@ package com.inclination.scaffold.infrastraction.otherSystem;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
+import com.inclination.http.rest.RestTemplateUtil;
 import com.inclination.scaffold.application.project.ProjectInformationDto;
 import com.inclination.scaffold.application.users.UserDto;
 import com.inclination.scaffold.constant.config.OtherSystemProperties;
 import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.otherSystem.git.GitService;
+import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import com.inclination.scaffold.utils.CMDExecuteUtil;
+import com.inclination.scaffold.utils.MyRestTemplate;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.eclipse.jgit.api.Git;
@@ -17,12 +20,19 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class GitServiceImpl implements GitService {
@@ -36,7 +46,13 @@ public class GitServiceImpl implements GitService {
 
     private RestTemplate restTemplate = new RestTemplate();
 
+    private MyRestTemplate myRestTemplate=new MyRestTemplate();
 
+    static String _csrf="";
+
+    static String lang="zh-CN";
+
+    static String i_like_gitea="";
     /**
      * 创建git仓库
      * @param artifactId
@@ -84,7 +100,6 @@ public class GitServiceImpl implements GitService {
      */
     public boolean crateGitProject(ProjectInformationDto projectDto, UserDto dto){
         String artifactId = projectDto.getArtifactId();
-        String packageName = projectDto.getArtifactId();
         String protectPath = System.getProperty("user.dir") + "/project-temp/" + artifactId;
         String gitUrl = projectProperties.getGitUrl() + "" + dto.getUserName() + "-org/" + artifactId + ".git";
         File file = new File(protectPath);
@@ -150,5 +165,71 @@ public class GitServiceImpl implements GitService {
         ResponseEntity<String> resEntity=restTemplate.exchange(api,HttpMethod.POST,entity,String.class);
         String responseStr=resEntity.getBody();
         System.out.println(responseStr);
+    }
+
+    @Override
+    public boolean updateUserPassword(UserDto newUser, UserPo oldUser) throws UnsupportedEncodingException {
+        String gitUpdatePwdUrl=projectProperties.getGitUrl()+"user/settings/account";
+        MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
+        if (Strings.isNullOrEmpty(_csrf)){
+            setCrsf(gitUpdatePwdUrl);
+            param.add("_csrf",_csrf);
+        }else{
+            param.add("_csrf",_csrf);
+        }
+        param.add("old_password",oldUser.getUserPassword());
+        param.add("password",newUser.getUserPassword());
+        param.add("retype",newUser.getUserPassword());
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang);
+        header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+        if (null != oldUser.getUserName() && null != oldUser.getUserPassword()) {
+            String userMsg = oldUser.getUserName() + ":" + oldUser.getUserPassword();
+            String base64UserMsg = Base64.encodeBase64String(userMsg.getBytes());
+            header.set("Authorization", "Basic " + base64UserMsg);
+        }
+        HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity(param, header);
+        ResponseEntity<String> resEntity=myRestTemplate.exchange(gitUpdatePwdUrl,HttpMethod.POST,entity,String.class,new Object[0]);
+        if(resEntity.getStatusCodeValue()==302){
+            return true;
+        }else if (resEntity.getStatusCodeValue()==400){
+            doSetCrsf(myRestTemplate.responseHeader);
+        }
+        return false;
+    }
+
+    private void setCrsf(String gitUpdatePwdUrl) {
+        try{
+            myRestTemplate.exchange(gitUpdatePwdUrl,HttpMethod.POST,null,String.class,new Object[0]);
+        }catch (Exception e){
+
+        }
+        doSetCrsf(myRestTemplate.responseHeader);
+    }
+
+    private void doSetCrsf(HttpHeaders responseHeader){
+        if (responseHeader.containsKey("Set-Cookie")){
+            List<String> cookies=responseHeader.get("Set-Cookie");
+            List<Object> list=cookies.stream().filter(c->c.contains("_csrf=")||c.contains("i_like_gitea")||c.contains("lang")).collect(Collectors.toList());
+            if (!CollectionUtils.isEmpty(list)){
+                String tian=list.toString();
+                String temp=tian.replace("[","");
+                temp=temp.replace("]","");
+                String[] spit=temp.split(",");
+                for (int i=0;i<spit.length;i++) {
+                    String[] cookieInfo = spit[i].split(";");
+                    String[] a = cookieInfo[0].split("=");
+                    if (a[0].contains("_csrf")) {
+                        _csrf = a[1];
+                    } else if (a[0].contains("i_like_gitea")) {
+                        i_like_gitea =a[1];
+                    } else if (a[0].contains("lang")) {
+                        lang =a[1];
+                    }
+                }
+            }
+        }
     }
 }

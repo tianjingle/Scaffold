@@ -7,6 +7,8 @@ import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import com.inclination.scaffold.utils.ModelMapUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.List;
+
 public class User {
     
 	private int id;
@@ -100,17 +102,25 @@ public class User {
 		}
 	}
 
-	public void update(UserPoMapper userMapping) throws TException {
+	public UserPo update(UserPoMapper userMapping) throws TException {
 		// TODO Auto-generated method stub
+
+
+
 		com.inclination.scaffold.infrastraction.repository.po.UserPo po=
 				ModelMapUtils.map(this, com.inclination.scaffold.infrastraction.repository.po.UserPo.class);
-		Example example=new Example(UserPo.class);
+		Example example=null;
+
+		example=new Example(UserPo.class);
+		example.createCriteria().andEqualTo("id",po.getId());
+		List<UserPo> target= userMapping.selectByExample(example);
 		example.createCriteria().andEqualTo("loginId",po.getLoginId()).andEqualTo("userPassword",po.getUserPassword());
-		Integer count=(Integer) userMapping.selectCountByExample(example);
-        if(count>1){
+		List<UserPo>users= userMapping.selectByExample(example);
+        if(users.size()>1){
         	throw new TException(TErrorCode.ERROR_INSERT_USER_CODE,TErrorCode.ERROR_INSERT_USER_MSG);
         }else if(userMapping.updateByPrimaryKeySelective(po)!=1){
 			throw new TException(TErrorCode.ERROR_UPDATE_USER_CODE,TErrorCode.ERROR_UPDATE_USER_MSG);
 		}
+        return target.get(0);
 	}
 }
