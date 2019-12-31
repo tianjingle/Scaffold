@@ -133,13 +133,9 @@ public class User {
 
 	public UserPo update(UserPoMapper userMapping) throws TException {
 		// TODO Auto-generated method stub
-
-
-
 		com.inclination.scaffold.infrastraction.repository.po.UserPo po=
 				ModelMapUtils.map(this, com.inclination.scaffold.infrastraction.repository.po.UserPo.class);
 		Example example=null;
-
 		example=new Example(UserPo.class);
 		example.createCriteria().andEqualTo("id",po.getId());
 		List<UserPo> target= userMapping.selectByExample(example);
