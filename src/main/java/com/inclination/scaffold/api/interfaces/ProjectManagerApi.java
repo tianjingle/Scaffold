@@ -64,6 +64,6 @@ public class ProjectManagerApi {
 	@GetMapping(value = "/projects-scaffold-find")
 	@ApiOperation(value="查询项目资料",notes = "查询项目资料")
 	public ViewData parseScaffold(@ModelAttribute ProjectQryByPage request,@SessionAttribute("CurrentUser") UserDto user){
-		return projectManagerService.doSearchProject(request,user.getLoginId());
+		return projectManagerService.doSearchProject(request,user);
 	}
 }

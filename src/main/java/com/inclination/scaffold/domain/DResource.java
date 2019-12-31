@@ -94,7 +94,7 @@ public class DResource {
 		Example example =new Example(ResourcePo.class);
 		example.createCriteria().andEqualTo("resourceName",this.resourceName);
 		long count=resourceMapper.selectCountByExample(example);
-		if ( count!= 0) {
+		if ( count> 1) {
 			throw new TException(TErrorCode.ERROR_EXISIT_RESOURCE_CODE, TErrorCode.ERROR_EXISIT_RESOURCE_MSG);
 		} else if (resourceMapper.updateByPrimaryKey(po) != 1) {
 			throw new TException(TErrorCode.ERROR_UPDATE_RESOURCE_CODE, TErrorCode.ERROR_UPDATE_RESOURCE_MSG);

@@ -4,6 +4,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @ApiModel
 @Data
 public class UserManageModifyRequest {
@@ -25,5 +28,10 @@ public class UserManageModifyRequest {
 
 	@ApiModelProperty(name="权限",value="权限")
     private Integer roId;
-	
+
+	@ApiModelProperty(name="orgId",value="id")
+	private int orgId;
+
+	@ApiModelProperty(name="orgName",value="名称")
+	private String orgName;
 }

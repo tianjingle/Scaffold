@@ -1,5 +1,6 @@
 package com.inclination.scaffold.infrastraction.repository.po;
 
+
 import javax.persistence.*;
 
 @Table(name = "user")
@@ -36,6 +37,29 @@ public class UserPo {
      */
     @Column(name = "ro_id")
     private Integer roId;
+
+    @Column(name = "org_id")
+    private Integer orgId;
+
+    @Column(name = "org_Name")
+    private String orgName;
+
+
+    public Integer getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
 
     /**
      * @return id

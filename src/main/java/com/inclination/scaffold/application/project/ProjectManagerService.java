@@ -12,9 +12,11 @@ public interface ProjectManagerService {
 
 	void createScaffoldProject(ProjectInformationDto projectDto, UserDto dto) throws URISyntaxException;
 
-	ViewData doSearchProject(ProjectQryByPage request, String loginId);
+	ViewData doSearchProject(ProjectQryByPage request, UserDto loginId);
 
     void createUserEnvironment(UserDto dto) throws Exception;
 
 	boolean updateUserPassword(UserDto dto, UserPo userDto);
+
+    void createUserOtherSystem(UserDto dto) throws Exception;
 }

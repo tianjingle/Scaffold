@@ -60,7 +60,7 @@ public class GitServiceImpl implements GitService {
      */
     public boolean createGitRepository(String artifactId, UserDto dto) {
         // TODO Auto-generated method stub
-        String orgModel=dto.getUserName()+"-org";
+        String orgModel=dto.getOrgName()+"-org";
         String username=dto.getUserName();
         String password=dto.getUserPassword();
         String gitUrl=projectProperties.getGitUrl();
@@ -100,7 +100,7 @@ public class GitServiceImpl implements GitService {
     public boolean crateGitProject(ProjectInformationDto projectDto, UserDto dto){
         String artifactId = projectDto.getArtifactId();
         String protectPath = System.getProperty("user.dir") + "/project-temp/" + artifactId;
-        String gitUrl = projectProperties.getGitUrl() + "" + dto.getUserName() + "-org/" + artifactId + ".git";
+        String gitUrl = projectProperties.getGitUrl() + "" + dto.getOrgName() + "-org/" + artifactId + ".git";
         File file = new File(protectPath);
         try {
             FileUtils.deleteDirectory(file.getParentFile());

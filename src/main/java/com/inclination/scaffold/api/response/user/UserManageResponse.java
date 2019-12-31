@@ -26,7 +26,9 @@ public class UserManageResponse {
 	@ApiModelProperty(name="roid",value="权限")
     private Integer roId;
 
-	
+	private Integer orgId;
+
+	private String orgName;
 
 
 }

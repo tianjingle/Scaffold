@@ -41,5 +41,12 @@ public class UserManageAddRequest {
 	
 	@ApiModelProperty(name="roid",value="权限")
     private int roId;
-	
+
+	@ApiModelProperty(name="orgId",value="id")
+	@NotNull(message = "组织id不能为空")
+	private int orgId;
+
+	@ApiModelProperty(name="orgName",value="用户密码")
+	@NotBlank(message="项目组织")
+	private String orgName;
 }

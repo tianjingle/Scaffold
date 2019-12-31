@@ -7,7 +7,9 @@ import javax.validation.Valid;
 
 import com.inclination.scaffold.application.project.ProjectManagerService;
 import com.inclination.scaffold.constant.exception.TErrorCode;
+import com.inclination.scaffold.infrastraction.repository.OrganizationPoMapper;
 import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
+import com.inclination.scaffold.infrastraction.repository.po.OrganizationPo;
 import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,10 @@ public class UserServiceImp implements UserService {
 	@Autowired
 	private UserPoMapper userMapping;
 
+	@Autowired
+	private OrganizationPoMapper organizationPoMapper;
+
+
 	/**
 	 * 项目管理服务
 	 */
@@ -54,13 +60,22 @@ public class UserServiceImp implements UserService {
 	@Transactional
 	public void createUser(UserDto dto) throws Exception {
 		// TODO Auto-generated method stub
+		Example example=new Example(OrganizationPo.class);
+		example.createCriteria().andEqualTo("id",dto.getOrgId());
+		List<OrganizationPo> list=organizationPoMapper.selectByExample(example);
+		if (list.size()>0){
+			dto.setOrgName(list.get(0).getContent());
+		}
 		ModelMapUtils.map(dto, User.class).userCreate(userMapping);
 		/**
 		 * 用户主要有超级管理员、高级管理员（部门负责人）、普通开发者
 		 * 创建用户的脚手架的用户环境（jenkins、git、apollo）
 		 */
-		if(dto.getRoId()!=1){
+		if(dto.getRoId()==2){
 			projectManagerService.createUserEnvironment(dto);
+			projectManagerService.createUserOtherSystem(dto);
+		}else if (dto.getRoId()==3){
+			projectManagerService.createUserOtherSystem(dto);
 		}
 	}
 

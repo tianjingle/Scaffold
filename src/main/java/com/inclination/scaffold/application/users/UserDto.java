@@ -17,4 +17,8 @@ public class UserDto {
 	private String userEmil;
 
     private Integer roId;
+
+	private int orgId;
+
+	private String orgName;
 }

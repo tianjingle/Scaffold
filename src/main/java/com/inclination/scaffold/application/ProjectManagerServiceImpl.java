@@ -87,15 +87,18 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 	}
 
 	@Override
-	public ViewData doSearchProject(ProjectQryByPage request, String loginId) {
+	public ViewData doSearchProject(ProjectQryByPage request, UserDto dto) {
 		Example example=new Example(ProjectPo.class);
-		if (!Strings.isNullOrEmpty(request.getArtifactId())){
+		if (dto.getRoId()==1&&Strings.isNullOrEmpty(request.getArtifactId())){
+
+		}else if(dto.getRoId()==1&&!Strings.isNullOrEmpty(request.getArtifactId())){
 			example.createCriteria().andEqualTo("artifactId",request.getArtifactId());
-			example.setOrderByClause("id desc");
+		}else if (dto.getRoId()!=1&&!Strings.isNullOrEmpty(request.getArtifactId())){
+			example.createCriteria().andEqualTo("artifactId",request.getArtifactId()).andEqualTo("gitOrg",dto.getOrgName());
 		}else{
-			example.createCriteria().andEqualTo("loginId",loginId);
-			example.setOrderByClause("id desc");
+			example.createCriteria().andEqualTo("gitOrg",dto.getOrgName());
 		}
+		example.setOrderByClause("id desc");
 		Page hpage= PageHelper.startPage((int)request.getPage(), request.getLimit());
 		List<ProjectPo> list=projectMpper.selectByExample(example);
 		return ViewData.success(list,hpage.getPages(),hpage.getTotal());
@@ -105,7 +108,7 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 
 	public boolean crateScaffoldProject(ProjectInformationDto projectDto, UserDto dto) throws URISyntaxException, IOException, JAXBException, TException {
 		String artifactId=projectDto.getArtifactId();
-		String gitUrl=projectProperties.getGitUrl()+""+dto.getUserName()+"-org/"+artifactId+".git";
+		String gitUrl=projectProperties.getGitUrl()+""+dto.getOrgName()+"-org/"+artifactId+".git";
 		if (!gitService.crateGitProject(projectDto,dto)){
 			throw new TException(TErrorCode.ERROR_SCAFFOLD_PROJECT_CREATE_CODE,TErrorCode.ERROR_SCAFFOLD_PROJECT_CREATE_MSG);
 		}
@@ -121,7 +124,7 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		String username=dto.getUserName();
 		String password=dto.getUserPassword();
 		String jobName=projectDto.getArtifactId()+"-service";
-		String orgModel=dto.getUserName() +"-org";
+		String orgModel=dto.getOrgName() +"-org";
 		boolean flag=false;
 		for (String env : envs) {
 			flag=jenkinsService.createJobByJenkinsClient(jenkinsUrl,dto.getUserName(),dto.getUserPassword(),jobName,gitUrl,env);
@@ -150,10 +153,7 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 	public void createUserEnvironment(UserDto dto) throws Exception {
 		String username = dto.getUserName();
 		String password = dto.getUserPassword();
-		String email = dto.getUserEmil();
-
 		String gitUrl = projectProperties.getGitUrl();
-		String jenkinsUrl = projectProperties.getJenkinsUrl() + "securityRealm/createAccount";
 //		String apolloUrl=toolProjectProperties.getJenkinsUrl();
 		/**
 		 * apollo 管理员的账户和密码
@@ -161,18 +161,7 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 //		String apolloUsername=toolProjectProperties.get
 //		String apollopassword=toolProjectProperties.getUserPassword();
 		//create git`s user
-		boolean gitResult = repositoryCreate.createUser(username, password, email, gitUrl);
-		if (!gitResult) {
-			throw new Exception("git用户创建失败..");
-		}
-		/**
-		 * create jenkins user
-		 */
-		boolean jenkinsResult = jenkinsService.createUser(username, password, email, jenkinsUrl);
 
-		if (!jenkinsResult) {
-			throw new Exception("jenkins用户创建失败");
-		}
 		/**
 		 * create apollo user
 		 */
@@ -181,21 +170,14 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 //			throw new Exception("apollo创建失败..");
 //		}
 //
-		/**
-		 * these is place where add role for this user
-		 *
-		 * ignore code....please complate
-		 */
-
-		boolean myview = jenkinsService.createMyView(username, password, projectProperties.getJenkinsUrl(), username);
-
+		boolean myview = jenkinsService.createMyView(username, password, projectProperties.getJenkinsUrl(), dto.getOrgName());
 		if (!myview) {
 			throw new Exception("jenkins视图创建失败");
 		}
 		/**
 		 * create git org
 		 */
-		boolean gitOrg = repositoryCreate.createOrg(username, password, gitUrl, username);
+		boolean gitOrg = repositoryCreate.createOrg(username, password, gitUrl, dto.getOrgName());
 		if (!gitOrg) {
 			throw new Exception("创建git组织");
 		}
@@ -224,6 +206,28 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		}
 		jenkinsService.updatePwd(newUser.getUserName(),oldUser.getUserPassword(),newUser.getUserPassword(),newUser.getUserEmil(),projectProperties.getJenkinsUrl());
 		return false;
+	}
+
+	@Override
+	public void createUserOtherSystem(UserDto dto) throws Exception {
+		String username = dto.getUserName();
+		String password = dto.getUserPassword();
+		String email = dto.getUserEmil();
+
+		String gitUrl = projectProperties.getGitUrl();
+		String jenkinsUrl = projectProperties.getJenkinsUrl() + "securityRealm/createAccount";
+		boolean gitResult = repositoryCreate.createUser(username, password, email, gitUrl);
+		if (!gitResult) {
+			throw new Exception("git用户创建失败..");
+		}
+		/**
+		 * create jenkins user
+		 */
+		boolean jenkinsResult = jenkinsService.createUser(username, password, email, jenkinsUrl);
+
+		if (!jenkinsResult) {
+			throw new Exception("jenkins用户创建失败");
+		}
 	}
 
 

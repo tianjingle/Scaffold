@@ -72,6 +72,8 @@ user_name varchar(64) not null COMMENT '用户名称',
 user_password varchar(64) not null COMMENT '用户密码',
 user_emil varchar(64) COMMENT '用户电子邮箱',
 ro_id int not null COMMENT '用户权限标志',
+org_id int not null comment '机构id',
+org_name varchar(64) comment '机构名称',
 CONSTRAINT user_role FOREIGN KEY (ro_id) REFERENCES role (id) ON DELETE CASCADE ON UPDATE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

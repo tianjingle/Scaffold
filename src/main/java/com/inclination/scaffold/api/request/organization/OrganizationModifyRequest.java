@@ -5,13 +5,14 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @ApiModel
 @Data
 public class OrganizationModifyRequest {
 
     @ApiModelProperty(name = "id")
-    @NotBlank(message = "id不能为空")
+    @NotNull(message = "id不能为空")
     private Integer id;
     /**
      * 机构名称

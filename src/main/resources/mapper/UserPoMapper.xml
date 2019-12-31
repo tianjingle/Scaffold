@@ -11,12 +11,14 @@
     <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
     <result column="user_emil" jdbcType="VARCHAR" property="userEmil" />
     <result column="ro_id" jdbcType="INTEGER" property="roId" />
+    <result column="org_id" jdbcType="INTEGER" property="orgId" />
+    <result column="org_name" jdbcType="VARCHAR" property="orgName" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
     -->
-    id, login_id, user_name, user_password, user_emil, ro_id
+    id, login_id, user_name, user_password, user_emil, ro_id,org_Id,org_Name
   </sql>
   <select id="findUserByNamePass" parameterType="com.inclination.scaffold.infrastraction.repository.po.UserPo" resultType="java.lang.Integer">
 	select count(*) from user
