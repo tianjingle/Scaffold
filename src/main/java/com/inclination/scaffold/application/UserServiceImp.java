@@ -71,12 +71,13 @@ public class UserServiceImp implements UserService {
 		 * 用户主要有超级管理员、高级管理员（部门负责人）、普通开发者
 		 * 创建用户的脚手架的用户环境（jenkins、git、apollo）
 		 */
-		if(dto.getRoId()==2){
-			projectManagerService.createUserEnvironment(dto);
-			projectManagerService.createUserOtherSystem(dto);
-		}else if (dto.getRoId()==3){
+		if (dto.getRoId()==2||dto.getRoId()==3){
 			projectManagerService.createUserOtherSystem(dto);
 		}
+		if(dto.getRoId()==2){
+			projectManagerService.createUserEnvironment(dto);
+		}
+
 	}
 
 	@Override

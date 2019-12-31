@@ -47,7 +47,7 @@ public class JenkinsServiceImpl implements JenkinsService {
 	 * @throws IOException
 	 * @throws JAXBException
 	 */
-	public boolean createJobByJenkinsClient(String url, String username, String password, String jobName, String gitUrl,String env) throws URISyntaxException, IOException, JAXBException {
+	public boolean createJobByJenkinsClient(String url, String username, String password, String jobName, String gitUrl,String env,String org) throws URISyntaxException, IOException, JAXBException {
         JenkinsServer jenkins=new JenkinsServer(new URI(url),username,password);
 		Project project=null;
 		try {
@@ -66,7 +66,7 @@ public class JenkinsServiceImpl implements JenkinsService {
 		jenkins.createJob(jobName+"-"+env,config);
 		MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
 		param.add("name", jobName+"-"+env);
-		RestTemplateUtil.submitForm(param,url+"/view/"+username+"/addJobToView",username,password);
+		RestTemplateUtil.submitForm(param,url+"/view/"+org+"/addJobToView",username,password);
 		if("dev".equals(env)&& !Strings.isNullOrEmpty(otherSystemProperties.getMonitorView())){
 			MultiValueMap<String,Object> param2=new LinkedMultiValueMap<>();
 			param2.add("name",jobName+"-"+env);

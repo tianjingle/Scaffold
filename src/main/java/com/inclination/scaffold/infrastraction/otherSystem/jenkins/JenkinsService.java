@@ -6,7 +6,7 @@ import java.net.URISyntaxException;
 
 public interface JenkinsService {
 
-    boolean createJobByJenkinsClient(String url, String username, String password, String jobName, String gitUrl,String env) throws URISyntaxException, IOException, JAXBException;
+    boolean createJobByJenkinsClient(String url, String username, String password, String jobName, String gitUrl,String env,String org) throws URISyntaxException, IOException, JAXBException;
 
     boolean createUser(String username,String password,String email,String jenkinsurl) throws Exception;
 

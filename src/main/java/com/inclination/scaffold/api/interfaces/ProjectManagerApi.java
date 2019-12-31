@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.inclination.scaffold.api.request.project.ProjectQryByPage;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,7 @@ public class ProjectManagerApi {
 	 */
 	@PostMapping(value="/projects-scaffold-create")
 	@ApiOperation(value="创建脚手架工程",notes="创建工程")
-	public void scaffoldProjectCreate(@Valid @RequestBody ProjectManagerCreateRequest request,HttpSession session) throws URISyntaxException {
+	public void scaffoldProjectCreate(@Valid @RequestBody ProjectManagerCreateRequest request,HttpSession session) throws URISyntaxException, TException {
 		UserDto dto=(UserDto) session.getAttribute("CurrentUser");
 		ProjectInformationDto projectDto=ModelMapUtils.map(request, ProjectInformationDto.class);
 		projectDto.setCreateTime(new Date());

@@ -2,6 +2,7 @@ package com.inclination.scaffold.application.project;
 
 import com.inclination.scaffold.api.request.project.ProjectQryByPage;
 import com.inclination.scaffold.application.users.UserDto;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import com.inclination.scaffold.utils.ViewData;
 
@@ -10,7 +11,7 @@ import java.net.URISyntaxException;
 public interface ProjectManagerService {
 
 
-	void createScaffoldProject(ProjectInformationDto projectDto, UserDto dto) throws URISyntaxException;
+	void createScaffoldProject(ProjectInformationDto projectDto, UserDto dto) throws URISyntaxException, TException;
 
 	ViewData doSearchProject(ProjectQryByPage request, UserDto loginId);
 

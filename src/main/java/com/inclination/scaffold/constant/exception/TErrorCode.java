@@ -14,6 +14,10 @@ public class TErrorCode {
 
 	public static final String ERROR_INSERT_USER_MSG = "该用户名已经存在";
 
+	public static final String ERROR_CREATE_SUPER_USER_CODE = "10011";
+
+	public static final String ERROR_CREATE_SUPER_USER_MSG = "每个团队的负责人只能有一个";
+
 	public static final String ERROR_UPDATE_USER_CODE = "10002";
 
 	public static final String ERROR_UPDATE_USER_MSG = "删除用户失败";
@@ -145,5 +149,10 @@ public class TErrorCode {
 	public static final String ERROR_NO_MODEL_MAVEN_CODE = "90004";
 
 	public static final String ERROR_NO_MODEL_MAVEN_MSG = "缺少项目模板";
+
+
+	public static final String ERROR_CREATE_PROJECT_CREATE_CODE = "90005";
+
+	public static final String ERROR_CREATE_PROJECT_CREATE_MSG = "对不起，您没有创建项目的权限，创建项目请联系部门负责人";
 
 }

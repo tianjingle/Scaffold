@@ -66,8 +66,11 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 
 
 	@Override
-	public void createScaffoldProject(ProjectInformationDto projectDto,UserDto dto) throws URISyntaxException {
+	public void createScaffoldProject(ProjectInformationDto projectDto,UserDto dto) throws URISyntaxException, TException {
 		// TODO Auto-generated method stub
+		if(dto.getRoId()!=2){
+			throw new TException(TErrorCode.ERROR_CREATE_PROJECT_CREATE_CODE,TErrorCode.ERROR_CREATE_PROJECT_CREATE_MSG);
+		}
 		if (gitService.createGitRepository(projectDto.getArtifactId(),dto)){
 			try {
 				try {
@@ -127,7 +130,7 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		String orgModel=dto.getOrgName() +"-org";
 		boolean flag=false;
 		for (String env : envs) {
-			flag=jenkinsService.createJobByJenkinsClient(jenkinsUrl,dto.getUserName(),dto.getUserPassword(),jobName,gitUrl,env);
+			flag=jenkinsService.createJobByJenkinsClient(jenkinsUrl,dto.getUserName(),dto.getUserPassword(),jobName,gitUrl,env,dto.getOrgName());
 			if(!flag){
 				return false;
 			}
@@ -136,7 +139,7 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		if(flag){
 			ProjectPo po=ModelMapUtils.map(projectDto, ProjectPo.class);
 			po.setGitUrl(gitUrl);
-			po.setGitOrg(orgModel);
+			po.setGitOrg(dto.getOrgName());
 			po.setJenkinsUrl(jenkinsUrl+"job/"+jobName+"-dev");
 			po.setApolloUrl("");
 			po.setCreateTime(new Date());

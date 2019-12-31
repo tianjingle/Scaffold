@@ -104,8 +104,19 @@ public class User {
 		com.inclination.scaffold.infrastraction.repository.po.UserPo po=
 				ModelMapUtils.map(this, com.inclination.scaffold.infrastraction.repository.po.UserPo.class);
 		Example example=new Example(UserPo.class);
-		example.createCriteria().andEqualTo("loginId",po.getLoginId()).andEqualTo("userPassword",po.getUserPassword());
-		Integer count=(Integer) userMapper.selectCountByExample(example);
+		Example.Criteria criteria=example.createCriteria();
+		Integer count=0;
+		if (po.getRoId()==2){
+			criteria=example.createCriteria();
+			criteria.andEqualTo("roId",2);
+			criteria.andEqualTo("orgName",po.getOrgName());
+			count=(Integer) userMapper.selectCountByExample(example);
+			if (count>0){
+				throw new TException(TErrorCode.ERROR_CREATE_SUPER_USER_CODE,TErrorCode.ERROR_CREATE_SUPER_USER_MSG);
+			}
+		}
+		criteria.andEqualTo("loginId",po.getLoginId()).andEqualTo("userPassword",po.getUserPassword());
+		count=(Integer) userMapper.selectCountByExample(example);
         if(count>0){
         	throw new TException(TErrorCode.ERROR_INSERT_USER_CODE,TErrorCode.ERROR_INSERT_USER_MSG);
         }else if(userMapper.insert(po)!=1){

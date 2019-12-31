@@ -10,6 +10,7 @@ import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.otherSystem.git.GitService;
 import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import com.inclination.scaffold.utils.CMDExecuteUtil;
+import com.inclination.scaffold.utils.ModelMapUtils;
 import com.inclination.scaffold.utils.MyRestTemplate;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -60,6 +61,10 @@ public class GitServiceImpl implements GitService {
      */
     public boolean createGitRepository(String artifactId, UserDto dto) {
         // TODO Auto-generated method stub
+
+
+        addCurrentUser2Org(dto);
+
         String orgModel=dto.getOrgName()+"-org";
         String username=dto.getUserName();
         String password=dto.getUserPassword();
@@ -89,6 +94,18 @@ public class GitServiceImpl implements GitService {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 把当前git用户添加到团队里
+     * @param dto
+     */
+    private void addCurrentUser2Org(UserDto dto) {
+        setCrsf(ModelMapUtils.map(dto,UserPo.class));
+        String url=projectProperties.getGitUrl()+"api/v1/users/search?q="+dto.getUserName();
+
+
+
     }
 
     /**
@@ -177,7 +194,7 @@ public class GitServiceImpl implements GitService {
     public boolean updateUserPassword(UserDto newUser, UserPo oldUser) throws UnsupportedEncodingException {
         String gitUpdatePwdUrl=projectProperties.getGitUrl()+"user/settings/account";
         MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
-        setCrsf(gitUpdatePwdUrl,oldUser);
+        setCrsf(oldUser);
         param.add("_csrf",_csrf);
         param.add("old_password",oldUser.getUserPassword());
         param.add("password",newUser.getUserPassword());
@@ -205,10 +222,9 @@ public class GitServiceImpl implements GitService {
 
     /**
      * 设置cookie
-     * @param gitUpdatePwdUrl
      * @param oldUser
      */
-    private void setCrsf(String gitUpdatePwdUrl, UserPo oldUser) {
+    private void setCrsf(UserPo oldUser) {
         try{
             myRestTemplate.exchange(projectProperties.getGitUrl(),HttpMethod.GET,null,String.class,new Object[0]);
         }catch (Exception e){
