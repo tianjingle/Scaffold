@@ -26,25 +26,25 @@ public class OrganizationApi {
     private OrganizationService organizationService;
 
 
-    @RequestMapping(value = "/add")
+    @PostMapping(value = "/add")
     @ApiOperation(value = "")
     public ViewData addOrg(@Valid @RequestBody OrganizationAddRequest request) throws TException {
         return organizationService.add(ModelMapUtils.map(request, OrganizationDto.class));
     }
 
-    @RequestMapping(value = "/modify")
+    @PatchMapping(value = "/modify")
     @ApiOperation(value = "")
     public ViewData modifyOrg(@Valid @RequestBody OrganizationModifyRequest request) throws TException {
         return organizationService.modify(ModelMapUtils.map(request, OrganizationDto.class));
     }
 
-    @RequestMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     @ApiOperation(value = "")
     public ViewData deleteOrg(@PathVariable("id") String id){
         return organizationService.delete(id);
     }
 
-    @RequestMapping(value = "/find")
+    @GetMapping(value = "/find")
     @ApiOperation(value = "")
     public ViewData findOrgs(@ModelAttribute OrganizationFindRequest name){
         return organizationService.find(name);

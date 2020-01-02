@@ -68,9 +68,14 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 	@Override
 	public void createScaffoldProject(ProjectInformationDto projectDto,UserDto dto) throws URISyntaxException, TException {
 		// TODO Auto-generated method stub
-		if(dto.getRoId()!=2){
-			throw new TException(TErrorCode.ERROR_CREATE_PROJECT_CREATE_CODE,TErrorCode.ERROR_CREATE_PROJECT_CREATE_MSG);
-		}
+//		if(dto.getRoId()!=2){
+//			if (dto.getRoId()==1){
+//				throw new TException(TErrorCode.ERROR_CREATE_PROJECT_ROOT_CODE,TErrorCode.ERROR_CREATE_PROJECT_ROOT_MSG);
+//			}else{
+//				throw new TException(TErrorCode.ERROR_CREATE_PROJECT_CREATE_CODE,TErrorCode.ERROR_CREATE_PROJECT_CREATE_MSG);
+//			}
+//		}
+
 		if (gitService.createGitRepository(projectDto.getArtifactId(),dto)){
 			try {
 				try {

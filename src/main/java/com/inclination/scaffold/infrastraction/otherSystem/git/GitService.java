@@ -2,6 +2,7 @@ package com.inclination.scaffold.infrastraction.otherSystem.git;
 
 import com.inclination.scaffold.application.project.ProjectInformationDto;
 import com.inclination.scaffold.application.users.UserDto;
+import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 
 import javax.xml.bind.JAXBException;
@@ -17,7 +18,7 @@ public interface GitService {
      * @param dto
      * @return
      */
-    boolean createGitRepository(String artifactId, UserDto dto);
+    boolean createGitRepository(String artifactId, UserDto dto) throws TException;
 
     /**
      * 创建git项目

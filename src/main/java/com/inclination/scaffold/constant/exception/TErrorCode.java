@@ -155,4 +155,16 @@ public class TErrorCode {
 
 	public static final String ERROR_CREATE_PROJECT_CREATE_MSG = "对不起，您没有创建项目的权限，创建项目请联系部门负责人";
 
+
+	public static final String ERROR_CREATE_PROJECT_ROOT_CODE = "90006";
+
+	public static final String ERROR_CREATE_PROJECT_ROOT_MSG = "对不起，系统管理员不具有项目创建的功能";
+
+	public static final String ERROR_No_USER_CODE = "90007";
+
+	public static final String ERROR_No_USER_MSG = "没有该用户";
+
+	public static final String ERROR_No_ADMIN_USER_CODE = "90009";
+
+	public static final String ERROR_No_ADMIN_USER_MSG = "团队至少要有一个团队负责人";
 }

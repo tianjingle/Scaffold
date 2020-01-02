@@ -45,9 +45,6 @@ public class UserServiceImp implements UserService {
 	@Autowired
 	private UserPoMapper userMapping;
 
-	@Autowired
-	private OrganizationPoMapper organizationPoMapper;
-
 
 	/**
 	 * 项目管理服务
@@ -60,12 +57,6 @@ public class UserServiceImp implements UserService {
 	@Transactional
 	public void createUser(UserDto dto) throws Exception {
 		// TODO Auto-generated method stub
-		Example example=new Example(OrganizationPo.class);
-		example.createCriteria().andEqualTo("id",dto.getOrgId());
-		List<OrganizationPo> list=organizationPoMapper.selectByExample(example);
-		if (list.size()>0){
-			dto.setOrgName(list.get(0).getContent());
-		}
 		ModelMapUtils.map(dto, User.class).userCreate(userMapping);
 		/**
 		 * 用户主要有超级管理员、高级管理员（部门负责人）、普通开发者

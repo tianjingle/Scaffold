@@ -1,5 +1,6 @@
 package com.inclination.scaffold.infrastraction.otherSystem;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.inclination.scaffold.application.project.ProjectInformationDto;
@@ -8,6 +9,8 @@ import com.inclination.scaffold.constant.config.OtherSystemProperties;
 import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.otherSystem.git.GitService;
+import com.inclination.scaffold.infrastraction.otherSystem.git.GitUserView;
+import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import com.inclination.scaffold.utils.CMDExecuteUtil;
 import com.inclination.scaffold.utils.ModelMapUtils;
@@ -24,6 +27,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +50,10 @@ public class GitServiceImpl implements GitService {
 
     private MyRestTemplate myRestTemplate=new MyRestTemplate();
 
+    @Autowired
+    private UserPoMapper userPoMapper;
+
+
     static String _csrf="";
 
     static String lang="zh-CN";
@@ -53,13 +61,16 @@ public class GitServiceImpl implements GitService {
     static String i_like_gitea="";
 
     static String macaron_flash="";
+
+
+    static int uid;
     /**
      * 创建git仓库
      * @param artifactId
      * @param dto
      * @return
      */
-    public boolean createGitRepository(String artifactId, UserDto dto) {
+    public boolean createGitRepository(String artifactId, UserDto dto) throws TException {
         // TODO Auto-generated method stub
 
 
@@ -100,11 +111,59 @@ public class GitServiceImpl implements GitService {
      * 把当前git用户添加到团队里
      * @param dto
      */
-    private void addCurrentUser2Org(UserDto dto) {
-        setCrsf(ModelMapUtils.map(dto,UserPo.class));
-        String url=projectProperties.getGitUrl()+"api/v1/users/search?q="+dto.getUserName();
+    private void addCurrentUser2Org(UserDto dto) throws TException {
+        String url="";
+        Example example=new Example(UserPo.class);
+        example.createCriteria().andEqualTo("roId","2").andEqualTo("orgId",dto.getOrgId());
+        List<UserPo> list=userPoMapper.selectByExample(example);
+        if (list.size()>0){
+            setCrsf(ModelMapUtils.map(list.get(0),UserPo.class));
+            url=projectProperties.getGitUrl()+"api/v1/users/search?q="+list.get(0).getUserName();
+        }else{
+            throw new TException(TErrorCode.ERROR_No_ADMIN_USER_CODE,TErrorCode.ERROR_No_ADMIN_USER_MSG);
+        }
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang);
+        header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+        HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity(null, header);
+        ResponseEntity<String> resEntity=myRestTemplate.exchange(url,HttpMethod.GET,entity,String.class,new Object[0]);
+        GitUserView view=JSON.parseObject(resEntity.getBody(), GitUserView.class);
+        if (view.getData().size()>0){
+            for (int i=0;i<view.getData().size();i++){
+                if (view.getData().get(i).getLogin().equals(list.get(0).getUserName())){
+                    uid=view.getData().get(0).getId();
+                }
+            }
+        }
+        if (uid<-1){
+            throw new TException(TErrorCode.ERROR_No_USER_CODE,TErrorCode.ERROR_No_USER_MSG);
+        }
+        doSetInnerCookies(myRestTemplate.responseHeader);
+        MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
+        param.add("_csrf",_csrf);
+        param.add("uid",uid);
+        param.add("username",dto.getUserName());
 
+        header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang);
+        header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+        entity = new HttpEntity(param, header);
+        resEntity=myRestTemplate.exchange(projectProperties.getGitUrl()+"org/"+dto.getOrgName()+"-org/teams/owners/action/add",HttpMethod.POST,entity,String.class,new Object[0]);
+        //http://localhost:3000/org/keyanerbu-org/teams/owners
 
+        myRestTemplate.exchange(projectProperties.getGitUrl()+"org/"+dto.getOrgName()+"-org/teams/owners",HttpMethod.GET,entity,String.class,new Object[0]);
+
+        //        if(resEntity.getStatusCodeValue()==302){
+//            header = new HttpHeaders();
+//            header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+//            header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang+"; macaron_flash="+macaron_flash);
+//            header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+//            entity = new HttpEntity(null, header);
+//            myRestTemplate.exchange(gitUpdatePwdUrl,HttpMethod.GET,entity,String.class,new Object[0]);
+//            return true;
+//        }
 
     }
 
@@ -251,12 +310,13 @@ public class GitServiceImpl implements GitService {
         myRestTemplate.exchange(projectProperties.getGitUrl()+"user/login",HttpMethod.POST,entity,String.class,new Object[0]);
         doSetInnerCookies(myRestTemplate.responseHeader);
         try{
-            myRestTemplate.exchange(projectProperties.getGitUrl(),HttpMethod.GET,null,String.class,new Object[0]);
+            //myRestTemplate.exchange(projectProperties.getGitUrl(),HttpMethod.GET,null,String.class,new Object[0]);
         }catch (Exception e){
 
         }
         doSetInnerCookies(myRestTemplate.responseHeader);
     }
+
 
 
     /**

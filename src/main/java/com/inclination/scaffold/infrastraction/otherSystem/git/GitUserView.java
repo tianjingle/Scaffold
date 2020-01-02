@@ -2,10 +2,11 @@ package com.inclination.scaffold.infrastraction.otherSystem.git;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class GitUserDto {
+public class GitUserView {
 
-    private int id;
+    private List<GitUserDto> data;
 
-    private String login;
 }
