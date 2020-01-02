@@ -12,7 +12,6 @@ import com.inclination.scaffold.infrastraction.repository.*;
 import com.inclination.scaffold.infrastraction.repository.po.*;
 import com.inclination.scaffold.utils.ModelMapUtils;
 import com.inclination.scaffold.utils.ViewData;
-import com.inclination.scaffold.utils.ViewDataOld;
 import tk.mybatis.mapper.entity.Example;
 
 public class DMenu {
@@ -101,7 +100,7 @@ public class DMenu {
 		Example.Criteria menuCriteria=menuExample.createCriteria();
 		menuCriteria.andIn("id",rmlist.stream().map(RoleMenuPo::getMenuId).collect(Collectors.toList()));
 		List<MenuPo> menulist=menuMapping.selectByExample(menuExample);
-//获取改角色的所有菜单
+		//获取改角色的所有菜单
 		for(int i=0;i<menulist.size();i++){
 			Map map = new HashMap();
 			Example example1=new Example(MenuResourcePo.class);
