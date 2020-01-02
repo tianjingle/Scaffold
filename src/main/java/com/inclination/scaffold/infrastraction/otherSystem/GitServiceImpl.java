@@ -144,27 +144,13 @@ public class GitServiceImpl implements GitService {
         param.add("_csrf",_csrf);
         param.add("uid",uid);
         param.add("username",dto.getUserName());
-
         header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang);
         header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
         entity = new HttpEntity(param, header);
         resEntity=myRestTemplate.exchange(projectProperties.getGitUrl()+"org/"+dto.getOrgName()+"-org/teams/owners/action/add",HttpMethod.POST,entity,String.class,new Object[0]);
-        //http://localhost:3000/org/keyanerbu-org/teams/owners
-
         myRestTemplate.exchange(projectProperties.getGitUrl()+"org/"+dto.getOrgName()+"-org/teams/owners",HttpMethod.GET,entity,String.class,new Object[0]);
-
-        //        if(resEntity.getStatusCodeValue()==302){
-//            header = new HttpHeaders();
-//            header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-//            header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang+"; macaron_flash="+macaron_flash);
-//            header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
-//            entity = new HttpEntity(null, header);
-//            myRestTemplate.exchange(gitUpdatePwdUrl,HttpMethod.GET,entity,String.class,new Object[0]);
-//            return true;
-//        }
-
     }
 
     /**
