@@ -212,8 +212,9 @@ public class ProjectManagerServiceImpl implements ProjectManagerService{
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		jenkinsService.updatePwd(newUser.getUserName(),oldUser.getUserPassword(),newUser.getUserPassword(),newUser.getUserEmil(),projectProperties.getJenkinsUrl());
 		return false;
+		//jenkinsService.updatePwd(newUser.getUserName(),oldUser.getUserPassword(),newUser.getUserPassword(),newUser.getUserEmil(),projectProperties.getJenkinsUrl());
+		//return true;
 	}
 
 	@Override

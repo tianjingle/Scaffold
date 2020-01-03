@@ -19,4 +19,6 @@ public interface UserPoMapper extends MyMapper<UserPo> {
      * @return
      */
     List<UserPo> selectBySelective(UserPo po);
+
+    List<UserPo> selectBySelectiveByAdmin(UserPo po);
 }

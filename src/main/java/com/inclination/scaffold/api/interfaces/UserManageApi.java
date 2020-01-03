@@ -45,9 +45,9 @@ public class UserManageApi {
 	 */
 	@PostMapping(value="/user-add",consumes="application/json",produces = "application/json;charset=utf-8")
 	@ApiOperation(value="创建用户",notes="创建用户")
-	public void userAdd(@Valid @RequestBody UserManageAddRequest user) throws Exception{
+	public void userAdd(@Valid @RequestBody UserManageAddRequest user,@SessionAttribute("CurrentUser") UserDto userdto) throws Exception{
 		UserDto dto=ModelMapUtils.map(user, UserDto.class);
-		userManageServiceImp.createUser(dto);
+		userManageServiceImp.createUser(dto,userdto);
 	}
 	/**
 	 * 查询所有用户
@@ -55,8 +55,8 @@ public class UserManageApi {
 	 */
 	@GetMapping(value="/user-find",produces = "application/json;charset=utf-8")
 	@ApiOperation(value="查询用户",notes="查询用户")
-	public ViewData userQry(@ModelAttribute UserQryByPages request){
-		return userManageServiceImp.userFind(request);
+	public ViewData userQry(@ModelAttribute UserQryByPages request,@SessionAttribute("CurrentUser") UserDto userdto){
+		return userManageServiceImp.userFind(request,userdto);
 	}
 
 
@@ -82,9 +82,9 @@ public class UserManageApi {
 	 */
 	@PatchMapping(value="/user-update",produces="application/json;charset=utf-8")
 	@ApiOperation(value="修改用户",notes="修改用户")
-	public void userModify(@RequestBody UserManageModifyRequest request) throws TException{
+	public void userModify(@RequestBody UserManageModifyRequest request,HttpSession session) throws TException{
 		UserDto dto=ModelMapUtils.map(request, UserDto.class);
-		userManageServiceImp.modifyUser(dto);
+		userManageServiceImp.modifyUser(dto,session);
 	}
 	
 	@GetMapping(value="/user-time-out",produces="application/json;charset=utf-8")

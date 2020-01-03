@@ -3,12 +3,14 @@ package com.inclination.scaffold.infrastraction.otherSystem;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
+import com.inclination.http.rest.RestTemplateUtil;
 import com.inclination.scaffold.application.project.ProjectInformationDto;
 import com.inclination.scaffold.application.users.UserDto;
 import com.inclination.scaffold.constant.config.OtherSystemProperties;
 import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.otherSystem.git.GitService;
+import com.inclination.scaffold.infrastraction.otherSystem.git.vo.GitUserDto;
 import com.inclination.scaffold.infrastraction.otherSystem.git.vo.GitUserView;
 import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.UserPo;
@@ -62,8 +64,8 @@ public class GitServiceImpl implements GitService {
 
     static String macaron_flash="";
 
+    static String redirect_to="";
 
-    static int uid;
     /**
      * 创建git仓库
      * @param artifactId
@@ -72,14 +74,14 @@ public class GitServiceImpl implements GitService {
      */
     public boolean createGitRepository(String artifactId, UserDto dto) throws TException {
         // TODO Auto-generated method stub
-
-
-        addCurrentUser2Org(dto);
-
+        if (dto.getRoId()==3){
+            addCurrentUser2Org(dto);
+        }
         String orgModel=dto.getOrgName()+"-org";
         String username=dto.getUserName();
         String password=dto.getUserPassword();
         String gitUrl=projectProperties.getGitUrl();
+        String targertUrl=gitUrl+"api/v1/org/"+orgModel+"/repos";
         String userMsg=username+":"+password;
         String base64userMsg= Base64.encodeBase64String(userMsg.getBytes());
         HttpHeaders header=new HttpHeaders();
@@ -96,7 +98,7 @@ public class GitServiceImpl implements GitService {
         String paramStr= JSONObject.toJSONString(param);
         HttpEntity<String> entity=new HttpEntity<>(paramStr,header);
         try{
-            ResponseEntity<String> resEntity=this.restTemplate.exchange(gitUrl+"api/v1/org/"+orgModel+"/repos", HttpMethod.POST,entity,String.class);
+            ResponseEntity<String> resEntity=this.restTemplate.exchange(targertUrl, HttpMethod.POST,entity,String.class);
             String responseStr=resEntity.getBody();
             System.out.println("仓库创建成功...");
         }catch(Exception e){
@@ -112,45 +114,36 @@ public class GitServiceImpl implements GitService {
      * @param dto
      */
     private void addCurrentUser2Org(UserDto dto) throws TException {
-        String url="";
         Example example=new Example(UserPo.class);
         example.createCriteria().andEqualTo("roId","2").andEqualTo("orgId",dto.getOrgId());
         List<UserPo> list=userPoMapper.selectByExample(example);
-        if (list.size()>0){
-            setCrsf(ModelMapUtils.map(list.get(0),UserPo.class));
-            url=projectProperties.getGitUrl()+"api/v1/users/search?q="+list.get(0).getUserName();
-        }else{
-            throw new TException(TErrorCode.ERROR_No_ADMIN_USER_CODE,TErrorCode.ERROR_No_ADMIN_USER_MSG);
+        if (list.size()<1){
+            throw new TException("","当前机构没有组织者");
         }
+        String orgUrl=projectProperties.getGitUrl()+"api/v1/orgs/"+dto.getOrgName()+"-org/teams";
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang);
-        header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+        if (null != list.get(0).getUserName() && null != list.get(0).getUserPassword()) {
+            String userMsg = list.get(0).getUserName() + ":" + list.get(0).getUserPassword();
+            String base64UserMsg = Base64.encodeBase64String(userMsg.getBytes());
+            header.set("Authorization", "Basic " + base64UserMsg);
+        }
+
         HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity(null, header);
-        ResponseEntity<String> resEntity=myRestTemplate.exchange(url,HttpMethod.GET,entity,String.class,new Object[0]);
-        GitUserView view=JSON.parseObject(resEntity.getBody(), GitUserView.class);
-        if (view.getData().size()>0){
-            for (int i=0;i<view.getData().size();i++){
-                if (view.getData().get(i).getLogin().equals(list.get(0).getUserName())){
-                    uid=view.getData().get(0).getId();
-                }
-            }
-        }
-        if (uid<-1){
-            throw new TException(TErrorCode.ERROR_No_USER_CODE,TErrorCode.ERROR_No_USER_MSG);
-        }
-        doSetInnerCookies(myRestTemplate.responseHeader);
-        MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
-        param.add("_csrf",_csrf);
-        param.add("uid",uid);
-        param.add("username",dto.getUserName());
+        ResponseEntity<String> resEntity = restTemplate.exchange(orgUrl, HttpMethod.GET, entity, String.class, new Object[0]);
+        List<GitUserDto> view=JSON.parseArray(resEntity.getBody(), GitUserDto.class);
+
+        String add2Org=projectProperties.getGitUrl()+"api/v1/teams/"+view.get(0).getId()+"/members/"+dto.getUserName();
         header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang);
-        header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
-        entity = new HttpEntity(param, header);
-        resEntity=myRestTemplate.exchange(projectProperties.getGitUrl()+"org/"+dto.getOrgName()+"-org/teams/owners/action/add",HttpMethod.POST,entity,String.class,new Object[0]);
-        myRestTemplate.exchange(projectProperties.getGitUrl()+"org/"+dto.getOrgName()+"-org/teams/owners",HttpMethod.GET,entity,String.class,new Object[0]);
+        if (null != list.get(0).getUserName() && null != list.get(0).getUserPassword()) {
+            String userMsg = list.get(0).getUserName() + ":" + list.get(0).getUserPassword();
+            String base64UserMsg = Base64.encodeBase64String(userMsg.getBytes());
+            header.set("Authorization", "Basic " + base64UserMsg);
+        }
+        entity = new HttpEntity(null, header);
+        resEntity = restTemplate.exchange(add2Org, HttpMethod.PUT, entity, String.class, new Object[0]);
+        System.out.println(resEntity);
     }
 
     /**
@@ -239,12 +232,11 @@ public class GitServiceImpl implements GitService {
     public boolean updateUserPassword(UserDto newUser, UserPo oldUser) throws UnsupportedEncodingException {
         String gitUpdatePwdUrl=projectProperties.getGitUrl()+"user/settings/account";
         MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
-        setCrsf(oldUser);
+        setCrsf(gitUpdatePwdUrl,oldUser);
         param.add("_csrf",_csrf);
         param.add("old_password",oldUser.getUserPassword());
         param.add("password",newUser.getUserPassword());
         param.add("retype",newUser.getUserPassword());
-
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang);
@@ -258,6 +250,7 @@ public class GitServiceImpl implements GitService {
             header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
             entity = new HttpEntity(null, header);
             myRestTemplate.exchange(gitUpdatePwdUrl,HttpMethod.GET,entity,String.class,new Object[0]);
+            myRestTemplate.exchange("http://localhost:3000/user/settings/organization",HttpMethod.GET,null,String.class,new Object[0]);
             return true;
         }else if (resEntity.getStatusCodeValue()==400){
             doSetCrsf(myRestTemplate.responseHeader,oldUser);
@@ -265,11 +258,7 @@ public class GitServiceImpl implements GitService {
         return false;
     }
 
-    /**
-     * 设置cookie
-     * @param oldUser
-     */
-    private void setCrsf(UserPo oldUser) {
+    private void setCrsf(String gitUpdatePwdUrl, UserPo oldUser) {
         try{
             myRestTemplate.exchange(projectProperties.getGitUrl(),HttpMethod.GET,null,String.class,new Object[0]);
         }catch (Exception e){
@@ -296,7 +285,7 @@ public class GitServiceImpl implements GitService {
         myRestTemplate.exchange(projectProperties.getGitUrl()+"user/login",HttpMethod.POST,entity,String.class,new Object[0]);
         doSetInnerCookies(myRestTemplate.responseHeader);
         try{
-            //myRestTemplate.exchange(projectProperties.getGitUrl(),HttpMethod.GET,null,String.class,new Object[0]);
+            myRestTemplate.exchange(projectProperties.getGitUrl(),HttpMethod.GET,null,String.class,new Object[0]);
         }catch (Exception e){
 
         }
@@ -312,7 +301,7 @@ public class GitServiceImpl implements GitService {
     public void doSetInnerCookies(HttpHeaders responseHeader){
         if (responseHeader.containsKey("Set-Cookie")){
             List<String> cookies=responseHeader.get("Set-Cookie");
-            List<Object> list=cookies.stream().filter(c->c.contains("_csrf=")||c.contains("i_like_gitea")||c.contains("lang")).collect(Collectors.toList());
+            List<Object> list=cookies.stream().filter(c->c.contains("_csrf=")||c.contains("i_like_gitea")||c.contains("lang")||c.contains("redirect_to")).collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(list)){
                 String tian=list.toString();
                 String temp=tian.replace("[","");
@@ -333,6 +322,8 @@ public class GitServiceImpl implements GitService {
                         lang =a[1];
                     }else if (a[0].contains("macaron_flash")){
                         macaron_flash=a[1];
+                    }else if(a[0].contains("redirect_to")){
+                        redirect_to=a[1].replace("%2F","/");
                     }
                 }
             }

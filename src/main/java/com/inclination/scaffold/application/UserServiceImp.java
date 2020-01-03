@@ -3,13 +3,13 @@ package com.inclination.scaffold.application;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import com.google.common.base.Strings;
 import com.inclination.scaffold.application.project.ProjectManagerService;
 import com.inclination.scaffold.constant.exception.TErrorCode;
-import com.inclination.scaffold.infrastraction.repository.OrganizationPoMapper;
 import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
-import com.inclination.scaffold.infrastraction.repository.po.OrganizationPo;
 import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import com.inclination.scaffold.utils.ViewData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.inclination.scaffold.api.request.user.UserQryByPages;
 import com.inclination.scaffold.api.response.user.UserManageResponse;
-import com.inclination.scaffold.api.response.user.UserManagerQryResponse;
 import com.inclination.scaffold.application.users.UserDto;
 import com.inclination.scaffold.application.users.UserService;
 import com.inclination.scaffold.constant.exception.TException;
@@ -55,8 +54,22 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	@Transactional
-	public void createUser(UserDto dto) throws Exception {
+	public void createUser(UserDto dto, UserDto adminDto) throws Exception {
 		// TODO Auto-generated method stub
+		if (adminDto.getRoId()==2){
+            dto.setOrgName(adminDto.getOrgName());
+            dto.setRoId(3);
+            dto.setOrgId(adminDto.getOrgId());
+		}
+		if (dto.getRoId()==0){
+			throw new TException("","权限不能为空");
+		}
+		if (dto.getOrgId()==0){
+			throw new TException("","组织机构不能为空");
+		}
+		if (Strings.isNullOrEmpty(dto.getOrgName())){
+			throw new TException("","组织机构不能为空");
+		}
 		ModelMapUtils.map(dto, User.class).userCreate(userMapping);
 		/**
 		 * 用户主要有超级管理员、高级管理员（部门负责人）、普通开发者
@@ -72,16 +85,19 @@ public class UserServiceImp implements UserService {
 	}
 
 	@Override
-	public ViewData userFind(@Valid UserQryByPages request) {
+	public ViewData userFind(@Valid UserQryByPages request, UserDto userdto) {
 		// TODO Auto-generated method stub
 		UserPo po=ModelMapUtils.map(request,UserPo.class);
 		Page hpage=PageHelper.startPage((int)request.getPage(), request.getLimit());
-		List<com.inclination.scaffold.infrastraction.repository.po.UserPo> list=userMapping.selectBySelective(po);
-		UserManagerQryResponse response = new UserManagerQryResponse();
-		response.setList(ModelMapUtils.map(list, UserManageResponse.class));
-		response.PageBaseQueryEntity(request.getPage(),request.getLimit(), 
-				(int)hpage.getPages(),(int)hpage.getTotal());
-		return ViewData.success(ModelMapUtils.map(list, UserManageResponse.class), (int) hpage.getPages(),hpage.getTotal());
+		if (userdto.getRoId()==2){
+			po.setOrgId(userdto.getOrgId());
+			List<com.inclination.scaffold.infrastraction.repository.po.UserPo> list=userMapping.selectBySelectiveByAdmin(po);
+			return ViewData.success(ModelMapUtils.map(list, UserManageResponse.class), (int) hpage.getPages(),hpage.getTotal());
+		}else if (userdto.getRoId()==1){
+			List<com.inclination.scaffold.infrastraction.repository.po.UserPo> list=userMapping.selectBySelective(po);
+			return ViewData.success(ModelMapUtils.map(list, UserManageResponse.class), (int) hpage.getPages(),hpage.getTotal());
+		}
+		return ViewData.error("权限不够");
 	}
 
 	@Override
@@ -93,7 +109,7 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	@Transactional
-	public void modifyUser(UserDto dto) throws TException {
+	public void modifyUser(UserDto dto, HttpSession session) throws TException {
 		// TODO Auto-generated method stub
 		UserPo po=ModelMapUtils.map(dto, User.class).update(userMapping);
 	    if (po.getUserName().equals(dto.getUserName())&&!dto.getUserPassword().equals(po.getUserPassword())){

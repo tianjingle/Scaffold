@@ -1,5 +1,6 @@
 package com.inclination.scaffold.application.users;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import com.inclination.scaffold.api.request.user.UserQryByPages;
@@ -8,13 +9,13 @@ import com.inclination.scaffold.utils.ViewData;
 
 public interface UserService {
 
-	void createUser(UserDto dto) throws TException, Exception;
+	void createUser(UserDto userDto, UserDto dto) throws TException, Exception;
 
-	ViewData userFind(@Valid UserQryByPages request);
+	ViewData userFind(@Valid UserQryByPages request, UserDto userdto);
 
 	void deleteUser(UserDto dto) throws TException;
 
-	void modifyUser(UserDto userDto) throws TException;
+	void modifyUser(UserDto userDto, HttpSession session) throws TException;
 
 	UserDto usersLogin(UserDto dto);;
 
