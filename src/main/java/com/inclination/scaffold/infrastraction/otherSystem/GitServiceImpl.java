@@ -232,15 +232,17 @@ public class GitServiceImpl implements GitService {
     public boolean updateUserPassword(UserDto newUser, UserPo oldUser) throws UnsupportedEncodingException {
         String gitUpdatePwdUrl=projectProperties.getGitUrl()+"user/settings/account";
         MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
-        setCrsf(gitUpdatePwdUrl,oldUser);
+        setCrsf(oldUser);
         param.add("_csrf",_csrf);
         param.add("old_password",oldUser.getUserPassword());
         param.add("password",newUser.getUserPassword());
         param.add("retype",newUser.getUserPassword());
+
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang);
         header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+        header.add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36");
         HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity(param, header);
         ResponseEntity<String> resEntity=myRestTemplate.exchange(gitUpdatePwdUrl,HttpMethod.POST,entity,String.class,new Object[0]);
         if(resEntity.getStatusCodeValue()==302){
@@ -248,9 +250,9 @@ public class GitServiceImpl implements GitService {
             header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang+"; macaron_flash="+macaron_flash);
             header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
+            header.add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36");
             entity = new HttpEntity(null, header);
             myRestTemplate.exchange(gitUpdatePwdUrl,HttpMethod.GET,entity,String.class,new Object[0]);
-            myRestTemplate.exchange("http://localhost:3000/user/settings/organization",HttpMethod.GET,null,String.class,new Object[0]);
             return true;
         }else if (resEntity.getStatusCodeValue()==400){
             doSetCrsf(myRestTemplate.responseHeader,oldUser);
@@ -258,7 +260,11 @@ public class GitServiceImpl implements GitService {
         return false;
     }
 
-    private void setCrsf(String gitUpdatePwdUrl, UserPo oldUser) {
+    /**
+     * 设置cookie
+     * @param oldUser
+     */
+    private void setCrsf(UserPo oldUser) {
         try{
             myRestTemplate.exchange(projectProperties.getGitUrl(),HttpMethod.GET,null,String.class,new Object[0]);
         }catch (Exception e){
@@ -281,6 +287,7 @@ public class GitServiceImpl implements GitService {
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang);
+        header.add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36");
         HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity(param, header);
         myRestTemplate.exchange(projectProperties.getGitUrl()+"user/login",HttpMethod.POST,entity,String.class,new Object[0]);
         doSetInnerCookies(myRestTemplate.responseHeader);
@@ -293,7 +300,6 @@ public class GitServiceImpl implements GitService {
     }
 
 
-
     /**
      * 获取cookie
      * @param responseHeader
@@ -301,7 +307,7 @@ public class GitServiceImpl implements GitService {
     public void doSetInnerCookies(HttpHeaders responseHeader){
         if (responseHeader.containsKey("Set-Cookie")){
             List<String> cookies=responseHeader.get("Set-Cookie");
-            List<Object> list=cookies.stream().filter(c->c.contains("_csrf=")||c.contains("i_like_gitea")||c.contains("lang")||c.contains("redirect_to")).collect(Collectors.toList());
+            List<Object> list=cookies.stream().filter(c->c.contains("_csrf=")||c.contains("i_like_gitea")||c.contains("lang")).collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(list)){
                 String tian=list.toString();
                 String temp=tian.replace("[","");
@@ -322,8 +328,6 @@ public class GitServiceImpl implements GitService {
                         lang =a[1];
                     }else if (a[0].contains("macaron_flash")){
                         macaron_flash=a[1];
-                    }else if(a[0].contains("redirect_to")){
-                        redirect_to=a[1].replace("%2F","/");
                     }
                 }
             }

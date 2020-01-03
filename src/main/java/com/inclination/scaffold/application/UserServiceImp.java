@@ -108,7 +108,7 @@ public class UserServiceImp implements UserService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor =Exception.class)
 	public void modifyUser(UserDto dto, HttpSession session) throws TException {
 		// TODO Auto-generated method stub
 		UserPo po=ModelMapUtils.map(dto, User.class).update(userMapping);
