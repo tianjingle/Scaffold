@@ -53,7 +53,7 @@ public class UserServiceImp implements UserService {
 
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public void createUser(UserDto dto, UserDto adminDto) throws Exception {
 		// TODO Auto-generated method stub
 		if (adminDto.getRoId()==2){

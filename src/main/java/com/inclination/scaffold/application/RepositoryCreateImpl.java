@@ -56,7 +56,7 @@ public class RepositoryCreateImpl {
 		param.put("username",orgName+"-org");
 		param.put("full_name", orgName+"-org");
 		param.put("description", orgName+"-org");
-		param.put("website", "田景乐");
+		param.put("website", "localhost:3000");
 		ResponseEntity<String> response=RestTemplateUtil.sendJson(param, gitUrl+"api/v1/orgs", username, password);
 		if(response.getStatusCodeValue()==201){
 			return true;

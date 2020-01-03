@@ -117,7 +117,7 @@ public class User {
 		}else{
 			criteria=example.createCriteria();
 		}
-		criteria.andEqualTo("loginId",po.getLoginId()).andEqualTo("userPassword",po.getUserPassword());
+		criteria.andEqualTo("userName",po.getUserName()).andEqualTo("userPassword",po.getUserPassword());
 		count=(Integer) userMapper.selectCountByExample(example);
         if(count>0){
         	throw new TException(TErrorCode.ERROR_INSERT_USER_CODE,TErrorCode.ERROR_INSERT_USER_MSG);

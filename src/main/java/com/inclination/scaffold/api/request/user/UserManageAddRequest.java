@@ -26,9 +26,8 @@ public class UserManageAddRequest {
 	@NotBlank(message="用戶名稱不能为空")
 	private String userName;
 	
-	@ApiModelProperty(name="loginid",value="手机号")
-	@NotBlank(message="手機號碼不能为空")
-    @Pattern(regexp = "^\\d{11}$", message = "手机号码格式错误")
+	@ApiModelProperty(name="loginid",value="用户名称")
+	@NotBlank(message="用户名称")
 	private String loginId;
 	
 	@ApiModelProperty(name="userpassword",value="用户密码")

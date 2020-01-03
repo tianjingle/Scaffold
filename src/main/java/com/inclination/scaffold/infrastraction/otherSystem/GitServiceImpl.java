@@ -10,6 +10,7 @@ import com.inclination.scaffold.constant.config.OtherSystemProperties;
 import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.otherSystem.git.GitService;
+import com.inclination.scaffold.infrastraction.otherSystem.git.vo.AdminUpdateUser;
 import com.inclination.scaffold.infrastraction.otherSystem.git.vo.GitUserDto;
 import com.inclination.scaffold.infrastraction.otherSystem.git.vo.GitUserView;
 import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
@@ -24,6 +25,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
@@ -64,7 +66,6 @@ public class GitServiceImpl implements GitService {
 
     static String macaron_flash="";
 
-    static String redirect_to="";
 
     /**
      * 创建git仓库
@@ -221,6 +222,48 @@ public class GitServiceImpl implements GitService {
         System.out.println(responseStr);
     }
 
+
+    /**
+     * 更新git账户
+     * @param newUser
+     * @param oldUser
+     * @return
+     */
+    public boolean updateUserGit(UserDto newUser, UserPo oldUser){
+        MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
+        param.add("active",true);
+        param.add("admin",false);
+        param.add("allow_create_organization",true);
+        param.add("allow_git_hook",true);
+        param.add("allow_import_local",true);
+        param.add("email",newUser.getUserEmil());
+        param.add("full_name","");
+        param.add("location","");
+        param.add("login_name",oldUser.getUserName());
+        param.add("max_repo_creation","-1");
+        param.add("password",newUser.getUserPassword());
+        param.add("must_change_password",true);
+        param.add("prohibit_login",true);
+        param.add("website","");
+        param.add("source_id",0);
+        String url=projectProperties.getGitUrl()+"api/v1/admin/users/"+oldUser.getUserName();
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        if (null != projectProperties.getGitAdmin() && null != projectProperties.getGitPassword()) {
+            String userMsg = projectProperties.getGitAdmin() + ":" + projectProperties.getGitPassword();
+            String base64UserMsg = Base64.encodeBase64String(userMsg.getBytes());
+            header.set("Authorization", "Basic " + base64UserMsg);
+        }
+        RestTemplate restTemplate1 = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+        HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity(param, header);
+        try{
+            restTemplate1.patchForObject(url, entity, String.class, new Object[0]);
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+
+    }
     /**
      * 修改用户密码
      * @param newUser
@@ -229,74 +272,8 @@ public class GitServiceImpl implements GitService {
      * @throws UnsupportedEncodingException
      */
     @Override
-    public boolean updateUserPassword(UserDto newUser, UserPo oldUser) throws UnsupportedEncodingException {
-        String gitUpdatePwdUrl=projectProperties.getGitUrl()+"user/settings/account";
-        MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
-        setCrsf(oldUser);
-        param.add("_csrf",_csrf);
-        param.add("old_password",oldUser.getUserPassword());
-        param.add("password",newUser.getUserPassword());
-        param.add("retype",newUser.getUserPassword());
-
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang);
-        header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
-        header.add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36");
-        HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity(param, header);
-        ResponseEntity<String> resEntity=myRestTemplate.exchange(gitUpdatePwdUrl,HttpMethod.POST,entity,String.class,new Object[0]);
-        if(resEntity.getStatusCodeValue()==302){
-            header = new HttpHeaders();
-            header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-            header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang+"; macaron_flash="+macaron_flash);
-            header.add("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
-            header.add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36");
-            entity = new HttpEntity(null, header);
-            myRestTemplate.exchange(gitUpdatePwdUrl,HttpMethod.GET,entity,String.class,new Object[0]);
-            return true;
-        }else if (resEntity.getStatusCodeValue()==400){
-            doSetCrsf(myRestTemplate.responseHeader,oldUser);
-        }
-        return false;
-    }
-
-    /**
-     * 设置cookie
-     * @param oldUser
-     */
-    private void setCrsf(UserPo oldUser) {
-        try{
-            myRestTemplate.exchange(projectProperties.getGitUrl(),HttpMethod.GET,null,String.class,new Object[0]);
-        }catch (Exception e){
-
-        }
-        doSetCrsf(myRestTemplate.responseHeader, oldUser);
-    }
-
-    /**
-     * 设置cookie
-     * @param responseHeader
-     * @param oldUser
-     */
-    private void doSetCrsf(HttpHeaders responseHeader, UserPo oldUser){
-        doSetInnerCookies(responseHeader);
-        MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();
-        param.add("_csrf",_csrf);
-        param.add("user_name",oldUser.getUserPassword());
-        param.add("password",oldUser.getUserPassword());
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        header.add("Cookie","_csrf="+_csrf+"; i_like_gitea="+i_like_gitea+"; lang="+lang);
-        header.add("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36");
-        HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity(param, header);
-        myRestTemplate.exchange(projectProperties.getGitUrl()+"user/login",HttpMethod.POST,entity,String.class,new Object[0]);
-        doSetInnerCookies(myRestTemplate.responseHeader);
-        try{
-            myRestTemplate.exchange(projectProperties.getGitUrl(),HttpMethod.GET,null,String.class,new Object[0]);
-        }catch (Exception e){
-
-        }
-        doSetInnerCookies(myRestTemplate.responseHeader);
+    public boolean updateUserPassword(UserDto newUser, UserPo oldUser){
+        return updateUserGit(newUser,oldUser);
     }
 
 
