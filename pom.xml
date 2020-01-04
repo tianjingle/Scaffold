@@ -272,6 +272,13 @@
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 
+<!--		jenkinsfile流水线生成器-->
+		<dependency>
+			<groupId>com.scaffold.xml</groupId>
+			<artifactId>xml-jenkins-pipeline</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
         <!--数据库修改变动-->
 		<dependency>
 			<groupId>org.liquibase</groupId>
