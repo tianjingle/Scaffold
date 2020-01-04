@@ -3,21 +3,16 @@ package com.inclination.scaffold.infrastraction.otherSystem;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
-import com.inclination.http.rest.RestTemplateUtil;
 import com.inclination.scaffold.application.project.ProjectInformationDto;
 import com.inclination.scaffold.application.users.UserDto;
 import com.inclination.scaffold.constant.config.OtherSystemProperties;
 import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.otherSystem.git.GitService;
-import com.inclination.scaffold.infrastraction.otherSystem.git.vo.AdminUpdateUser;
 import com.inclination.scaffold.infrastraction.otherSystem.git.vo.GitUserDto;
-import com.inclination.scaffold.infrastraction.otherSystem.git.vo.GitUserView;
 import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import com.inclination.scaffold.utils.CMDExecuteUtil;
-import com.inclination.scaffold.utils.ModelMapUtils;
-import com.inclination.scaffold.utils.MyRestTemplate;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.eclipse.jgit.api.Git;
@@ -51,8 +46,6 @@ public class GitServiceImpl implements GitService {
     private OtherSystemProperties projectProperties;
 
     private RestTemplate restTemplate = new RestTemplate();
-
-    private MyRestTemplate myRestTemplate=new MyRestTemplate();
 
     @Autowired
     private UserPoMapper userPoMapper;
