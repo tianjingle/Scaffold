@@ -162,7 +162,9 @@ public class GitServiceImpl implements GitService {
             if (Strings.isNullOrEmpty(cmd)){
                 throw new TException(TErrorCode.ERROR_NO_MODEL_MAVEN_CODE,TErrorCode.ERROR_NO_MODEL_MAVEN_MSG);
             }
+//
             cmd= MessageFormat.format(cmd, projectDto.getGroupId(), projectDto.getArtifactId(),projectDto.getVersion(),projectDto.getGroupId()+"."+projectDto.getArtifactId());
+            System.out.println(cmd);
             String output = CMDExecuteUtil.executeCommand(cmd, file.getParentFile());
             System.out.println(output);
             git.add().addFilepattern(".").call();

@@ -73,6 +73,6 @@ Scaffold:
       jenkins-admin: admin
       jenkins-password: tianjingle
       monitor-view: monitor
-  maven:
-    env: dev
-    script: mvn archetype:generate -DgroupId={0} -DartifactId={1} -Dversion=1.0.0-SNAPSHOT -Dpackage={2}  -DarchetypeGroupId=net.cnki -DarchetypeArtifactId=discuss-archetype -DarchetypeVersion=1.0.0-SNAPSHOT -B -DarchetypeCatalog=local -DinteractiveMode=false
+    maven:
+      env: dev
+      script: mvn archetype:generate -DgroupId={0} -DartifactId={1} -Dversion={2} -Dpackage={3}  -DarchetypeGroupId=net.cnki.demo -DarchetypeArtifactId=curd-archetype -DarchetypeVersion=0.0.1-SNAPSHOT -B -DarchetypeCatalog=local -DinteractiveMode=false
