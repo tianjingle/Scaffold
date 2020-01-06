@@ -13,6 +13,9 @@ import com.inclination.http.rest.RestTemplateUtil;
 import com.inclination.scaffold.constant.config.OtherSystemProperties;
 import com.inclination.scaffold.infrastraction.otherSystem.jenkins.JenkinsService;
 import com.offbytwo.jenkins.JenkinsServer;
+import com.scaffold.PipelineUtils;
+import com.scaffold.root.FlowDefinition;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -50,10 +53,16 @@ public class JenkinsServiceImpl implements JenkinsService {
 	public boolean createJobByJenkinsClient(String url, String username, String password, String jobName, String gitUrl,String env,String org) throws URISyntaxException, IOException, JAXBException {
         JenkinsServer jenkins=new JenkinsServer(new URI(url),username,password);
 		Project project=null;
+		FlowDefinition flowDefinition=new FlowDefinition();
 		try {
 			project= XmlUtils.getProject();
 			XmlUtils.setGitUrl(project,gitUrl);
 			XmlUtils.setHudsonShell(project,"ls -l");
+
+
+			PipelineUtils.setGitInfo(flowDefinition,gitUrl,env);
+			PipelineUtils.setGogInfo(flowDefinition,password,jobName);
+
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
@@ -61,7 +70,8 @@ public class JenkinsServiceImpl implements JenkinsService {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		String config=XmlUtils.getConfigXml(project);
+//		String config=XmlUtils.getConfigXml(project);
+		String config=PipelineUtils.writeXml(flowDefinition);
 		System.out.println(config);
 		jenkins.createJob(jobName+"-"+env,config);
 		MultiValueMap<String,Object> param=new LinkedMultiValueMap<>();

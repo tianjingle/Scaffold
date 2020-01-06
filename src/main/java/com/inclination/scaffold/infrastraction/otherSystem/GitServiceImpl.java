@@ -199,7 +199,8 @@ public class GitServiceImpl implements GitService {
         Map<String,Object> param=new HashMap<>();
         param.put("active", true);
         Map<String,Object> config=new HashMap<>();
-        config.put("url", jenkinsUrl+"gogs-webhook/?job="+jobName+"-"+env);
+        //config.put("url", jenkinsUrl+"gogs-webhook/?job="+jobName+"-"+env);
+        config.put("url", jenkinsUrl+"generic-webhook-trigger/invoke?token="+jobName);
         config.put("content_type", "json");
         param.put("config", config);
         List<String> events=new ArrayList<>();
