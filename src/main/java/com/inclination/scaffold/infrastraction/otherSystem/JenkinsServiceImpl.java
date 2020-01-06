@@ -60,7 +60,7 @@ public class JenkinsServiceImpl implements JenkinsService {
 			XmlUtils.setHudsonShell(project,"ls -l");
 
 
-			PipelineUtils.setGitInfo(flowDefinition,gitUrl,env);
+			PipelineUtils.setGitInfo(flowDefinition,gitUrl,null);
 			PipelineUtils.setGogInfo(flowDefinition,password,jobName);
 
 		} catch (IllegalAccessException e) {
