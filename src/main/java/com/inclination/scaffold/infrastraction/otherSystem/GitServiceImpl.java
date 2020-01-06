@@ -28,9 +28,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import tk.mybatis.mapper.entity.Example;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -162,11 +160,11 @@ public class GitServiceImpl implements GitService {
             if (Strings.isNullOrEmpty(cmd)){
                 throw new TException(TErrorCode.ERROR_NO_MODEL_MAVEN_CODE,TErrorCode.ERROR_NO_MODEL_MAVEN_MSG);
             }
-//
             cmd= MessageFormat.format(cmd, projectDto.getGroupId(), projectDto.getArtifactId(),projectDto.getVersion(),projectDto.getGroupId()+"."+projectDto.getArtifactId());
             System.out.println(cmd);
             String output = CMDExecuteUtil.executeCommand(cmd, file.getParentFile());
             System.out.println(output);
+            parseJenkinsPipeLineToken(protectPath,projectDto);
             git.add().addFilepattern(".").call();
             git.commit().setMessage("上传到仓库..").call();
             git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(dto.getUserName(), dto.getUserPassword())).call();
@@ -176,6 +174,44 @@ public class GitServiceImpl implements GitService {
             return false;
         }
         return true;
+    }
+
+    private void parseJenkinsPipeLineToken(String protectPath, ProjectInformationDto projectDto) throws IOException {
+        String targetFilePath=protectPath+"/JenkinsFile";
+        String[] bufstring=new String[1024];
+        //打开带读取的文件
+        BufferedReader br = null;
+        int position=0;
+        try {
+            br = new BufferedReader(new FileReader(targetFilePath));
+            String line=null;
+            while((line=br.readLine())!=null) {
+                System.out.println(line);
+                if (Strings.isNullOrEmpty(line.trim())){
+                    continue;
+                }
+                if (line.contains("token")){
+                    line="      token:'"+projectDto.getArtifactId()+"-service'";
+                }
+                bufstring[position]=line;
+                position++;
+            }
+            OutputStream os = new FileOutputStream(targetFilePath);
+            PrintWriter pw=new PrintWriter(os);
+            for(int i=0;i<position;i++) {
+                pw.println(bufstring[i]);
+            }
+            pw.close();
+            os.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            br.close();//关闭
+        }
+
+
     }
 
 
