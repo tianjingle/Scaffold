@@ -32,7 +32,9 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/user/user")
 public class UserApi {
-	
+
+
+
 	/**
 	 * 注入菜单服务
 	 */
@@ -40,7 +42,7 @@ public class UserApi {
 	private UsersService userService;
 	
 	/**
-	  *   添加
+	  * 添加
 	 * @param userVo
 	 * @return
 	 */
@@ -60,6 +62,8 @@ public class UserApi {
 	public void modify(@ModelAttribute UserVo userVo) throws TException {
 		userService.UserModify(userVo);
 	}
+
+
 	/**
 	  *通过id删除
 	 * @param id
@@ -70,6 +74,8 @@ public class UserApi {
 	public void menuDelete(@PathVariable String id) throws TException{
 		userService.UserDelete(id);
 	}
+
+
 	/**
 	 * 分页查询
 	 * @param entity 查询条件
@@ -80,6 +86,8 @@ public class UserApi {
 	public ViewDataOld findByPage(@ModelAttribute UserFindByPageVo entity){
 		return userService.findByPage(entity);
 	}
+
+
 	/**
 	 * 查询用户的访问菜单列表
 	 * @param  entity

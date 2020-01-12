@@ -16,5 +16,4 @@ public class MenuAddRequest {
 
 	@ApiModelProperty(value = "flag", notes = "标志")
 	private String flag;
-
 }

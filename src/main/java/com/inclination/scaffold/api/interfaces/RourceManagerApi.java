@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.inclination.scaffold.api.request.resource.ResourceAddRequest;
 import com.inclination.scaffold.api.request.resource.ResourceModifyRequest;
 import com.inclination.scaffold.api.request.resource.ResourceQryByPage;
-import com.inclination.scaffold.api.response.resource.ResourceManagerQryResponse;
 import com.inclination.scaffold.application.resource.ResourceDto;
 import com.inclination.scaffold.application.resource.ResourceService;
 import com.inclination.scaffold.constant.exception.TException;

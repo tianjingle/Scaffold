@@ -19,7 +19,4 @@ public class RoleManageAddRequest {
 
 	@ApiModelProperty(name = "flag", value = "标志")
 	private String flag;
-
-
-
 }

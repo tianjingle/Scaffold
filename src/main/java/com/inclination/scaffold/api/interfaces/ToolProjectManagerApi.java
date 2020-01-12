@@ -32,7 +32,8 @@ public class ToolProjectManagerApi {
 	 */
 	@Autowired
 	private ToolProjectService toolProjectService;
-	
+
+
 	/**
 	 * 新增外部工具软件的地址
 	 * @param request
@@ -43,12 +44,16 @@ public class ToolProjectManagerApi {
 	public void toolProjectCreate(@Valid @RequestBody ToolProjectCreateRequest request) throws TException{
 		toolProjectService.addToolProject(ModelMapUtils.map(request, ToolProjectDto.class));
 	}
-	
+
+
+
 	@PatchMapping(value="/tools-projects-manager")
 	@ApiOperation(value="修改外部工具项目信息",notes="修改外部工具项目的信息")
 	public void toolProjectModify(@Valid @RequestBody ToolProjectModifyRequest request) throws TException{
 		toolProjectService.modifyToolProject(ModelMapUtils.map(request, ToolProjectDto.class));
 	}
+
+
 	@DeleteMapping(value="/tools-projects-manager/{id}")
 	@ApiOperation(value="删除外部工具项目信息",notes="删除外部工具项目的信息")
 	public void toolProjectDelete(@PathVariable String id) throws TException{
@@ -56,6 +61,9 @@ public class ToolProjectManagerApi {
 		dto.setId(Integer.parseInt(id));
 		toolProjectService.deleteToolProject(dto);
 	}
+
+
+
 	@GetMapping(value="/tools-projects-manager")
 	@ApiOperation(value="获取外部工具项目信息",notes="获取外部工具项目的信息")
 	public ViewData findToolProjectAll(){

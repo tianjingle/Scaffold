@@ -18,6 +18,4 @@ public class ToolProjectQryAllResponse {
 	public void setList(List<ToolProjectResponse> list) {
 		this.list = list;
 	}
-	
-	
 }

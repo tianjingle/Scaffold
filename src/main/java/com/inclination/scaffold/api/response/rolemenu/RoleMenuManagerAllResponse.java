@@ -18,6 +18,4 @@ public class RoleMenuManagerAllResponse {
 	public void setList(List<RoleMenuManagerResponse> list) {
 		this.list = list;
 	}
-	
-	
 }

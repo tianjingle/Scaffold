@@ -30,6 +30,4 @@ public class ToolProjectCreateRequest {
 	@ApiModelProperty(name = "url", value = "工具软件的密码")
 	private String userPassword;
 
-	
-	
 }

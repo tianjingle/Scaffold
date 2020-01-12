@@ -8,6 +8,7 @@ import com.inclination.scaffold.utils.BaseQueryResponseEntity;
 import io.swagger.annotations.ApiModelProperty;
 
 public class MenuManagerQryResponse  extends BaseQueryResponseEntity{
+
 	public void MenuManagerQryResponse(int currentPage, int pageSize, int pageNum, int totalElement) {
 		PageBaseQueryEntity(currentPage, pageSize, pageNum, totalElement);
 		// TODO Auto-generated constructor stub

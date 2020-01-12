@@ -9,8 +9,6 @@ import javax.validation.constraints.NotBlank;
 @ApiModel
 @Data
 public class OrganizationAddRequest {
-
-
     /**
      * 机构名称
      */

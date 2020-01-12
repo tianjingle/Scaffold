@@ -34,17 +34,7 @@ public class RoleMenuManagerApi {
 	 */
 	@Autowired
 	private RoleMenuService roleMenuService;
-	
-	/**
-	 * 角色-菜单的添加
-	 * @param request 添加的内容
-	 * @throws TException
-	 */
-/*	@PostMapping(value="/roles-menus-manager")
-	public void addRoleMenus(@RequestBody RoleMenuAddRequest request) throws TException{
-		RoleMenuDto dto=ModelMapUtils.map(request, RoleMenuDto.class);
-		roleMenuService.roleMenuAdd(dto);
-	}*/
+
 	/**
 	 * 角色菜单修改
 	 * @param request
@@ -76,9 +66,4 @@ public class RoleMenuManagerApi {
 	public ViewData findAllRoleMenuNew(@PathVariable Integer id){
 		return roleMenuService.roleMenuFindNew(id);
 	}
-/*	
-	@GetMapping(value="/roles-menus-manager-old")
-	public RoleMenuManagerQryResponse findAllRoleMenu(){
-		return roleMenuService.roleMenuFind();
-	}*/
 }

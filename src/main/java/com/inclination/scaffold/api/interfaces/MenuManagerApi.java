@@ -36,7 +36,6 @@ public class MenuManagerApi {
 
 	/**
 	 * 菜单的新增
-	 * 
 	 * @param reqeust
 	 * @throws TException
 	 */
@@ -88,6 +87,7 @@ public class MenuManagerApi {
 	public ViewData findMenuByPages(@ModelAttribute MenuQryByPage request){
 		return menuService.findMenu(request);
 	}
+
 	/**
 	 * 查询用户的访问菜单列表
 	 * @return 返回结果集
