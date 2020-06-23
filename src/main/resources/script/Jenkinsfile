@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    triggers{
+      GenericTrigger(
+      token:'hexue-service'
+      )
+    }
+    stages {
+        stage('Build') {
+            steps {
+
+                echo '1.start build.....'
+                bat 'mvn clean -Dmaven.test.skip=true package'
+                echo 'end build'
+                bat 'cd target\n dir \n XCOPY *.jar D:\\SCAFFOLD /y'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                bat 'D:\n cd SCAFFOLD\n scp -P 8888 *.jar root@106.75.66.83:/root/user/share_linux\n'
+                bat 'ssh -tt -p 8888 root@106.75.66.83 < execute.sh'
+                echo 'Deploying....tianjingle sldfjlsjflsdftyryrtytrytrtyj'
+            }
+        }
+    }
+}
