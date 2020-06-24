@@ -265,12 +265,6 @@
 			</exclusions>
 		</dependency>
 
-<!--		jenkinsConfig.xml自动化，原理是通过bean的xml注解来做的-->
-		<dependency>
-			<groupId>com.github.csxiaoshang</groupId>
-			<artifactId>xml-jenkins</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
 
 <!--		jenkinsfile流水线生成器-->
 		<dependency>

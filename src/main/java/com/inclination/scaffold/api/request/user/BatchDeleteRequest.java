@@ -1,6 +1,5 @@
 package com.inclination.scaffold.api.request.user;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

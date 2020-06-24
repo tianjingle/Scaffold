@@ -1,4 +1,4 @@
-package com.inclination.scaffold.infrastraction.otherSystem.git.vo;
+package com.inclination.scaffold.infrastraction.otherSystem.git.so;
 
 import lombok.Builder;
 import lombok.Data;

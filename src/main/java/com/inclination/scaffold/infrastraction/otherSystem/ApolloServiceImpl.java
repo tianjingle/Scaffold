@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * apollo组件
+ */
 @Service
 public class ApolloServiceImpl implements ApolloService {
 

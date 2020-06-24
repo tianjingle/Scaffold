@@ -25,13 +25,7 @@ import java.util.Map;
 public class ModelMapUtils {
 
 	private static ModelMapper modelMapper=new ModelMapper();
-	
-//	public static <T,V> T map(V v,Class<T> cls){
-//		if(v==null){
-//			return null;
-//		}
-//		return modelMapper.map(v,cls);
-//	}
+
 	public static <T,V> T map(V v,Class<T> cls){
 		if(v==null){
 			return null;

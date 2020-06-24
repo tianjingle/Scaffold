@@ -6,8 +6,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.csxiaoshang.xml.XmlUtils;
-import com.csxiaoshang.xml.model.root.Project;
 import com.google.common.base.Strings;
 import com.inclination.http.rest.RestTemplateUtil;
 import com.inclination.scaffold.constant.config.OtherSystemProperties;
@@ -15,7 +13,6 @@ import com.inclination.scaffold.infrastraction.otherSystem.jenkins.JenkinsServic
 import com.offbytwo.jenkins.JenkinsServer;
 import com.scaffold.PipelineUtils;
 import com.scaffold.root.FlowDefinition;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,7 +23,9 @@ import com.alibaba.fastjson.JSON;
 
 import javax.xml.bind.JAXBException;
 
-
+/***
+ * jenkins组件
+ */
 @Service
 public class JenkinsServiceImpl implements JenkinsService {
 
@@ -52,25 +51,9 @@ public class JenkinsServiceImpl implements JenkinsService {
 	 */
 	public boolean createJobByJenkinsClient(String url, String username, String password, String jobName, String gitUrl,String env,String org) throws URISyntaxException, IOException, JAXBException {
         JenkinsServer jenkins=new JenkinsServer(new URI(url),username,password);
-		Project project=null;
 		FlowDefinition flowDefinition=new FlowDefinition();
-		try {
-			project= XmlUtils.getProject();
-			XmlUtils.setGitUrl(project,gitUrl);
-			XmlUtils.setHudsonShell(project,"ls -l");
-
-
-			PipelineUtils.setGitInfo(flowDefinition,gitUrl,null);
-			PipelineUtils.setGogInfo(flowDefinition,password,jobName);
-
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-//		String config=XmlUtils.getConfigXml(project);
+		PipelineUtils.setGitInfo(flowDefinition,gitUrl,null);
+		PipelineUtils.setGogInfo(flowDefinition,password,jobName);
 		String config=PipelineUtils.writeXml(flowDefinition);
 		System.out.println(config);
 		jenkins.createJob(jobName+"-"+env,config);
@@ -204,7 +187,6 @@ public class JenkinsServiceImpl implements JenkinsService {
 		Map<String,Object> userProperty12=new HashMap<>();
 		userProperty12.put("insensitiveSearch", true);
 		json.put("userProperty12", userProperty12);
-
 		json.put("core:apply", "");
 
 

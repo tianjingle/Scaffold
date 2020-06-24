@@ -9,7 +9,7 @@ import com.inclination.scaffold.constant.config.OtherSystemProperties;
 import com.inclination.scaffold.constant.exception.TErrorCode;
 import com.inclination.scaffold.constant.exception.TException;
 import com.inclination.scaffold.infrastraction.otherSystem.git.GitService;
-import com.inclination.scaffold.infrastraction.otherSystem.git.vo.GitUserDto;
+import com.inclination.scaffold.infrastraction.otherSystem.git.so.GitUserSo;
 import com.inclination.scaffold.infrastraction.repository.UserPoMapper;
 import com.inclination.scaffold.infrastraction.repository.po.UserPo;
 import com.inclination.scaffold.utils.CMDExecuteUtil;
@@ -33,6 +33,9 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/***
+ * gitea组件
+ */
 @Service
 public class GitServiceImpl implements GitService {
 
@@ -123,7 +126,7 @@ public class GitServiceImpl implements GitService {
 
         HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity(null, header);
         ResponseEntity<String> resEntity = restTemplate.exchange(orgUrl, HttpMethod.GET, entity, String.class, new Object[0]);
-        List<GitUserDto> view=JSON.parseArray(resEntity.getBody(), GitUserDto.class);
+        List<GitUserSo> view=JSON.parseArray(resEntity.getBody(), GitUserSo.class);
 
         String add2Org=projectProperties.getGitUrl()+"api/v1/teams/"+view.get(0).getId()+"/members/"+dto.getUserName();
         header = new HttpHeaders();
