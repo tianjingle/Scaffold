@@ -9,7 +9,7 @@ What is Scaffold? scaffold is project management tool for java project and deplo
 ##### 5.micro server deploy manager.
 
 
-![theme-blue](https://github.com/tianjingle/Scaffold/tree/master/src/main/resources/static/img/picture.PNG)
+![theme-blue](https://github.com/tianjingle/Scaffold/blob/master/src/main/resources/static/img/picture.PNG)
 
 ![theme-blue](https://github.com/tianjingle/scaffold-front/blob/main/static/img/picture.PNG)
 
