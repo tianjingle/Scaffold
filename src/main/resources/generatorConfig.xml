@@ -96,13 +96,31 @@
 <!--           enableSelectByExample="false"-->
 <!--           enableUpdateByExample="false">-->
 <!--    </table>-->
-    <table schema="scaffold" tableName="organization" domainObjectName="OrganizationPo"
+<!--    <table schema="scaffold" tableName="organization" domainObjectName="OrganizationPo"-->
+<!--           enableCountByExample="false"-->
+<!--           enableDeleteByExample="false"-->
+<!--           enableSelectByExample="false"-->
+<!--           enableUpdateByExample="false">-->
+<!--    </table>-->
+    <table schema="scaffold" tableName="project_info" domainObjectName="ProjectInfoPo"
            enableCountByExample="false"
            enableDeleteByExample="false"
            enableSelectByExample="false"
            enableUpdateByExample="false">
     </table>
 
+    <table schema="scaffold" tableName="http_trace" domainObjectName="TttpTracePo"
+           enableCountByExample="false"
+           enableDeleteByExample="false"
+           enableSelectByExample="false"
+           enableUpdateByExample="false">
+    </table>
+    <table schema="scaffold" tableName="system_info" domainObjectName="SystemInfoPo"
+           enableCountByExample="false"
+           enableDeleteByExample="false"
+           enableSelectByExample="false"
+           enableUpdateByExample="false">
+    </table>
 
 <!--            <table schema="scaffold" tableName="%">-->
 <!--                   enableCountByExample="false"-->

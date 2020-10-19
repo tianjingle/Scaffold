@@ -5,4 +5,5 @@
     <include file="changelog/table.sql" relativeToChangelogFile="true" />
 <!--    <include file="changelog/view.sql" relativeToChangelogFile="true" />-->
     <include file="changelog/data.sql" relativeToChangelogFile="true" />
+    <include file="changelog/table_2020.sql" relativeToChangelogFile="true" />
 </databaseChangeLog>

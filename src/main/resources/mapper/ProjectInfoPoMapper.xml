@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inclination.scaffold.infrastraction.repository.ProjectInfoPoMapper">
+  <resultMap id="BaseResultMap" type="com.inclination.scaffold.infrastraction.repository.po.ProjectInfoPo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="project_id" jdbcType="INTEGER" property="projectId" />
+    <result column="project_name" jdbcType="VARCHAR" property="projectName" />
+    <result column="health_url" jdbcType="VARCHAR" property="healthUrl" />
+    <result column="dump_url" jdbcType="VARCHAR" property="dumpUrl" />
+    <result column="info_url" jdbcType="VARCHAR" property="infoUrl" />
+    <result column="http_trance_url" jdbcType="VARCHAR" property="httpTranceUrl" />
+    <result column="properties_url" jdbcType="VARCHAR" property="propertiesUrl" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="other" jdbcType="VARCHAR" property="other" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, project_id, project_name, health_url, dump_url, info_url, http_trance_url, properties_url, 
+    create_time, other
+  </sql>
+</mapper>

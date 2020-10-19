@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inclination.scaffold.infrastraction.repository.SystemInfoPoMapper">
+  <resultMap id="BaseResultMap" type="com.inclination.scaffold.infrastraction.repository.po.SystemInfoPo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="project_id" jdbcType="INTEGER" property="projectId" />
+    <result column="jvm_memory_max" jdbcType="VARCHAR" property="jvmMemoryMax" />
+    <result column="jvm_threads_states" jdbcType="VARCHAR" property="jvmThreadsStates" />
+    <result column="jvm_gc_pause" jdbcType="VARCHAR" property="jvmGcPause" />
+    <result column="jvm_gc_memory_promoted" jdbcType="VARCHAR" property="jvmGcMemoryPromoted" />
+    <result column="jvm_memory_used" jdbcType="VARCHAR" property="jvmMemoryUsed" />
+    <result column="jvm_gc_max_data_size" jdbcType="VARCHAR" property="jvmGcMaxDataSize" />
+    <result column="jvm_memory_committed" jdbcType="VARCHAR" property="jvmMemoryCommitted" />
+    <result column="system_cpu_count" jdbcType="VARCHAR" property="systemCpuCount" />
+    <result column="logback_events" jdbcType="VARCHAR" property="logbackEvents" />
+    <result column="tomcat_global_sent" jdbcType="VARCHAR" property="tomcatGlobalSent" />
+    <result column="jvm_buffer_memory_used" jdbcType="VARCHAR" property="jvmBufferMemoryUsed" />
+    <result column="tomcat_sessions_created" jdbcType="VARCHAR" property="tomcatSessionsCreated" />
+    <result column="jvm_threads_daemon" jdbcType="VARCHAR" property="jvmThreadsDaemon" />
+    <result column="system_cpu_usage" jdbcType="VARCHAR" property="systemCpuUsage" />
+    <result column="jvm_gc_memory_allocated" jdbcType="VARCHAR" property="jvmGcMemoryAllocated" />
+    <result column="tomcat_global_request_max" jdbcType="VARCHAR" property="tomcatGlobalRequestMax" />
+    <result column="tomcat_global_request" jdbcType="VARCHAR" property="tomcatGlobalRequest" />
+    <result column="tomcat_sessions_expired" jdbcType="VARCHAR" property="tomcatSessionsExpired" />
+    <result column="jvm_threads_live" jdbcType="VARCHAR" property="jvmThreadsLive" />
+    <result column="jvm_threads_peak" jdbcType="VARCHAR" property="jvmThreadsPeak" />
+    <result column="tomcat_global_received" jdbcType="VARCHAR" property="tomcatGlobalReceived" />
+    <result column="process_uptime" jdbcType="TIMESTAMP" property="processUptime" />
+    <result column="tomcat_sessions_rejected" jdbcType="VARCHAR" property="tomcatSessionsRejected" />
+    <result column="process_cpu_usage" jdbcType="VARCHAR" property="processCpuUsage" />
+    <result column="tomcat_threads_config_max" jdbcType="VARCHAR" property="tomcatThreadsConfigMax" />
+    <result column="jvm_classes_loaded" jdbcType="VARCHAR" property="jvmClassesLoaded" />
+    <result column="jvm_classes_unloaded" jdbcType="VARCHAR" property="jvmClassesUnloaded" />
+    <result column="tomcat_global_error" jdbcType="VARCHAR" property="tomcatGlobalError" />
+    <result column="tomcat_sessions_active_current" jdbcType="VARCHAR" property="tomcatSessionsActiveCurrent" />
+    <result column="http_server_requests" jdbcType="VARCHAR" property="httpServerRequests" />
+    <result column="tomcat_sessions_alive_max" jdbcType="VARCHAR" property="tomcatSessionsAliveMax" />
+    <result column="jvm_gc_live_data_size" jdbcType="VARCHAR" property="jvmGcLiveDataSize" />
+    <result column="tomcat_threads_current" jdbcType="VARCHAR" property="tomcatThreadsCurrent" />
+    <result column="jvm_buffer_count" jdbcType="VARCHAR" property="jvmBufferCount" />
+    <result column="jvm_buffer_total_capacity" jdbcType="VARCHAR" property="jvmBufferTotalCapacity" />
+    <result column="tomcat_sessions_active_max" jdbcType="VARCHAR" property="tomcatSessionsActiveMax" />
+    <result column="tomcat_threads_busy" jdbcType="VARCHAR" property="tomcatThreadsBusy" />
+    <result column="process_start_time" jdbcType="TIMESTAMP" property="processStartTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, project_id, jvm_memory_max, jvm_threads_states, jvm_gc_pause, jvm_gc_memory_promoted, 
+    jvm_memory_used, jvm_gc_max_data_size, jvm_memory_committed, system_cpu_count, logback_events, 
+    tomcat_global_sent, jvm_buffer_memory_used, tomcat_sessions_created, jvm_threads_daemon, 
+    system_cpu_usage, jvm_gc_memory_allocated, tomcat_global_request_max, tomcat_global_request, 
+    tomcat_sessions_expired, jvm_threads_live, jvm_threads_peak, tomcat_global_received, 
+    process_uptime, tomcat_sessions_rejected, process_cpu_usage, tomcat_threads_config_max, 
+    jvm_classes_loaded, jvm_classes_unloaded, tomcat_global_error, tomcat_sessions_active_current, 
+    http_server_requests, tomcat_sessions_alive_max, jvm_gc_live_data_size, tomcat_threads_current, 
+    jvm_buffer_count, jvm_buffer_total_capacity, tomcat_sessions_active_max, tomcat_threads_busy, 
+    process_start_time, create_time
+  </sql>
+</mapper>

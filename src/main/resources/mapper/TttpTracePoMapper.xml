@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inclination.scaffold.infrastraction.repository.TttpTracePoMapper">
+  <resultMap id="BaseResultMap" type="com.inclination.scaffold.infrastraction.repository.po.TttpTracePo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="project_id" jdbcType="INTEGER" property="projectId" />
+    <result column="time_token" jdbcType="INTEGER" property="timeToken" />
+    <result column="request_info" jdbcType="VARCHAR" property="requestInfo" />
+    <result column="reponse_info" jdbcType="VARCHAR" property="reponseInfo" />
+    <result column="stata" jdbcType="INTEGER" property="stata" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="other" jdbcType="VARCHAR" property="other" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, project_id, time_token, request_info, reponse_info, stata, create_time, other
+  </sql>
+</mapper>
