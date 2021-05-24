@@ -29,6 +29,7 @@ public class OtherSystemProperties {
     @Value("${scaffold.tool.maven.script:mvn archetype:generate -DgroupId={0} -DartifactId={1} -Dversion={2} -Dpackage={3}  -DarchetypeGroupId=net.cnki -DarchetypeArtifactId=discuss-archetype -DarchetypeVersion=1.0.0-SNAPSHOT -B -DarchetypeCatalog=local -DinteractiveMode=false}")
     private String script;
 
+
     @Value("${scaffold.tool.maven.script:dev}")
     private String env;
 
