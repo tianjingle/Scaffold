@@ -13,4 +13,10 @@ What is Scaffold? scaffold is project management tool for java project and deplo
 
 ![theme-blue](https://github.com/tianjingle/scaffold-front/blob/main/static/img/picture.PNG)
 
+# git push
+```sql
+git push origin HEAD:master
+```
+
+
 
